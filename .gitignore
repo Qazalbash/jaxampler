@@ -1,0 +1,10 @@
+__pycache__
+.vscode
+*.aux          
+*.fls
+*.fdb_latexmk  
+*.log  
+*.synctex.gz
+*.tex
+*.pdf
+model_test.py
