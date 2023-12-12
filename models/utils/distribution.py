@@ -1,4 +1,5 @@
 from functools import partial
+from time import time
 
 import jax
 from jax import Array
@@ -51,3 +52,7 @@ class Distribution(object):
 
     def __str__(self) -> str:
         return self.__repr__()
+
+    @partial(jax.jit, static_argnums=(0,))
+    def get_key(self) -> int:
+        return jax.random.PRNGKey(int(time()))

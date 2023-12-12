@@ -39,7 +39,7 @@ class Gaussian(Distribution):
         return jax_norm.cdf(x, self._mu, self._sigma)
 
     def rvs(self, N: int) -> Array:
-        return jax.random.normal(jax.random.PRNGKey(0), shape=(N,)) * self._sigma + self._mu
+        return jax.random.normal(self.get_key(), shape=(N,)) * self._sigma + self._mu
 
     def __repr__(self) -> str:
         string = f"Gaussian(mu={self._mu}, sigma={self._sigma}"

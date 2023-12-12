@@ -34,7 +34,7 @@ class Gamma(Distribution):
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def rvs(self, N: int) -> Array:
-        return jax.random.gamma(jax.random.PRNGKey(0), self._alpha, shape=(N,)) / self._beta
+        return jax.random.gamma(self.get_key(), self._alpha, shape=(N,)) / self._beta
 
     def __repr__(self) -> str:
         string = f"Gamma(alpha={self._alpha}, beta={self._beta}"

@@ -67,11 +67,7 @@ class Triangular(Distribution):
         return cdfinv_val
 
     def rvs(self, N: int = 1) -> Array:
-        return jax.random.triangular(jax.random.PRNGKey(0),
-                                     left=self._low,
-                                     right=self._high,
-                                     mode=self._mode,
-                                     shape=(N,))
+        return jax.random.triangular(self.get_key(), left=self._low, right=self._high, mode=self._mode, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Triangular(low={self._low}, mode={self._mode}, high={self._high}"

@@ -34,11 +34,11 @@ class Rayleigh(Distribution):
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
     def logrvs(self, N: int) -> Array:
-        U = jax.random.uniform(jax.random.PRNGKey(0), shape=(N,))
+        U = jax.random.uniform(self.get_key(), shape=(N,))
         return jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log(U))
 
     def rvs(self, N: int = 1) -> Array:
-        return jax.random.rayleigh(jax.random.PRNGKey(0), scale=self._sigma, shape=(N,))
+        return jax.random.rayleigh(self.get_key(), scale=self._sigma, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"

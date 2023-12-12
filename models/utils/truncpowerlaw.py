@@ -67,7 +67,7 @@ class TruncPowerLaw(Distribution):
         return logcdfinv_val
 
     def logrvs(self, N: int = 1) -> Array:
-        U = jax.random.uniform(jax.random.PRNGKey(0), shape=(N,), dtype=jnp.float32)
+        U = jax.random.uniform(self.get_key(), shape=(N,), dtype=jnp.float32)
         logrvs_val = self.logcdfinv(U)
         return logrvs_val
 

@@ -41,7 +41,7 @@ class Cauchy(Distribution):
         return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
 
     def rvs(self, N: int) -> Array:
-        return jax.random.cauchy(jax.random.PRNGKey(0), self._loc, self._sigma, shape=(N,))
+        return jax.random.cauchy(self.get_key(), self._loc, self._sigma, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Cauchy(sigma={self._sigma}, loc={self._loc}"

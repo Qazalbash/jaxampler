@@ -36,7 +36,7 @@ class Weibull(Distribution):
         return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 
     def rvs(self, N: int = 1) -> Array:
-        U = jax.random.uniform(jax.random.PRNGKey(0), shape=(N,))
+        U = jax.random.uniform(self.get_key(), shape=(N,))
         return self.cdfinv(U)
 
     def __repr__(self) -> str:

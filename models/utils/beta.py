@@ -43,7 +43,7 @@ class Beta(Distribution):
         return tfp.math.betaincinv(self._alpha, self._beta, x)
 
     def rvs(self, N: int = 1) -> Array:
-        return jax.random.beta(jax.random.PRNGKey(0), self._alpha, self._beta, shape=(N,))
+        return jax.random.beta(self.get_key(), self._alpha, self._beta, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"beta(alpha={self._alpha}, beta={self._beta}"

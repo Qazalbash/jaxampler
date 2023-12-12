@@ -44,7 +44,7 @@ class Exponential(Distribution):
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
     def logrvs(self, N: int) -> Array:
-        U = jax.random.uniform(jax.random.PRNGKey(0), shape=(N,))
+        U = jax.random.uniform(self.get_key(), shape=(N,))
         return jnp.log(-jnp.log(U)) + self._logZ
 
     def __repr__(self) -> str:

@@ -39,7 +39,7 @@ class Chi2(Distribution):
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def rvs(self, N: int) -> Array:
-        return jax.random.chisquare(jax.random.PRNGKey(0), self._nu, shape=(N,))
+        return jax.random.chisquare(self.get_key(), self._nu, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Chi2(nu={self._nu}"

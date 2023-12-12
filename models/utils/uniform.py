@@ -37,11 +37,7 @@ class Uniform(Distribution):
         return jax_uniform.pdf(x, loc=self._low, scale=self._high - self._low)
 
     def rvs(self, N: int) -> Array:
-        return jax.random.uniform(jax.random.PRNGKey(0),
-                                  minval=self._low,
-                                  maxval=self._high,
-                                  shape=(N,),
-                                  dtype=jnp.float32)
+        return jax.random.uniform(self.get_key(), minval=self._low, maxval=self._high, shape=(N,), dtype=jnp.float32)
 
     def __repr__(self) -> str:
         string = f"Uniform(low={self._low}, high={self._high}"

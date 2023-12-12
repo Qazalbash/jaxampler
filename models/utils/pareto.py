@@ -41,7 +41,7 @@ class Pareto(Distribution):
         return logcdfinv_val
 
     def rvs(self, N: int = 1) -> Array:
-        return jax.random.pareto(jax.random.PRNGKey(0), self._alpha, shape=(N,)) * self._scale
+        return jax.random.pareto(self.get_key(), self._alpha, shape=(N,)) * self._scale
 
     def __repr__(self) -> str:
         string = f"Pareto(alpha={self._alpha}, scale={self._scale}"

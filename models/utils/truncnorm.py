@@ -48,7 +48,7 @@ class TruncNorm(Distribution):
 
     def rvs(self, N: int) -> Array:
         return jax.random.truncated_normal(
-            jax.random.PRNGKey(0),
+            self.get_key(),
             self._alpha,
             self._beta,
             shape=(N,),

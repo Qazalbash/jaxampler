@@ -38,7 +38,7 @@ class Logistic(Distribution):
         return self._mu + self._scale * logit(x)
 
     def rvs(self, N: int = 1) -> Array:
-        return jax.random.logistic(jax.random.PRNGKey(0), shape=(N,)) * self._scale + self._mu
+        return jax.random.logistic(self.get_key(), shape=(N,)) * self._scale + self._mu
 
     def __repr__(self) -> str:
         string = f"Logistic(mu={self._mu}, scale={self._scale}"
