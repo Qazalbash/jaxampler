@@ -6,10 +6,10 @@ from jax import Array
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Cauchy(Distribution):
+class Cauchy(ContinuousRV):
 
     def __init__(self, sigma: ArrayLike, loc: ArrayLike = 0, name: str = None) -> None:
         self._sigma = sigma

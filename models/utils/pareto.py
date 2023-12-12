@@ -6,10 +6,10 @@ from jax import Array
 from jax.scipy.stats import pareto as jax_pareto
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Pareto(Distribution):
+class Pareto(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, scale: ArrayLike, name: str = None) -> None:
         self._alpha = alpha

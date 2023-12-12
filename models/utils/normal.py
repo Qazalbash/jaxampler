@@ -6,10 +6,10 @@ from jax import Array
 from jax.scipy.stats import norm as jax_norm
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Gaussian(Distribution):
+class Normal(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None) -> None:
         self._mu = mu
@@ -42,7 +42,7 @@ class Gaussian(Distribution):
         return jax.random.normal(self.get_key(), shape=(N,)) * self._sigma + self._mu
 
     def __repr__(self) -> str:
-        string = f"Gaussian(mu={self._mu}, sigma={self._sigma}"
+        string = f"Normal(mu={self._mu}, sigma={self._sigma}"
         if self._name is not None:
             string += f", name={self._name}"
         return string + ")"

@@ -5,10 +5,10 @@ from jax import Array
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Weibull(Distribution):
+class Weibull(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike = 1.0, k: ArrayLike = 1.0, name: str = None) -> None:
         self._lmbda = lmbda

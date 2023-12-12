@@ -5,10 +5,10 @@ from jax import Array
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Chi2(Distribution):
+class Chi2(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
         self._nu = nu

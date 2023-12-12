@@ -6,10 +6,10 @@ from jax import Array
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Exponential(Distribution):
+class Exponential(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
         self._lmbda = lmbda

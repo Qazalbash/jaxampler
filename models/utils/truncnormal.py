@@ -6,10 +6,10 @@ from jax import Array
 from jax.scipy.stats import truncnorm as jax_truncnorm
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class TruncNorm(Distribution):
+class TruncNormal(ContinuousRV):
 
     def __init__(self,
                  mu: ArrayLike,

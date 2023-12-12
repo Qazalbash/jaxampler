@@ -6,10 +6,10 @@ from jax import Array
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Gamma(Distribution):
+class Gamma(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
         self._alpha = alpha

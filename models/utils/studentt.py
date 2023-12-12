@@ -6,10 +6,10 @@ from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class StudentT(Distribution):
+class StudentT(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
         self._nu = nu

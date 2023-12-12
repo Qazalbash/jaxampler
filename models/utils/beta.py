@@ -7,10 +7,10 @@ from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Beta(Distribution):
+class Beta(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
         self._alpha = alpha

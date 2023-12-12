@@ -7,10 +7,10 @@ from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Logistic(Distribution):
+class Logistic(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, scale: ArrayLike = 1.0, name: str = None) -> None:
         self._scale = scale

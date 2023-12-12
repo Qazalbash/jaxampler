@@ -6,10 +6,10 @@ from jax import numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Uniform(Distribution):
+class Uniform(ContinuousRV):
 
     def __init__(self, low: ArrayLike = 0.0, high: ArrayLike = 1.0, name: str = None) -> None:
         self._low = low

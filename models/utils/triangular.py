@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from jax import Array, lax
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Triangular(Distribution):
+class Triangular(ContinuousRV):
 
     def __init__(self, low: ArrayLike = 0, high: ArrayLike = 1, mode: ArrayLike = 0.5, name: str = None) -> None:
         self._low = low

@@ -7,7 +7,7 @@ from jax import numpy as jnp
 from jax.typing import ArrayLike
 
 
-class Distribution(object):
+class ContinuousRV(object):
 
     def __init__(self, name: str = None) -> None:
         self._logZ = None

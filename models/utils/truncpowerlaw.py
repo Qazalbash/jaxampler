@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from jax import Array, lax
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class TruncPowerLaw(Distribution):
+class TruncPowerLaw(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, low: ArrayLike = 0, high: ArrayLike = 1, name: str = None) -> None:
         self._alpha = alpha

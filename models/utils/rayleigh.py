@@ -5,10 +5,10 @@ import jax.numpy as jnp
 from jax import Array
 from jax.typing import ArrayLike
 
-from .distribution import Distribution
+from .continuousrv import ContinuousRV
 
 
-class Rayleigh(Distribution):
+class Rayleigh(ContinuousRV):
 
     def __init__(self, sigma: ArrayLike, name: str = None) -> None:
         self._sigma = sigma
