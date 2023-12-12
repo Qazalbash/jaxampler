@@ -1,7 +1,7 @@
 from functools import partial
 
 import jax
-from jax import Array, lax
+from jax import Array, jit, lax
 from jax import numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jax.typing import ArrayLike
@@ -20,11 +20,11 @@ class Uniform(ContinuousRV):
     def check_params(self) -> None:
         assert jnp.all(self._low < self._high), "All low must be less than high"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_uniform.logpdf(x, loc=self._low, scale=self._high - self._low)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         logcdf_val = jnp.where((self._low <= x) & (x <= self._high),
                                lax.log(x - self._low) - lax.log(self._high - self._low), -jnp.inf)
@@ -32,7 +32,7 @@ class Uniform(ContinuousRV):
 
         return logcdf_val
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_uniform.pdf(x, loc=self._low, scale=self._high - self._low)
 

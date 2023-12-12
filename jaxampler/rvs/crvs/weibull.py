@@ -1,7 +1,7 @@
 from functools import partial
 
 import jax
-from jax import Array
+from jax import Array, jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
@@ -20,18 +20,18 @@ class Weibull(ContinuousRV):
         assert jnp.all(self._lmbda > 0.0), "scale must be greater than 0"
         assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jnp.where(
             x < 0, -jnp.inf,
             jnp.log(self._k) - (self._k * jnp.log(self._lmbda)) + (self._k - 1.0) * jnp.log(x) -
             jnp.power(x / self._lmbda, self._k))
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jnp.where(x < 0, 0.0, 1.0 - jnp.exp(-jnp.power(x / self._lmbda, self._k)))
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdfinv(self, x: ArrayLike) -> ArrayLike:
         return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 

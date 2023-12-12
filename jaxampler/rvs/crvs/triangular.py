@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array, lax
+from jax import Array, jit, lax
+from jax import numpy as jnp
 from jax.typing import ArrayLike
 
 from .continuousrv import ContinuousRV
@@ -22,7 +22,7 @@ class Triangular(ContinuousRV):
         assert jnp.all(self._low <= self._mode), "low must be less than or equal to mid"
         assert jnp.all(self._mode <= self._high), "mid must be less than or equal to high"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         logpdf_val = jnp.where(x < self._low, -jnp.inf, x)
         logpdf_val = jnp.where(
@@ -37,7 +37,7 @@ class Triangular(ContinuousRV):
         logpdf_val = jnp.where(x > self._high, -jnp.inf, logpdf_val)
         return logpdf_val
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         logcdf_val = jnp.where(x < self._low, -jnp.inf, x)
         logcdf_val = jnp.where(
@@ -56,7 +56,7 @@ class Triangular(ContinuousRV):
         logcdf_val = jnp.where(x >= self._high, jnp.log(1), logcdf_val)
         return logcdf_val
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdfinv(self, x: ArrayLike) -> ArrayLike:
         _Fc = self.cdf(self._mode)
         cdfinv_val = jnp.where(

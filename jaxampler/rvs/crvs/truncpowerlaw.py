@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array, lax
+from jax import Array, jit, lax
+from jax import numpy as jnp
 from jax.typing import ArrayLike
 
 from .continuousrv import ContinuousRV
@@ -23,7 +23,7 @@ class TruncPowerLaw(ContinuousRV):
         assert jnp.all(self._low > 0.0), "low must be greater than 0"
         assert jnp.all(self._high > self._low), "high must be greater than low"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logZ(self) -> ArrayLike:
         logZ_val = lax.cond(
             self._alpha == -1.0, lambda _: jnp.log(jnp.log(self._high) - jnp.log(self._low)), lambda beta: lax.cond(
@@ -34,13 +34,13 @@ class TruncPowerLaw(ContinuousRV):
             ), self._beta)
         return logZ_val
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         logpdf_val = jnp.log(x) * self._alpha - self._logZ
         logpdf_val = jnp.where((x >= self._low) * (x <= self._high), logpdf_val, -jnp.inf)
         return logpdf_val
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         logcdf_val = lax.cond(
             self._alpha == -1.0, lambda _: jnp.log(jnp.log(x) - jnp.log(self._low)), lambda beta: lax.cond(
@@ -54,7 +54,7 @@ class TruncPowerLaw(ContinuousRV):
         logcdf_val = jnp.where(x <= self._high, logcdf_val, jnp.log(1.0))
         return logcdf_val
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdfinv(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = lax.cond(
             self._alpha == -1.0,

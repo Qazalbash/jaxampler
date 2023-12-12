@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
@@ -21,24 +21,24 @@ class Exponential(ContinuousRV):
     def check_params(self) -> None:
         assert jnp.all(self._lmbda > 0), "lamda must be positive"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logZ(self) -> ArrayLike:
         return -jnp.log(self._lmbda)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_expon.logpdf(x, scale=self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_expon.pdf(x, scale=self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         logcdf_val = jnp.log1p(-jnp.exp(-self._lmbda * x))
         return jnp.where(x >= 0, logcdf_val, -jnp.inf)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdfinv(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = jnp.log(-jnp.log1p(-x)) + self._logZ
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)

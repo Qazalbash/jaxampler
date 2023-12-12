@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
@@ -22,23 +22,23 @@ class Beta(ContinuousRV):
         assert jnp.all(self._alpha > 0), "alpha must be positive"
         assert jnp.all(self._beta > 0), "beta must be positive"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_beta.logpdf(x, self._alpha, self._beta)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_beta.pdf(x, self._alpha, self._beta)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         return jax_beta.logcdf(x, self._alpha, self._beta)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_beta.cdf(x, self._alpha, self._beta)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdfinv(self, x: ArrayLike) -> ArrayLike:
         return tfp.math.betaincinv(self._alpha, self._beta, x)
 

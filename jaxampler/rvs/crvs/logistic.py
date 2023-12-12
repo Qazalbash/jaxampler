@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike
@@ -21,19 +21,19 @@ class Logistic(ContinuousRV):
     def check_params(self) -> None:
         assert jnp.all(self._scale > 0), "scale must be positive"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_logistic.logpdf(x, self._mu, self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_logistic.pdf(x, self._mu, self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_logistic.cdf(x, self._mu, self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdfinv(self, x: ArrayLike) -> ArrayLike:
         return self._mu + self._scale * logit(x)
 

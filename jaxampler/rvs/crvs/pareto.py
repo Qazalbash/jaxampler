@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import pareto as jax_pareto
 from jax.typing import ArrayLike
 
@@ -21,19 +21,19 @@ class Pareto(ContinuousRV):
         assert jnp.all(self._alpha > 0.0), "alpha must be greater than 0"
         assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_pareto.logpdf(x, self._alpha, scale=self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_pareto.pdf(x, self._alpha, scale=self._scale)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         return jnp.where(self._scale <= x, jnp.log1p(-jnp.power(self._scale / x, self._alpha)), -jnp.inf)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdfinv(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log(1 - x)
         logcdfinv_val = jnp.where(0.0 <= x, logcdfinv_val, -jnp.inf)

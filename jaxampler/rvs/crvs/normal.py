@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import norm as jax_norm
 from jax.typing import ArrayLike
 
@@ -21,20 +21,19 @@ class Normal(ContinuousRV):
     def check_params(self) -> None:
         assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-
         return jax_norm.logpdf(x, self._mu, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         return jax_norm.logcdf(x, self._mu, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_norm.pdf(x, self._mu, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_norm.cdf(x, self._mu, self._sigma)
 

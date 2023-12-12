@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import truncnorm as jax_truncnorm
 from jax.typing import ArrayLike
 
@@ -30,19 +30,19 @@ class TruncNormal(ContinuousRV):
         assert jnp.all(self._low < self._high), "low must be smaller than high"
         assert jnp.all(self._sigma > 0), "sigma must be positive"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_truncnorm.logpdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_truncnorm.pdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         return jax_truncnorm.logcdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_truncnorm.cdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
 

@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 
@@ -20,23 +20,23 @@ class Cauchy(ContinuousRV):
     def check_params(self) -> None:
         assert jnp.all(self._sigma > 0), "sigma must be positive"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_cauchy.logpdf(x, self._loc, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jax_cauchy.pdf(x, self._loc, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         return jax_cauchy.logcdf(x, self._loc, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_cauchy.cdf(x, self._loc, self._sigma)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdfinv(self, x: ArrayLike) -> ArrayLike:
         return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
 

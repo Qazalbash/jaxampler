@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-import jax.numpy as jnp
-from jax import Array
+from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
@@ -21,15 +21,15 @@ class Gamma(ContinuousRV):
         assert jnp.all(self._alpha > 0), "All alpha must be greater than 0"
         assert jnp.all(self._beta > 0), "All beta must be greater than 0"
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
         return jax_gamma.logpdf(x, self._alpha, scale=1 / self._beta)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
 
-    @partial(jax.jit, static_argnums=(0,))
+    @partial(jit, static_argnums=(0,))
     def logcdfinv(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 

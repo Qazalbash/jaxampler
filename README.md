@@ -6,30 +6,40 @@ Jaxampler is a tool for sampling statistical distributions using the [JAX](https
 
 -   [x] Inverse Transform Sampling
 -   [ ] Rejection Sampling
+-   [ ] Adaptive Rejection Sampling
 -   [ ] Metropolis-Hastings
 -   [ ] Hamiltonian Monte Carlo
 -   [ ] Slice Sampling
 -   [ ] Gibbs Sampling
 -   [ ] Importance Sampling
 
-## Distributions
+## Random Variables
 
--   [x] [Beta Distribution](models/utils/beta.py)
--   [x] [Cauchy Distribution](models/utils/cauchy.py)
--   [x] [Chi Square Distribution](models/utils/chi2.py)
--   [x] [Exponential Distribution](models/utils/exponential.py)
--   [x] [Gamma Distribution](models/utils/gamma.py)
--   [x] [Log Normal Distribution](models/utils/lognormal.py)
--   [x] [Logistic Distribution](models/utils/logistic.py)
--   [x] [Normal Distribution](models/utils/normal.py)
--   [x] [Pareto Distribution](models/utils/pareto.py)
--   [x] [Rayleigh Distribution](models/utils/rayleigh.py)
--   [x] [Student t Distribution](models/utils/studentt.py)
--   [x] [Triangular Distribution](models/utils/triangular.py)
--   [x] [Truncated Normal Distribution](models/utils/truncnormal.py)
--   [x] [Truncated Power Law Distribution](models/utils/truncpowerlaw.py)
--   [x] [Uniform Distribution](models/utils/uniform.py)
--   [x] [Weibull Distribution](models/utils/weibull.py)
+### Discrete Random Variables
+
+-   [x] [Bernoulli](jaxampler/rvs/drvs/bernoulli.py)
+-   [x] [Binomial](jaxampler/rvs/drvs/binomial.py)
+-   [x] [Geometric](jaxampler/rvs/drvs/geometric.py)
+-   [x] [Poisson](jaxampler/rvs/drvs/poisson.py)
+
+### Continuous Random Variables
+
+-   [x] [Beta](jaxampler/rvs/crvs/beta.py)
+-   [x] [Cauchy](jaxampler/rvs/crvs/cauchy.py)
+-   [x] [Chi Square](jaxampler/rvs/crvs/chi2.py)
+-   [x] [Exponential](jaxampler/rvs/crvs/exponential.py)
+-   [x] [Gamma](jaxampler/rvs/crvs/gamma.py)
+-   [x] [Log Normal](jaxampler/rvs/crvs/lognormal.py)
+-   [x] [Logistic](jaxampler/rvs/crvs/logistic.py)
+-   [x] [Normal](jaxampler/rvs/crvs/normal.py)
+-   [x] [Pareto](jaxampler/rvs/crvs/pareto.py)
+-   [x] [Rayleigh](jaxampler/rvs/crvs/rayleigh.py)
+-   [x] [Student t](jaxampler/rvs/crvs/studentt.py)
+-   [x] [Triangular](jaxampler/rvs/crvs/triangular.py)
+-   [x] [Truncated Normal](jaxampler/rvs/crvs/truncnormal.py)
+-   [x] [Truncated Power Law](jaxampler/rvs/crvs/truncpowerlaw.py)
+-   [x] [Uniform](jaxampler/rvs/crvs/uniform.py)
+-   [x] [Weibull](jaxampler/rvs/crvs/weibull.py)
 
 ## Citing Jaxampler
 
