@@ -31,6 +31,20 @@ Jaxampler is a tool for sampling statistical distributions using the [JAX](https
 -   [x] [Uniform Distribution](models/utils/uniform.py)
 -   [x] [Weibull Distribution](models/utils/weibull.py)
 
+## Citing Jaxampler
+
+To cite this repository:
+
+```
+@software{jaxampler2023github,
+    author  = {Meesum Qazalbash},
+    title   = {{JAXampler}: tool for sampling statistical distributions},
+    url     = {http://github.com/Qazalbash/jaxampler},
+    version = {0.0.1},
+    year    = {2023}
+}
+```
+
 # Contributors
 
 <a href="https://github.com/Qazalbash/jaxampler/graphs/contributors">

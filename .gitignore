@@ -1,5 +1,4 @@
-__pycache__
-.vscode
+# extra tex files
 *.aux          
 *.fls
 *.fdb_latexmk  
@@ -7,4 +6,34 @@ __pycache__
 *.synctex.gz
 *.tex
 *.pdf
+
+# temporary ignores
 model_test.py
+
+# permenant ignores
+*.pyc
+*.so
+*.egg-info
+*.whl
+/build/lib
+/dist/
+.ipynb_checkpoints
+/tensorflow
+.DS_Store
+.mypy_cache/
+.pytype/
+/docs/build
+*_pb2.py
+/docs/notebooks/.ipynb_checkpoints/
+/docs/_autosummary
+.idea
+.vscode
+.envrc
+jax.iml
+
+# virtualenv/venv directories
+/venv/
+/bin/
+/include/
+/lib/
+/share/
