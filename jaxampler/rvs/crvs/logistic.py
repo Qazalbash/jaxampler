@@ -34,7 +34,7 @@ class Logistic(ContinuousRV):
         return jax_logistic.cdf(x, self._mu, self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._mu + self._scale * logit(x)
 
     def rvs(self, N: int = 1) -> Array:

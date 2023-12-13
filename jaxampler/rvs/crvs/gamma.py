@@ -30,7 +30,7 @@ class Gamma(ContinuousRV):
         return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def rvs(self, N: int) -> Array:

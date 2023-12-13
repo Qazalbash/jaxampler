@@ -39,7 +39,7 @@ class Beta(ContinuousRV):
         return jax_beta.cdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         return tfp.math.betaincinv(self._alpha, self._beta, x)
 
     def rvs(self, N: int = 1) -> Array:

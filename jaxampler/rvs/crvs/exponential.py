@@ -39,7 +39,7 @@ class Exponential(ContinuousRV):
         return jnp.where(x >= 0, logcdf_val, -jnp.inf)
 
     @partial(jit, static_argnums=(0,))
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = jnp.log(-jnp.log1p(-x)) + self._logZ
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 

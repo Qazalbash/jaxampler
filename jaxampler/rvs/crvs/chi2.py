@@ -35,7 +35,7 @@ class Chi2(ContinuousRV):
         return jax_chi2.cdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def rvs(self, N: int) -> Array:

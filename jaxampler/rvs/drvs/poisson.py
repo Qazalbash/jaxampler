@@ -1,8 +1,8 @@
 from functools import partial
 
 import jax
-from jax import numpy as jnp
 from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 

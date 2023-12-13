@@ -37,7 +37,7 @@ class Cauchy(ContinuousRV):
         return jax_cauchy.cdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
 
     def rvs(self, N: int) -> Array:

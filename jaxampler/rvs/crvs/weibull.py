@@ -32,12 +32,12 @@ class Weibull(ContinuousRV):
         return jnp.where(x < 0, 0.0, 1.0 - jnp.exp(-jnp.power(x / self._lmbda, self._k)))
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 
     def rvs(self, N: int = 1) -> Array:
         U = jax.random.uniform(self.get_key(), shape=(N,))
-        return self.cdfinv(U)
+        return self.ppf(U)
 
     def __repr__(self) -> str:
         string = f"Weibull(lambda={self._lmbda}, k={self._k}"

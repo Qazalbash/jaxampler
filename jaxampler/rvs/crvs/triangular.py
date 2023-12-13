@@ -57,7 +57,7 @@ class Triangular(ContinuousRV):
         return logcdf_val
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         _Fc = self.cdf(self._mode)
         cdfinv_val = jnp.where(
             x < _Fc,

@@ -1,8 +1,6 @@
 from functools import partial
-from time import time
 
-import jax
-from jax import Array, jit
+from jax import jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
@@ -14,9 +12,6 @@ class ContinuousRV(GenericRV):
     def __init__(self, name: str = None) -> None:
         self._logZ = None
         super().__init__(name)
-
-    def check_params(self) -> None:
-        raise NotImplementedError
 
     def logZ(self) -> ArrayLike:
         raise NotImplementedError
@@ -32,15 +27,5 @@ class ContinuousRV(GenericRV):
     def pdf(self, x: ArrayLike) -> ArrayLike:
         return jnp.exp(self.logpdf(x))
 
-    def logrvs(self, N: int) -> Array:
-        raise NotImplementedError
-
-    def rvs(self, N: int = 1) -> Array:
-        return jnp.exp(self.logrvs(N))
-
     def __str__(self) -> str:
         return super().__str__()
-
-    @partial(jit, static_argnums=(0,))
-    def get_key(self) -> int:
-        return jax.random.PRNGKey(int(time()))

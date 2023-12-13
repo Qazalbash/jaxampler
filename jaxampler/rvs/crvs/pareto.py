@@ -34,7 +34,7 @@ class Pareto(ContinuousRV):
         return jnp.where(self._scale <= x, jnp.log1p(-jnp.power(self._scale / x, self._alpha)), -jnp.inf)
 
     @partial(jit, static_argnums=(0,))
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log(1 - x)
         logcdfinv_val = jnp.where(0.0 <= x, logcdfinv_val, -jnp.inf)
         logcdfinv_val = jnp.where(x < 1.0, logcdfinv_val, jnp.log(1.0))

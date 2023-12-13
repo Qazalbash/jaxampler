@@ -1,2 +1,3 @@
-from .rvs import (Beta, Cauchy, Chi2, ContinuousRV, Exponential, Gamma, Logistic, LogNormal, Normal, Pareto, Rayleigh,
-                  StudentT, Triangular, TruncNormal, TruncPowerLaw, Uniform, Weibull)
+from .rvs import (Bernoulli, Beta, Binomial, Cauchy, Chi2, ContinuousRV, DiscreteRV, Exponential, Gamma, Geometric,
+                  Logistic, LogNormal, Normal, Pareto, Poisson, Rayleigh, StudentT, Triangular, TruncNormal,
+                  TruncPowerLaw, Uniform, Weibull)

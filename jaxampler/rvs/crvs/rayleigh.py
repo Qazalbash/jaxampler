@@ -29,7 +29,7 @@ class Rayleigh(ContinuousRV):
         return jnp.where(x >= 0, logcdf_val, -jnp.inf)
 
     @partial(jit, static_argnums=(0,))
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 

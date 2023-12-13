@@ -1,8 +1,8 @@
 from functools import partial
 from time import time
 
-from jax import Array, jit
 import jax
+from jax import Array, jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
@@ -11,6 +11,9 @@ class GenericRV(object):
 
     def __init__(self, name: str = None) -> None:
         self._name = None if name is None else name
+
+    def check_params(self) -> None:
+        raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
@@ -21,11 +24,22 @@ class GenericRV(object):
         return jnp.exp(self.logcdf(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self.logcdfinv(x))
-
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
+
+    @partial(jit, static_argnums=(0,))
+    def ppf(self, x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logppf(x))
+
+    def logrvs(self, N: int) -> Array:
+        raise NotImplementedError
+
+    def rvs(self, N: int = 1) -> Array:
+        return jnp.exp(self.logrvs(N))
+
+    @partial(jit, static_argnums=(0,))
+    def get_key(self) -> int:
+        return jax.random.PRNGKey(int(time()))
 
     def __str__(self) -> str:
         return self.__repr__()

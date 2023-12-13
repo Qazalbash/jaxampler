@@ -1,10 +1,14 @@
 from functools import partial
 
-from jax import Array, jit
 import jax
+from jax import Array, jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
+from .sampler import Sampler
 
-class InverseTransformSampler():
-    pass
+
+class InverseTransformSampler(Sampler):
+
+    def __init__(self) -> None:
+        super().__init__()

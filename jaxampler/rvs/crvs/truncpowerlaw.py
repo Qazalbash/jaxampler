@@ -55,7 +55,7 @@ class TruncPowerLaw(ContinuousRV):
         return logcdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdfinv(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, x: ArrayLike) -> ArrayLike:
         logcdfinv_val = lax.cond(
             self._alpha == -1.0,
             lambda _: x * jnp.log(self._high) + (1.0 - x) * jnp.log(self._low),
@@ -68,7 +68,7 @@ class TruncPowerLaw(ContinuousRV):
 
     def logrvs(self, N: int = 1) -> Array:
         U = jax.random.uniform(self.get_key(), shape=(N,), dtype=jnp.float32)
-        logrvs_val = self.logcdfinv(U)
+        logrvs_val = self.logppf(U)
         return logrvs_val
 
     def __repr__(self) -> str:

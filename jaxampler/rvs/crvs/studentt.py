@@ -32,7 +32,7 @@ class StudentT(ContinuousRV):
         return 1 - 0.5 * betainc(self._nu * 0.5, 0.5, 1 / (1 + jnp.power(x, 2) / self._nu))
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         """A method is addressed in this paper https://www.homepages.ucl.ac.uk/~ucahwts/lgsnotes/JCF_Student.pdf"""
         raise NotImplementedError
 

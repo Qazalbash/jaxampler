@@ -39,13 +39,13 @@ class LogNormal(ContinuousRV):
         return ndtr((jnp.log(x) - self._mu) / self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdfinv(self, x: ArrayLike) -> ArrayLike:
+    def ppf(self, x: ArrayLike) -> ArrayLike:
         return jnp.exp(self._mu + self._sigma * ndtri(x))
 
     def rvs(self, N: int = 1) -> Array:
         # return jax.random.lognormal(self.get_key(), shape=(N,)) * self._sigma + self._mu
         U = jax.random.uniform(self.get_key(), shape=(N,))
-        return self.cdfinv(U)
+        return self.ppf(U)
 
     def __repr__(self) -> str:
         string = f"LogNormal(mu={self._mu}, sigma={self._sigma}"
