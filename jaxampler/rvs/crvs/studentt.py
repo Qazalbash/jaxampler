@@ -6,7 +6,7 @@ from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class StudentT(ContinuousRV):

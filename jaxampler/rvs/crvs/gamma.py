@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Gamma(ContinuousRV):

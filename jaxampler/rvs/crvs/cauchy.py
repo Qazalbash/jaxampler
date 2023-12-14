@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Cauchy(ContinuousRV):

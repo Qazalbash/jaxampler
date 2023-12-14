@@ -7,7 +7,7 @@ from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Beta(ContinuousRV):

@@ -6,7 +6,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Chi2(ContinuousRV):

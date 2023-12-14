@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import pareto as jax_pareto
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Pareto(ContinuousRV):

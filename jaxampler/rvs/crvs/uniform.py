@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import uniform as jax_uniform
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Uniform(ContinuousRV):

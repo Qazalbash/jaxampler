@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Exponential(ContinuousRV):

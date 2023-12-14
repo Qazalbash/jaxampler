@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.stats import truncnorm as jax_truncnorm
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class TruncNormal(ContinuousRV):

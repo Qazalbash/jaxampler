@@ -7,7 +7,7 @@ from jax.random import KeyArray
 from jax.scipy.special import log_ndtr, ndtr, ndtri
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class LogNormal(ContinuousRV):

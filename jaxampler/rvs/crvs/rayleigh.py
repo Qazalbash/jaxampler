@@ -6,7 +6,7 @@ from jax import numpy as jnp
 from jax.random import KeyArray
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Rayleigh(ContinuousRV):

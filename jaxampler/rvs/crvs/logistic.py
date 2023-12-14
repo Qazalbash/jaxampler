@@ -7,7 +7,7 @@ from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike
 
-from .continuousrv import ContinuousRV
+from .crvs import ContinuousRV
 
 
 class Logistic(ContinuousRV):
