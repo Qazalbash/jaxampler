@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit, lax
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.typing import ArrayLike
 
 from .continuousrv import ContinuousRV
@@ -10,7 +11,7 @@ from .continuousrv import ContinuousRV
 
 class Triangular(ContinuousRV):
 
-    def __init__(self, low: ArrayLike = 0, high: ArrayLike = 1, mode: ArrayLike = 0.5, name: str = None) -> None:
+    def __init__(self, low: float = 0, mode: float = 0.5, high: float = 1, name: str = None) -> None:
         self._low = low
         self._mode = mode
         self._high = high
@@ -68,8 +69,10 @@ class Triangular(ContinuousRV):
         )
         return cdfinv_val
 
-    def rvs(self, N: int = 1) -> Array:
-        return jax.random.triangular(self.get_key(), left=self._low, right=self._high, mode=self._mode, shape=(N,))
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        return jax.random.triangular(key, left=self._low, right=self._high, mode=self._mode, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Triangular(low={self._low}, mode={self._mode}, high={self._high}"

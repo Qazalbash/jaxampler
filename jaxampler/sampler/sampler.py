@@ -5,6 +5,7 @@ from time import time
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.typing import ArrayLike
 
 from ..rvs import ContinuousRV, GenericRV

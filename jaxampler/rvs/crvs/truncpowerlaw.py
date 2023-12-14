@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit, lax
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.typing import ArrayLike
 
 from .continuousrv import ContinuousRV
@@ -10,7 +11,7 @@ from .continuousrv import ContinuousRV
 
 class TruncPowerLaw(ContinuousRV):
 
-    def __init__(self, alpha: ArrayLike, low: ArrayLike = 0, high: ArrayLike = 1, name: str = None) -> None:
+    def __init__(self, alpha: float, low: float = 0, high: float = 1, name: str = None) -> None:
         self._alpha = alpha
         self._low = low
         self._high = high
@@ -20,8 +21,8 @@ class TruncPowerLaw(ContinuousRV):
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._low > 0.0), "low must be greater than 0"
-        assert jnp.all(self._high > self._low), "high must be greater than low"
+        assert self._low > 0.0, "low must be greater than 0"
+        assert self._high > self._low, "high must be greater than low"
 
     @partial(jit, static_argnums=(0,))
     def logZ(self) -> ArrayLike:
@@ -66,8 +67,10 @@ class TruncPowerLaw(ContinuousRV):
         logcdfinv_val = jnp.where(x <= 1.0, logcdfinv_val, jnp.log(1.0))
         return logcdfinv_val
 
-    def logrvs(self, N: int = 1) -> Array:
-        U = jax.random.uniform(self.get_key(), shape=(N,), dtype=jnp.float32)
+    def logrvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        U = jax.random.uniform(key, shape=(N,), dtype=jnp.float32)
         logrvs_val = self.logppf(U)
         return logrvs_val
 

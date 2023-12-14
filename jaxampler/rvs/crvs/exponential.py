@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
@@ -11,7 +12,7 @@ from .continuousrv import ContinuousRV
 
 class Exponential(ContinuousRV):
 
-    def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
+    def __init__(self, lmbda: float, name: str = None) -> None:
         self._lmbda = lmbda
         self.check_params()
         self._scale = 1.0 / lmbda
@@ -19,7 +20,7 @@ class Exponential(ContinuousRV):
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._lmbda > 0), "lamda must be positive"
+        assert self._lmbda > 0.0, "lmbda must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logZ(self) -> ArrayLike:
@@ -43,8 +44,10 @@ class Exponential(ContinuousRV):
         logcdfinv_val = jnp.log(-jnp.log1p(-x)) + self._logZ
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
-    def logrvs(self, N: int) -> Array:
-        U = jax.random.uniform(self.get_key(), shape=(N,))
+    def logrvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        U = jax.random.uniform(key, shape=(N,))
         return jnp.log(-jnp.log(U)) + self._logZ
 
     def __repr__(self) -> str:

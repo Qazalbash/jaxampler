@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.scipy.stats import binom as jax_binom
 from jax.typing import ArrayLike
 
@@ -11,7 +12,7 @@ from .drvs import DiscreteRV
 
 class Binomial(DiscreteRV):
 
-    def __init__(self, p: ArrayLike, n: int, name: str = None) -> None:
+    def __init__(self, p: float, n: int, name: str = None) -> None:
         self._p = p
         self._n = n
         self.check_params()
@@ -19,9 +20,9 @@ class Binomial(DiscreteRV):
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._p >= 0.0) and jnp.all(self._p <= 1.0), "p must be in [0, 1]"
-        assert self._n > 0, "n must be positive"
+        assert (self._p >= 0.0) and (self._p <= 1.0), "p must be in [0, 1]"
         assert type(self._n) == int, "n must be an integer"
+        assert self._n > 0, "n must be positive"
 
     @partial(jit, static_argnums=(0))
     def logpmf(self, k: Array) -> Array:
@@ -42,8 +43,10 @@ class Binomial(DiscreteRV):
         cond = [k < 0, k >= self._n, jnp.logical_and(k >= 0, k < self._n)]
         return jnp.select(cond, [0.0, 1.0, complete_cdf[k]])
 
-    def rvs(self, N: int = 1) -> ArrayLike:
-        return jax.random.binomial(key=self.get_key(), n=self._n, p=self._p, shape=(N,))
+    def rvs(self, N: int = 1, key: KeyArray = None) -> ArrayLike:
+        if key is None:
+            key = self.get_key()
+        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Binomial(p={self._p}, n={self._n}"

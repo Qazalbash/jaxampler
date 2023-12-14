@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
@@ -11,7 +12,7 @@ from .continuousrv import ContinuousRV
 
 class Gamma(ContinuousRV):
 
-    def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
+    def __init__(self, alpha: float, beta: float, name: str = None) -> None:
         self._alpha = alpha
         self._beta = beta
         self.check_params()
@@ -41,8 +42,10 @@ class Gamma(ContinuousRV):
     def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, N: int) -> Array:
-        return jax.random.gamma(self.get_key(), self._alpha, shape=(N,)) / self._beta
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        return jax.random.gamma(key, self._alpha, shape=(N,)) / self._beta
 
     def __repr__(self) -> str:
         string = f"Gamma(alpha={self._alpha}, beta={self._beta}"

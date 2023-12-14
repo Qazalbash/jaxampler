@@ -4,6 +4,7 @@ from time import time
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.typing import ArrayLike
 
 
@@ -31,15 +32,15 @@ class GenericRV(object):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return jnp.exp(self.logppf(x))
 
-    def logrvs(self, N: int) -> Array:
+    def logrvs(self, N: int, key: KeyArray = None) -> Array:
         raise NotImplementedError
 
-    def rvs(self, N: int = 1) -> Array:
-        return jnp.exp(self.logrvs(N))
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        raise NotImplementedError
 
     @staticmethod
     @jit
-    def get_key() -> int:
+    def get_key() -> KeyArray:
         return jax.random.PRNGKey(int(time()))
 
     def __str__(self) -> str:

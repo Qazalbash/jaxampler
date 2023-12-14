@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.scipy.stats import geom as jax_geom
 from jax.typing import ArrayLike
 
@@ -11,14 +12,14 @@ from .drvs import DiscreteRV
 
 class Geometric(DiscreteRV):
 
-    def __init__(self, p: ArrayLike, name: str = None) -> None:
+    def __init__(self, p: float, name: str = None) -> None:
         self._p = p
         self.check_params()
         self._q = 1.0 - self._p
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._p > 0), "All p must be greater than 0"
+        assert self._p >= 0.0, "All p must be greater than or equals to 0"
 
     @partial(jit, static_argnums=(0,))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
@@ -38,8 +39,10 @@ class Geometric(DiscreteRV):
     def logcdf(self, k: ArrayLike) -> ArrayLike:
         return jnp.log(self.cdf(k))
 
-    def rvs(self, N: int = 1) -> Array:
-        return jax.random.geometric(self.get_key(), self._p, shape=(N,))
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        return jax.random.geometric(key, self._p, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Geometric(p={self._p}"

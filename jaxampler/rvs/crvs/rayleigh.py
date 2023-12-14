@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.typing import ArrayLike
 
 from .continuousrv import ContinuousRV
@@ -10,13 +11,13 @@ from .continuousrv import ContinuousRV
 
 class Rayleigh(ContinuousRV):
 
-    def __init__(self, sigma: ArrayLike, name: str = None) -> None:
+    def __init__(self, sigma: float, name: str = None) -> None:
         self._sigma = sigma
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._sigma > 0), "sigma must be positive"
+        assert self._sigma > 0.0, "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -33,12 +34,16 @@ class Rayleigh(ContinuousRV):
         logcdfinv_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
-    def logrvs(self, N: int) -> Array:
-        U = jax.random.uniform(self.get_key(), shape=(N,))
+    def logrvs(self, N: int, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        U = jax.random.uniform(key, shape=(N,))
         return jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log(U))
 
-    def rvs(self, N: int = 1) -> Array:
-        return jax.random.rayleigh(self.get_key(), scale=self._sigma, shape=(N,))
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        return jax.random.rayleigh(key, scale=self._sigma, shape=(N,))
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"

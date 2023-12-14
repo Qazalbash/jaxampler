@@ -11,13 +11,13 @@ from .continuousrv import ContinuousRV
 
 class StudentT(ContinuousRV):
 
-    def __init__(self, nu: ArrayLike, name: str = None) -> None:
+    def __init__(self, nu: float, name: str = None) -> None:
         self._nu = nu
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._nu > 0, "nu must be positive"
+        assert self._nu > 0.0, "nu must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:

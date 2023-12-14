@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.typing import ArrayLike
 
 from .continuousrv import ContinuousRV
@@ -10,15 +11,15 @@ from .continuousrv import ContinuousRV
 
 class Weibull(ContinuousRV):
 
-    def __init__(self, lmbda: ArrayLike = 1.0, k: ArrayLike = 1.0, name: str = None) -> None:
+    def __init__(self, lmbda: float = 1.0, k: float = 1.0, name: str = None) -> None:
         self._lmbda = lmbda
         self._k = k
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._lmbda > 0.0), "scale must be greater than 0"
-        assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
+        assert self._lmbda > 0.0, "scale must be greater than 0"
+        assert self._k > 0.0, "concentration must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -35,8 +36,10 @@ class Weibull(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 
-    def rvs(self, N: int = 1) -> Array:
-        U = jax.random.uniform(self.get_key(), shape=(N,))
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        U = jax.random.uniform(key, shape=(N,))
         return self.ppf(U)
 
     def __repr__(self) -> str:

@@ -3,6 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax.random import KeyArray
 from jax.scipy.stats import pareto as jax_pareto
 from jax.typing import ArrayLike
 
@@ -11,15 +12,15 @@ from .continuousrv import ContinuousRV
 
 class Pareto(ContinuousRV):
 
-    def __init__(self, alpha: ArrayLike, scale: ArrayLike, name: str = None) -> None:
+    def __init__(self, alpha: float, scale: float, name: str = None) -> None:
         self._alpha = alpha
         self._scale = scale
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._alpha > 0.0), "alpha must be greater than 0"
-        assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
+        assert self._alpha > 0.0, "alpha must be greater than 0"
+        assert self._scale > 0.0, "scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -47,8 +48,10 @@ class Pareto(ContinuousRV):
         ]
         return jnp.select(conditions, choices)
 
-    def rvs(self, N: int = 1) -> Array:
-        return jax.random.pareto(self.get_key(), self._alpha, shape=(N,)) * self._scale
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        return jax.random.pareto(key, self._alpha, shape=(N,)) * self._scale
 
     def __repr__(self) -> str:
         string = f"Pareto(alpha={self._alpha}, scale={self._scale}"

@@ -1,9 +1,7 @@
 from functools import partial
 
-import jax
-from jax import Array, jit
+from jax import jit
 from jax import numpy as jnp
-from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 
 from ..rvs import GenericRV
@@ -15,12 +13,12 @@ class DiscreteRV(GenericRV):
         super().__init__(name)
 
     @partial(jit, static_argnums=(0,))
-    def logpmf(self, x: ArrayLike) -> ArrayLike:
+    def logpmf(self, k: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pmf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self.logpmf(x))
+    def pmf(self, k: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logpmf(k))
 
     def __str__(self) -> str:
         return super().__str__()
