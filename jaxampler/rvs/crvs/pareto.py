@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import pareto as jax_pareto
 from jax.typing import ArrayLike
 
@@ -48,7 +48,7 @@ class Pareto(ContinuousRV):
         ]
         return jnp.select(conditions, choices)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.pareto(key, self._alpha, shape=(N,)) * self._scale

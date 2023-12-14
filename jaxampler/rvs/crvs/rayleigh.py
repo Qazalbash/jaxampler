@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.typing import ArrayLike
 
 from .crvs import ContinuousRV
@@ -34,7 +34,7 @@ class Rayleigh(ContinuousRV):
         logcdfinv_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.rayleigh(key, scale=self._sigma, shape=(N,))

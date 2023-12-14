@@ -1,12 +1,8 @@
 from abc import abstractmethod
-from functools import partial
 from time import time
 
 import jax
 from jax import Array, jit
-from jax import numpy as jnp
-from jax.random import KeyArray
-from jax.typing import ArrayLike
 
 from ..rvs import ContinuousRV, GenericRV
 
@@ -22,10 +18,10 @@ class Sampler(object):
         assert hasattr(rv, "logppf") or hasattr(rv, "ppf"), f"rv must have a method called logppf or ppf"
 
     @abstractmethod
-    def sample(self, rv: GenericRV, N: int = 1) -> Array:
-        pass
+    def sample(self, rv: GenericRV, N: int = 1, key: Array = None) -> Array:
+        raise NotImplementedError
 
     @staticmethod
     @jit
-    def get_key() -> int:
+    def get_key() -> Array:
         return jax.random.PRNGKey(int(time()))

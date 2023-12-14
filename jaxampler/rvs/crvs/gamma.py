@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
@@ -42,7 +42,7 @@ class Gamma(ContinuousRV):
     def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.gamma(key, self._alpha, shape=(N,)) / self._beta

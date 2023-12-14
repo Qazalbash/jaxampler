@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
@@ -44,7 +44,7 @@ class Exponential(ContinuousRV):
         logcdfinv_val = jnp.log(-jnp.log1p(-x)) + self._logZ
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         U = jax.random.uniform(key, shape=(N,))

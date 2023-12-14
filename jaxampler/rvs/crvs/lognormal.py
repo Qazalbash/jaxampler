@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.special import log_ndtr, ndtr, ndtri
 from jax.typing import ArrayLike
 
@@ -43,7 +43,7 @@ class LogNormal(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return jnp.exp(self._mu + self._sigma * ndtri(x))
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         # return jax.random.lognormal(self.get_key(), shape=(N,)) * self._sigma + self._mu
         if key is None:
             key = self.get_key()

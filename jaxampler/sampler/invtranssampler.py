@@ -1,10 +1,5 @@
-from functools import partial
-
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
-from jax.random import KeyArray
-from jax.typing import ArrayLike
+from jax import Array
 
 from ..rvs import GenericRV
 from .sampler import Sampler
@@ -15,7 +10,9 @@ class InverseTransformSampler(Sampler):
     def __init__(self) -> None:
         super().__init__()
 
-    def sample(self, rv: GenericRV, N: int = 1) -> Array:
+    def sample(self, rv: GenericRV, N: int = 1, key: Array = None) -> Array:
         self.check_rv(rv)
-        U = jax.random.uniform(self.get_key(), shape=(N,))
+        if key is None:
+            key = self.get_key()
+        U = jax.random.uniform(key, shape=(N,))
         return rv.ppf(U)

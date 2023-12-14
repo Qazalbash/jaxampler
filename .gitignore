@@ -7,12 +7,10 @@
 *.tex
 *.pdf
 
-# temporary ignores
-model_test.py
-sampler_test.py
-test
-
 # permenant ignores
+.hypothesis
+.pytest_cache
+__pycache__
 *.pyc
 *.so
 *.egg-info

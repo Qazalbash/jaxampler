@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.typing import ArrayLike
 
 from .crvs import ContinuousRV
@@ -36,7 +36,7 @@ class Weibull(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         U = jax.random.uniform(key, shape=(N,))

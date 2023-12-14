@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit, lax
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.typing import ArrayLike
 
 from .crvs import ContinuousRV
@@ -67,7 +67,7 @@ class TruncPowerLaw(ContinuousRV):
         logcdfinv_val = jnp.where(x <= 1.0, logcdfinv_val, jnp.log(1.0))
         return logcdfinv_val
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         U = jax.random.uniform(key, shape=(N,), dtype=jnp.float32)

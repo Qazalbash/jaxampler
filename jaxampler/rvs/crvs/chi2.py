@@ -2,7 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-from jax.random import KeyArray
+
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 
@@ -39,7 +39,7 @@ class Chi2(ContinuousRV):
     def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.chisquare(key, self._nu, shape=(N,))

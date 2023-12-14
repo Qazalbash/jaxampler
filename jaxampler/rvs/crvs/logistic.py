@@ -2,7 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-from jax.random import KeyArray
+
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike
@@ -37,7 +37,7 @@ class Logistic(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._mu + self._scale * logit(x)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.logistic(key, shape=(N,)) * self._scale + self._mu

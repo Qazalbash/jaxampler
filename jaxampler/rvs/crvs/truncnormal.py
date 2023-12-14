@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import truncnorm as jax_truncnorm
 from jax.typing import ArrayLike
 
@@ -42,7 +42,7 @@ class TruncNormal(ContinuousRV):
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_truncnorm.cdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.truncated_normal(key, self._alpha, self._beta, shape=(N,)) * self._sigma + self._mu

@@ -2,7 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-from jax.random import KeyArray
+
 from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
@@ -42,7 +42,7 @@ class Beta(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return tfp.math.betaincinv(self._alpha, self._beta, x)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.beta(key, self._alpha, self._beta, shape=(N,))

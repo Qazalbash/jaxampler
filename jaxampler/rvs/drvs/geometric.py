@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import geom as jax_geom
 from jax.typing import ArrayLike
 
@@ -39,7 +39,7 @@ class Geometric(DiscreteRV):
     def logcdf(self, k: ArrayLike) -> ArrayLike:
         return jnp.log(self.cdf(k))
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.geometric(key, self._p, shape=(N,))

@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit, lax
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.typing import ArrayLike
 
 from .crvs import ContinuousRV
@@ -69,7 +69,7 @@ class Triangular(ContinuousRV):
         )
         return cdfinv_val
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.triangular(key, left=self._low, right=self._high, mode=self._mode, shape=(N,))

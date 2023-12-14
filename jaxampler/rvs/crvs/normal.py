@@ -2,7 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-from jax.random import KeyArray
+
 from jax.scipy.stats import norm as jax_norm
 from jax.typing import ArrayLike
 
@@ -41,7 +41,7 @@ class Normal(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return jax_norm.ppf(x, self._mu, self._sigma)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.normal(key, shape=(N,)) * self._sigma + self._mu

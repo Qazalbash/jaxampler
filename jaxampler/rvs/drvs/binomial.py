@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import binom as jax_binom
 from jax.typing import ArrayLike
 
@@ -43,7 +43,7 @@ class Binomial(DiscreteRV):
         cond = [k < 0, k >= self._n, jnp.logical_and(k >= 0, k < self._n)]
         return jnp.select(cond, [0.0, 1.0, complete_cdf[k]])
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> ArrayLike:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N,))

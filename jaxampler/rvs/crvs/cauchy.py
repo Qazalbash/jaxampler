@@ -3,7 +3,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax.random import KeyArray
+
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 
@@ -41,7 +41,7 @@ class Cauchy(ContinuousRV):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.cauchy(key, self._loc, self._sigma, shape=(N,))

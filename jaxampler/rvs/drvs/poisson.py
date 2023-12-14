@@ -2,7 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-from jax.random import KeyArray
+
 from jax.scipy.stats import poisson as jax_poisson
 from jax.typing import ArrayLike
 
@@ -31,7 +31,7 @@ class Poisson(DiscreteRV):
     def cdf(self, k: ArrayLike) -> ArrayLike:
         return jax_poisson.cdf(k, self._lmbda)
 
-    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key()
         return jax.random.poisson(key, self._lmbda, shape=(N,))
