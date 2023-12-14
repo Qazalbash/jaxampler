@@ -25,15 +25,15 @@ class Binomial(DiscreteRV):
         assert self._n > 0, "n must be positive"
 
     @partial(jit, static_argnums=(0))
-    def logpmf(self, k: Array) -> Array:
+    def logpmf(self, k: ArrayLike) -> ArrayLike:
         return jax_binom.logpmf(k, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def pmf(self, k: Array) -> Array:
+    def pmf(self, k: ArrayLike) -> ArrayLike:
         return jax_binom.pmf(k, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, k: Array) -> ArrayLike:
+    def logcdf(self, k: ArrayLike) -> ArrayLike:
         return jnp.log(self.cdf(k))
 
     @partial(jit, static_argnums=(0,))
