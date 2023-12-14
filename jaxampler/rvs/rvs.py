@@ -37,8 +37,9 @@ class GenericRV(object):
     def rvs(self, N: int = 1) -> Array:
         return jnp.exp(self.logrvs(N))
 
-    @partial(jit, static_argnums=(0,))
-    def get_key(self) -> int:
+    @staticmethod
+    @jit
+    def get_key() -> int:
         return jax.random.PRNGKey(int(time()))
 
     def __str__(self) -> str:

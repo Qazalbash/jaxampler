@@ -9,6 +9,7 @@
 
 # temporary ignores
 model_test.py
+sampler_test.py
 
 # permenant ignores
 *.pyc

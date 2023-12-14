@@ -37,6 +37,10 @@ class Normal(ContinuousRV):
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_norm.cdf(x, self._mu, self._sigma)
 
+    @partial(jit, static_argnums=(0,))
+    def ppf(self, x: ArrayLike) -> ArrayLike:
+        return jax_norm.ppf(x, self._mu, self._sigma)
+
     def rvs(self, N: int) -> Array:
         return jax.random.normal(self.get_key(), shape=(N,)) * self._sigma + self._mu
 
