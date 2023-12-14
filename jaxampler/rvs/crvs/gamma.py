@@ -26,6 +26,14 @@ class Gamma(ContinuousRV):
         return jax_gamma.logpdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
+    def pdf(self, x: ArrayLike) -> ArrayLike:
+        return jax_gamma.pdf(x, self._alpha, scale=1 / self._beta)
+
+    @partial(jit, static_argnums=(0,))
+    def logcdf(self, x: ArrayLike) -> ArrayLike:
+        return jax_gamma.logcdf(x, self._alpha, scale=1 / self._beta)
+
+    @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
         return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
 

@@ -26,11 +26,14 @@ class Uniform(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        logcdf_val = jnp.where((self._low <= x) & (x <= self._high),
-                               lax.log(x - self._low) - lax.log(self._high - self._low), -jnp.inf)
-        logcdf_val = jnp.where(x <= self._high, logcdf_val, jnp.log(1.0))
+        conditions = [x < self._low, (self._low <= x) & (x <= self._high), self._high < x]
+        choice = [
+            -jnp.inf,
+            lax.log(x - self._low) - lax.log(self._high - self._low),
+            jnp.log(1.0),
+        ]
 
-        return logcdf_val
+        return jnp.select(conditions, choice)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:

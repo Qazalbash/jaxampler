@@ -35,10 +35,17 @@ class Pareto(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logcdfinv_val = jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log(1 - x)
-        logcdfinv_val = jnp.where(0.0 <= x, logcdfinv_val, -jnp.inf)
-        logcdfinv_val = jnp.where(x < 1.0, logcdfinv_val, jnp.log(1.0))
-        return logcdfinv_val
+        conditions = [
+            x < 0.0,
+            (0.0 <= x) & (x < 1.0),
+            1.0 <= x,
+        ]
+        choices = [
+            -jnp.inf,
+            jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log1p(-x),
+            jnp.log(1.0),
+        ]
+        return jnp.select(conditions, choices)
 
     def rvs(self, N: int = 1) -> Array:
         return jax.random.pareto(self.get_key(), self._alpha, shape=(N,)) * self._scale
