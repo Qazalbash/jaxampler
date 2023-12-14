@@ -44,11 +44,12 @@ class Exponential(ContinuousRV):
         logcdfinv_val = jnp.log(-jnp.log1p(-x)) + self._logZ
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
-    def logrvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
         if key is None:
             key = self.get_key()
         U = jax.random.uniform(key, shape=(N,))
-        return jnp.log(-jnp.log(U)) + self._logZ
+        rvs_val = jnp.log(-jnp.log(U)) + self._logZ
+        return jnp.exp(rvs_val)
 
     def __repr__(self) -> str:
         string = f"Exponential(lamda={self._lmbda}"

@@ -67,12 +67,12 @@ class TruncPowerLaw(ContinuousRV):
         logcdfinv_val = jnp.where(x <= 1.0, logcdfinv_val, jnp.log(1.0))
         return logcdfinv_val
 
-    def logrvs(self, N: int = 1, key: KeyArray = None) -> Array:
+    def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
         if key is None:
             key = self.get_key()
         U = jax.random.uniform(key, shape=(N,), dtype=jnp.float32)
-        logrvs_val = self.logppf(U)
-        return logrvs_val
+        rvs_val = self.ppf(U)
+        return rvs_val
 
     def __repr__(self) -> str:
         string = f"TruncPowerLaw(alpha={self._alpha}, low={self._low}, high={self._high}"

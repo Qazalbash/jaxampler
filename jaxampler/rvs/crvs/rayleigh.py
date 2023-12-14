@@ -34,12 +34,6 @@ class Rayleigh(ContinuousRV):
         logcdfinv_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
         return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
 
-    def logrvs(self, N: int, key: KeyArray = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        U = jax.random.uniform(key, shape=(N,))
-        return jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log(U))
-
     def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
         if key is None:
             key = self.get_key()

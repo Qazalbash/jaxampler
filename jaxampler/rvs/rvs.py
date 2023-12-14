@@ -32,9 +32,6 @@ class GenericRV(object):
     def ppf(self, x: ArrayLike) -> ArrayLike:
         return jnp.exp(self.logppf(x))
 
-    def logrvs(self, N: int, key: KeyArray = None) -> Array:
-        raise NotImplementedError
-
     def rvs(self, N: int = 1, key: KeyArray = None) -> Array:
         raise NotImplementedError
 
