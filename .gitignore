@@ -7,6 +7,9 @@
 *.tex
 *.pdf
 
+# temp ignores
+rough.py
+
 # permenant ignores
 .hypothesis
 .pytest_cache

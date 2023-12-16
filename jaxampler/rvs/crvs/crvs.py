@@ -10,7 +10,6 @@ from ..rvs import GenericRV
 class ContinuousRV(GenericRV):
 
     def __init__(self, name: str = None) -> None:
-        self._logZ = None
         super().__init__(name)
 
     def logZ(self) -> ArrayLike:

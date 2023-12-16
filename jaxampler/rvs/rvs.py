@@ -35,7 +35,6 @@ class GenericRV(object):
         raise NotImplementedError
 
     @staticmethod
-    @jit
     def get_key() -> Array:
         return jax.random.PRNGKey(int(time()))
 

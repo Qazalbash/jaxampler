@@ -15,7 +15,6 @@ class Sampler(object):
     def check_rv(self, rv: GenericRV) -> None:
         assert isinstance(rv, GenericRV), f"rv must be a GenericRV object, got {rv}"
         assert isinstance(rv, ContinuousRV), f"rv must be a ContinuousRV object, got {rv}"
-        assert hasattr(rv, "logppf") or hasattr(rv, "ppf"), f"rv must have a method called logppf or ppf"
 
     @abstractmethod
     def sample(self, rv: GenericRV, N: int = 1, key: Array = None) -> Array:
