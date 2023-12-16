@@ -2,7 +2,6 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-
 from jax.scipy.stats import poisson as jax_poisson
 from jax.typing import ArrayLike
 

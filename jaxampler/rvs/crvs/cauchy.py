@@ -3,7 +3,6 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 

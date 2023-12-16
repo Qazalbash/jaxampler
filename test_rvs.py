@@ -1,10 +1,7 @@
-from jax import Array
 from jax import numpy as jnp
 from jax import random
 
-from jaxampler import (Bernoulli, Beta, Binomial, Cauchy, Chi2, ContinuousRV, DiscreteRV, Exponential, Gamma, GenericRV,
-                       Geometric, Logistic, LogNormal, Normal, Pareto, Poisson, Rayleigh, StudentT, Triangular,
-                       TruncNormal, TruncPowerLaw, Uniform, Weibull)
+from jaxampler import Bernoulli
 
 eps = 1e-6
 

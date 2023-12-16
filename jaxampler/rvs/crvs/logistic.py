@@ -2,7 +2,6 @@ from functools import partial
 
 import jax
 from jax import Array, jit
-
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike

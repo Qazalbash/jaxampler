@@ -3,7 +3,6 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
