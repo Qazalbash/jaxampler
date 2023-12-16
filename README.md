@@ -4,9 +4,9 @@ Jaxampler is a tool for sampling statistical distributions using the [JAX](https
 
 ## Samplers
 
--   [x] Inverse Transform Sampling
--   [ ] Rejection Sampling
--   [ ] Adaptive Rejection Sampling
+-   [x] [Inverse Transform Sampling](jaxampler/sampler/invtranssampler.py)
+-   [x] [Accept-Rejection Sampling](jaxampler/sampler/arampler.py)
+-   [ ] Adaptive Accept-Rejection Sampling
 -   [ ] Metropolis-Hastings
 -   [ ] Hamiltonian Monte Carlo
 -   [ ] Slice Sampling
