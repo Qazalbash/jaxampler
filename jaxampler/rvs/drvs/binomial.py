@@ -11,7 +11,7 @@ from .drvs import DiscreteRV
 
 class Binomial(DiscreteRV):
 
-    def __init__(self, p: float, n: int, name: str = None) -> None:
+    def __init__(self, p: ArrayLike, n: int, name: str = None) -> None:
         self._p = p
         self._n = n
         self.check_params()
@@ -19,7 +19,7 @@ class Binomial(DiscreteRV):
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert (self._p >= 0.0) and (self._p <= 1.0), "p must be in [0, 1]"
+        assert jnp.all(self._p >= 0.0) and jnp.all(self._p <= 1.0), "p must be in [0, 1]"
         assert type(self._n) == int, "n must be an integer"
         assert self._n > 0, "n must be positive"
 
@@ -44,7 +44,7 @@ class Binomial(DiscreteRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N,))
 
     def __repr__(self) -> str:

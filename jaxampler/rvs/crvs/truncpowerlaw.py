@@ -10,7 +10,7 @@ from .crvs import ContinuousRV
 
 class TruncPowerLaw(ContinuousRV):
 
-    def __init__(self, alpha: float, low: float = 0, high: float = 1, name: str = None) -> None:
+    def __init__(self, alpha: ArrayLike, low: ArrayLike = 0, high: ArrayLike = 1, name: str = None) -> None:
         self._alpha = alpha
         self._low = low
         self._high = high
@@ -20,8 +20,8 @@ class TruncPowerLaw(ContinuousRV):
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._low > 0.0, "low must be greater than 0"
-        assert self._high > self._low, "high must be greater than low"
+        assert jnp.all(self._low > 0.0), "low must be greater than 0"
+        assert jnp.all(self._high > self._low), "high must be greater than low"
 
     @partial(jit, static_argnums=(0,))
     def logZ(self) -> ArrayLike:
@@ -56,19 +56,19 @@ class TruncPowerLaw(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logcdfinv_val = lax.cond(
+        logppf_val = lax.cond(
             self._alpha == -1.0,
             lambda _: x * jnp.log(self._high) + (1.0 - x) * jnp.log(self._low),
-            lambda b: (1.0 / b) * jnp.log(x * b * self.Z() + jnp.power(self._low, b)),
+            lambda b: (1.0 / b) * jnp.log(x * b * jnp.exp(self._logZ) + jnp.power(self._low, b)),
             self._beta,
         )
-        logcdfinv_val = jnp.where(x >= 0.0, logcdfinv_val, -jnp.inf)
-        logcdfinv_val = jnp.where(x <= 1.0, logcdfinv_val, jnp.log(1.0))
-        return logcdfinv_val
+        logppf_val = jnp.where(x >= 0.0, logppf_val, -jnp.inf)
+        logppf_val = jnp.where(x <= 1.0, logppf_val, jnp.log(1.0))
+        return logppf_val
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         U = jax.random.uniform(key, shape=(N,), dtype=jnp.float32)
         rvs_val = self.ppf(U)
         return rvs_val

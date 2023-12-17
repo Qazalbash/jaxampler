@@ -29,10 +29,17 @@ Jaxampler is a tool for sampling statistical distributions using the [JAX](https
 -   [x] [Chi Square](jaxampler/rvs/crvs/chi2.py)
 -   [x] [Exponential](jaxampler/rvs/crvs/exponential.py)
 -   [x] [Gamma](jaxampler/rvs/crvs/gamma.py)
+-   [] Generalized Normal
+-   [] Gumbel
+-   [] Laplace
+-   [] Log Gamma
 -   [x] [Log Normal](jaxampler/rvs/crvs/lognormal.py)
 -   [x] [Logistic](jaxampler/rvs/crvs/logistic.py)
+-   [] Maxwell
+-   [] Multivariate Normal
 -   [x] [Normal](jaxampler/rvs/crvs/normal.py)
 -   [x] [Pareto](jaxampler/rvs/crvs/pareto.py)
+-   [] Rademacher
 -   [x] [Rayleigh](jaxampler/rvs/crvs/rayleigh.py)
 -   [x] [Student t](jaxampler/rvs/crvs/studentt.py)
 -   [x] [Triangular](jaxampler/rvs/crvs/triangular.py)

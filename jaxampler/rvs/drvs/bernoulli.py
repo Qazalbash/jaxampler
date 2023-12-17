@@ -1,9 +1,11 @@
+from jax.typing import ArrayLike
+
 from .binomial import Binomial
 
 
 class Bernoulli(Binomial):
 
-    def __init__(self, p: float, name: str = None) -> None:
+    def __init__(self, p: ArrayLike, name: str = None) -> None:
         super().__init__(p, 1, name)
 
     def __repr__(self) -> str:

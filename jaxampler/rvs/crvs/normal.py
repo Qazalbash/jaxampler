@@ -2,6 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import norm as jax_norm
 from jax.typing import ArrayLike
 
@@ -10,7 +11,7 @@ from .crvs import ContinuousRV
 
 class Normal(ContinuousRV):
 
-    def __init__(self, mu: float = 0.0, sigma: float = 1.0, name: str = None) -> None:
+    def __init__(self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None) -> None:
         self._mu = mu
         self._sigma = sigma
         self.check_params()
@@ -18,7 +19,7 @@ class Normal(ContinuousRV):
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._sigma > 0.0, "All sigma must be greater than 0.0"
+        assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -42,7 +43,7 @@ class Normal(ContinuousRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.normal(key, shape=(N,)) * self._sigma + self._mu
 
     def __repr__(self) -> str:

@@ -11,14 +11,14 @@ from .crvs import ContinuousRV
 
 class Uniform(ContinuousRV):
 
-    def __init__(self, low: float = 0.0, high: float = 1.0, name: str = None) -> None:
+    def __init__(self, low: ArrayLike = 0.0, high: ArrayLike = 1.0, name: str = None) -> None:
         self._low = low
         self._high = high
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._low < self._high, "All low must be less than high"
+        assert jnp.all(self._low < self._high), "All low must be less than high"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -40,7 +40,7 @@ class Uniform(ContinuousRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=(N,))
 
     def __repr__(self) -> str:

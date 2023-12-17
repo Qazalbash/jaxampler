@@ -12,9 +12,6 @@ class ContinuousRV(GenericRV):
     def __init__(self, name: str = None) -> None:
         super().__init__(name)
 
-    def logZ(self) -> ArrayLike:
-        raise NotImplementedError
-
     @partial(jit, static_argnums=(0,))
     def Z(self) -> ArrayLike:
         return jnp.exp(self._logZ)

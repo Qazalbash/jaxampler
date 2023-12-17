@@ -30,12 +30,12 @@ class Rayleigh(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logcdfinv_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
-        return jnp.where(x >= 0, logcdfinv_val, -jnp.inf)
+        logppf_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
+        return jnp.where(x >= 0, logppf_val, -jnp.inf)
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.rayleigh(key, scale=self._sigma, shape=(N,))
 
     def __repr__(self) -> str:

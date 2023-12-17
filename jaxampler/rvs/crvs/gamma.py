@@ -11,7 +11,7 @@ from .crvs import ContinuousRV
 
 class Gamma(ContinuousRV):
 
-    def __init__(self, alpha: float, beta: float, name: str = None) -> None:
+    def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
         self._alpha = alpha
         self._beta = beta
         self.check_params()
@@ -43,7 +43,7 @@ class Gamma(ContinuousRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.gamma(key, self._alpha, shape=(N,)) / self._beta
 
     def __repr__(self) -> str:

@@ -21,7 +21,7 @@ class AcceptRejectSampler(Sampler):
         self.check_rv(target_rv)
         self.check_rv(proposal_rv)
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
 
         V = proposal_rv.rvs(N, jax.random.PRNGKey(1000))
         pdf_ratio = target_rv.pdf(V)

@@ -11,15 +11,15 @@ from .crvs import ContinuousRV
 
 class Pareto(ContinuousRV):
 
-    def __init__(self, alpha: float, scale: float, name: str = None) -> None:
+    def __init__(self, alpha: ArrayLike, scale: ArrayLike, name: str = None) -> None:
         self._alpha = alpha
         self._scale = scale
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._alpha > 0.0, "alpha must be greater than 0"
-        assert self._scale > 0.0, "scale must be greater than 0"
+        assert jnp.all(self._alpha > 0.0), "alpha must be greater than 0"
+        assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -49,7 +49,7 @@ class Pareto(ContinuousRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.pareto(key, self._alpha, shape=(N,)) * self._scale
 
     def __repr__(self) -> str:

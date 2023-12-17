@@ -2,6 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 
@@ -10,13 +11,13 @@ from .crvs import ContinuousRV
 
 class Chi2(ContinuousRV):
 
-    def __init__(self, nu: float, name: str = None) -> None:
+    def __init__(self, nu: ArrayLike, name: str = None) -> None:
         self._nu = nu
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._nu % 1 == 0, "nu must be an integer"
+        assert jnp.all(self._nu % 1 == 0), "nu must be an integer"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -40,7 +41,7 @@ class Chi2(ContinuousRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.chisquare(key, self._nu, shape=(N,))
 
     def __repr__(self) -> str:

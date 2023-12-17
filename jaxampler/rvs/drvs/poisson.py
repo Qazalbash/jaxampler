@@ -2,6 +2,7 @@ from functools import partial
 
 import jax
 from jax import Array, jit
+from jax import numpy as jnp
 from jax.scipy.stats import poisson as jax_poisson
 from jax.typing import ArrayLike
 
@@ -10,13 +11,13 @@ from .drvs import DiscreteRV
 
 class Poisson(DiscreteRV):
 
-    def __init__(self, lmbda: float, name: str = None) -> None:
+    def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
         self._lmbda = lmbda
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._lmbda > 0.0, "Lambda must be positive"
+        assert jnp.all(self._lmbda > 0.0), "Lambda must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
@@ -32,7 +33,7 @@ class Poisson(DiscreteRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.poisson(key, self._lmbda, shape=(N,))
 
     def __repr__(self) -> str:

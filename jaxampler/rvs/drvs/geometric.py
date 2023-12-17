@@ -11,14 +11,14 @@ from .drvs import DiscreteRV
 
 class Geometric(DiscreteRV):
 
-    def __init__(self, p: float, name: str = None) -> None:
+    def __init__(self, p: ArrayLike, name: str = None) -> None:
         self._p = p
         self.check_params()
         self._q = 1.0 - self._p
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._p >= 0.0, "All p must be greater than or equals to 0"
+        assert jnp.all(self._p >= 0.0), "All p must be greater than or equals to 0"
 
     @partial(jit, static_argnums=(0,))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
@@ -40,7 +40,7 @@ class Geometric(DiscreteRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.geometric(key, self._p, shape=(N,))
 
     def __repr__(self) -> str:

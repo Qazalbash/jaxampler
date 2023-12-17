@@ -61,16 +61,16 @@ class Triangular(ContinuousRV):
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
         _Fc = self.cdf(self._mode)
-        cdfinv_val = jnp.where(
+        ppf_val = jnp.where(
             x < _Fc,
             self._low + lax.sqrt(x * (self._mode - self._low) * (self._high - self._low)),
             self._high - lax.sqrt((1 - x) * (self._high - self._low) * (self._high - self._mode)),
         )
-        return cdfinv_val
+        return ppf_val
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.triangular(key, left=self._low, right=self._high, mode=self._mode, shape=(N,))
 
     def __repr__(self) -> str:

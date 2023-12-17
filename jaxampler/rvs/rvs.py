@@ -1,7 +1,8 @@
+import random
 from functools import partial
-from time import time
 
 import jax
+import jax.random
 from jax import Array, jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
@@ -35,8 +36,12 @@ class GenericRV(object):
         raise NotImplementedError
 
     @staticmethod
-    def get_key() -> Array:
-        return jax.random.PRNGKey(int(time()))
+    def get_key(key: Array = None) -> Array:
+        if key is None:
+            new_key = jax.random.PRNGKey(random.randint(0, 1e6))
+        else:
+            new_key, _ = jax.random.split(key)
+        return new_key
 
     def __str__(self) -> str:
         return self.__repr__()

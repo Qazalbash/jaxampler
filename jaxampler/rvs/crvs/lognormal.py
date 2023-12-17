@@ -11,14 +11,14 @@ from .crvs import ContinuousRV
 
 class LogNormal(ContinuousRV):
 
-    def __init__(self, mu: float = 0.0, sigma: float = 1.0, name: str = None) -> None:
+    def __init__(self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None) -> None:
         self._mu = mu
         self._sigma = sigma
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._sigma > 0.0, "All sigma must be greater than 0.0"
+        assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -45,7 +45,7 @@ class LogNormal(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         # return jax.random.lognormal(self.get_key(), shape=(N,)) * self._sigma + self._mu
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         U = jax.random.uniform(key, shape=(N,))
         return self.ppf(U)
 

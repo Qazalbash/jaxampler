@@ -13,6 +13,6 @@ class InverseTransformSampler(Sampler):
     def sample(self, rv: ContinuousRV, N: int = 1, key: Array = None) -> Array:
         self.check_rv(rv)
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         U = jax.random.uniform(key, shape=(N,))
         return rv.ppf(U)

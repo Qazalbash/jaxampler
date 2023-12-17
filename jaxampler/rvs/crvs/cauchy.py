@@ -11,14 +11,14 @@ from .crvs import ContinuousRV
 
 class Cauchy(ContinuousRV):
 
-    def __init__(self, sigma: float, loc: float = 0, name: str = None) -> None:
+    def __init__(self, sigma: ArrayLike, loc: ArrayLike = 0, name: str = None) -> None:
         self._sigma = sigma
         self._loc = loc
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._sigma > 0.0, "sigma must be positive"
+        assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -42,7 +42,7 @@ class Cauchy(ContinuousRV):
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
-            key = self.get_key()
+            key = self.get_key(key)
         return jax.random.cauchy(key, shape=(N,)) * self._sigma + self._loc
 
     def __repr__(self) -> str:
