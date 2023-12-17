@@ -19,12 +19,12 @@ class ContinuousRV(GenericRV):
     def Z(self) -> ArrayLike:
         return jnp.exp(self._logZ)
 
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
+    def logpdf(self, *x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self.logpdf(x))
+    def pdf(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logpdf(*x))
 
     def __str__(self) -> str:
         return super().__str__()

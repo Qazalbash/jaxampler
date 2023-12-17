@@ -25,9 +25,21 @@ class AcceptRejectSampler(Sampler):
 
         V = proposal_rv.rvs(N, jax.random.PRNGKey(1000))
         pdf_ratio = target_rv.pdf(V)
-        U_scaled = jax.random.uniform(jax.random.PRNGKey(10), shape=(N,), minval=0.0, maxval=scale * proposal_rv.pdf(V))
+        U_scaled = jax.random.uniform(
+            jax.random.PRNGKey(10),
+            shape=(N,),
+            minval=0.0,
+            maxval=scale * proposal_rv.pdf(V),
+        )
         accept = U_scaled <= pdf_ratio
         samples = V[accept]
         if scatter_plot:
-            plt.scatter(V, U_scaled, c=accept, cmap="coolwarm", alpha=0.5, label="Accept/Reject samples")
+            plt.scatter(
+                V,
+                U_scaled,
+                c=accept,
+                cmap="viridis",
+                alpha=0.5,
+                label="Accept/Reject samples",
+            )
         return samples

@@ -16,20 +16,20 @@ class GenericRV(object):
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
+    def logcdf(self, *x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self.logcdf(x))
+    def cdf(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logcdf(*x))
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, x: ArrayLike) -> ArrayLike:
+    def logppf(self, *x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self.logppf(x))
+    def ppf(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logppf(*x))
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         raise NotImplementedError
