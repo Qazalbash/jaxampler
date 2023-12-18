@@ -8,7 +8,6 @@
 *.pdf
 
 # temp ignores
-rough.py
 
 # permenant ignores
 .hypothesis
@@ -40,3 +39,4 @@ jax.iml
 /include/
 /lib/
 /share/
+.env

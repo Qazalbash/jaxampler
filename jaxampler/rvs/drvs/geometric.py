@@ -10,6 +10,7 @@ from .drvs import DiscreteRV
 
 
 class Geometric(DiscreteRV):
+    """Geometric Random Variable"""
 
     def __init__(self, p: ArrayLike, name: str = None) -> None:
         self._p = p

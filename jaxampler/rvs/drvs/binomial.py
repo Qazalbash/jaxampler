@@ -10,8 +10,20 @@ from .drvs import DiscreteRV
 
 
 class Binomial(DiscreteRV):
+    """Binomial random variable"""
 
     def __init__(self, p: ArrayLike, n: int, name: str = None) -> None:
+        """Initialize the Binomial random variable.
+
+        Parameters
+        ----------
+        p : ArrayLike
+            Probability of success.
+        n : int
+            Number of trials.
+        name : str, optional
+            Name of the random variable, by default None
+        """
         self._p = p
         self._n = n
         self.check_params()
@@ -19,6 +31,7 @@ class Binomial(DiscreteRV):
         super().__init__(name)
 
     def check_params(self) -> None:
+        """Check the parameters of the random variable."""
         assert jnp.all(self._p >= 0.0) and jnp.all(self._p <= 1.0), "p must be in [0, 1]"
         assert type(self._n) == int, "n must be an integer"
         assert self._n > 0, "n must be positive"
@@ -37,6 +50,18 @@ class Binomial(DiscreteRV):
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, k: ArrayLike) -> ArrayLike:
+        """Cumulative distribution function.
+
+        Parameters
+        ----------
+        k : ArrayLike
+            Input values.
+
+        Returns
+        -------
+        ArrayLike
+            Cumulative distribution function evaluated at k.
+        """
         x = jnp.arange(0, self._n + 1, dtype=jnp.int32)
         complete_cdf = jnp.cumsum(self.pmf(x))
         cond = [k < 0, k >= self._n, jnp.logical_and(k >= 0, k < self._n)]
