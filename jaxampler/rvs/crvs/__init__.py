@@ -1,4 +1,5 @@
 from .beta import Beta
+from .boltzmann import Boltzmann
 from .cauchy import Cauchy
 from .chi2 import Chi2
 from .crvs import ContinuousRV

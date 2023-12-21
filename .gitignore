@@ -8,6 +8,7 @@
 *.pdf
 
 # temp ignores
+rough.py
 
 # permenant ignores
 .hypothesis

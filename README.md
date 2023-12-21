@@ -4,55 +4,54 @@ Jaxampler is a tool for sampling statistical distributions using the [JAX](https
 
 ## Samplers
 
--   [x] [Inverse Transform Sampling](jaxampler/sampler/invtranssampler.py)
--   [x] [Accept-Rejection Sampling](jaxampler/sampler/arampler.py)
--   [ ] Adaptive Accept-Rejection Sampling
--   [ ] Metropolis-Hastings
--   [ ] Hamiltonian Monte Carlo
--   [ ] Slice Sampling
--   [ ] Gibbs Sampling
--   [ ] Importance Sampling
+- [x] [Inverse Transform Sampling](jaxampler/sampler/invtranssampler.py)
+- [x] [Accept-Rejection Sampling](jaxampler/sampler/arampler.py)
+- [ ] Adaptive Accept-Rejection Sampling
+- [ ] Metropolis-Hastings
+- [ ] Hamiltonian Monte Carlo
+- [ ] Slice Sampling
+- [ ] Gibbs Sampling
+- [ ] Importance Sampling
 
 ## Random Variables
 
 ### Discrete Random Variables
 
--   [x] [Bernoulli](jaxampler/rvs/drvs/bernoulli.py)
--   [x] [Binomial](jaxampler/rvs/drvs/binomial.py)
--   [x] [Geometric](jaxampler/rvs/drvs/geometric.py)
--   [x] [Poisson](jaxampler/rvs/drvs/poisson.py)
+- [x] [Bernoulli](jaxampler/rvs/drvs/bernoulli.py)
+- [x] [Binomial](jaxampler/rvs/drvs/binomial.py)
+- [x] [Geometric](jaxampler/rvs/drvs/geometric.py)
+- [x] [Poisson](jaxampler/rvs/drvs/poisson.py)
+- [ ] Rademacher
 
 ### Continuous Random Variables
 
--   [x] [Beta](jaxampler/rvs/crvs/beta.py)
--   [x] [Cauchy](jaxampler/rvs/crvs/cauchy.py)
--   [x] [Chi Square](jaxampler/rvs/crvs/chi2.py)
--   [x] [Exponential](jaxampler/rvs/crvs/exponential.py)
--   [x] [Gamma](jaxampler/rvs/crvs/gamma.py)
--   [ ] Generalized Normal
--   [ ] Gumbel
--   [ ] Laplace
--   [ ] Log Gamma
--   [x] [Log Normal](jaxampler/rvs/crvs/lognormal.py)
--   [x] [Logistic](jaxampler/rvs/crvs/logistic.py)
--   [ ] Maxwell
--   [ ] Multivariate Normal
--   [x] [Normal](jaxampler/rvs/crvs/normal.py)
--   [x] [Pareto](jaxampler/rvs/crvs/pareto.py)
--   [ ] Rademacher
--   [x] [Rayleigh](jaxampler/rvs/crvs/rayleigh.py)
--   [x] [Student t](jaxampler/rvs/crvs/studentt.py)
--   [x] [Triangular](jaxampler/rvs/crvs/triangular.py)
--   [x] [Truncated Normal](jaxampler/rvs/crvs/truncnormal.py)
--   [x] [Truncated Power Law](jaxampler/rvs/crvs/truncpowerlaw.py)
--   [x] [Uniform](jaxampler/rvs/crvs/uniform.py)
--   [x] [Weibull](jaxampler/rvs/crvs/weibull.py)
+- [x] [Beta](jaxampler/rvs/crvs/beta.py)
+- [x] [Boltzmann](jaxampler/rvs/crvs/boltzmann.py)
+- [x] [Cauchy](jaxampler/rvs/crvs/cauchy.py)
+- [x] [Chi Square](jaxampler/rvs/crvs/chi2.py)
+- [x] [Exponential](jaxampler/rvs/crvs/exponential.py)
+- [x] [Gamma](jaxampler/rvs/crvs/gamma.py)
+- [ ] Generalized Normal
+- [ ] Gumbel
+- [ ] Laplace
+- [x] [Log Normal](jaxampler/rvs/crvs/lognormal.py)
+- [x] [Logistic](jaxampler/rvs/crvs/logistic.py)
+- [ ] Multivariate Normal
+- [x] [Normal](jaxampler/rvs/crvs/normal.py)
+- [x] [Pareto](jaxampler/rvs/crvs/pareto.py)
+- [x] [Rayleigh](jaxampler/rvs/crvs/rayleigh.py)
+- [x] [Student t](jaxampler/rvs/crvs/studentt.py)
+- [x] [Triangular](jaxampler/rvs/crvs/triangular.py)
+- [x] [Truncated Normal](jaxampler/rvs/crvs/truncnormal.py)
+- [x] [Truncated Power Law](jaxampler/rvs/crvs/truncpowerlaw.py)
+- [x] [Uniform](jaxampler/rvs/crvs/uniform.py)
+- [x] [Weibull](jaxampler/rvs/crvs/weibull.py)
 
 ## Citing Jaxampler
 
 To cite this repository:
 
-```
+```bibtex
 @software{jaxampler2023github,
     author  = {Meesum Qazalbash},
     title   = {{JAXampler}: tool for sampling statistical distributions},
@@ -62,7 +61,7 @@ To cite this repository:
 }
 ```
 
-# Contributors
+## Contributors
 
 <a href="https://github.com/Qazalbash/jaxampler/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Qazalbash/jaxampler" />
