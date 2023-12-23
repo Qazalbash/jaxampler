@@ -1,9 +1,8 @@
 import random
 from abc import abstractmethod
-from time import time
 
 import jax
-from jax import Array, jit
+from jax import Array
 
 from ..rvs import ContinuousRV, GenericRV
 

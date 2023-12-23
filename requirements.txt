@@ -1,3 +1,4 @@
 jax
 tfp-nightly
+numpy
 matplotlib
