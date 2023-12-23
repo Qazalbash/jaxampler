@@ -17,8 +17,8 @@ def test_Bernoulli():
         assert rv._p == p
         assert rv.rvs().shape == (1,)
         assert rv.rvs(N=10).shape == (10,)
-        assert jnp.all(jnp.abs(rv.pmf(jnp.array([0, 1])) - jnp.array([1 - p, p])) < eps)
-        assert jnp.all(jnp.abs(rv.cdf(jnp.array([0, 1])) - jnp.array([1 - p, 1])) < eps)
+        assert jnp.all(jnp.abs(rv.pmf([0, 1]) - jnp.array([1 - p, p])) < eps)
+        assert jnp.all(jnp.abs(rv.cdf([0, 1]) - jnp.array([1 - p, 1])) < eps)
 
 
 def test_Beta():
