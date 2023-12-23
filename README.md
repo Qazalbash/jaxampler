@@ -1,5 +1,7 @@
 # Jaxampler
 
+[![Python package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml)
+
 Jaxampler is a tool for sampling statistical distributions using the [JAX](https://jax.readthedocs.io/en/latest/) library.
 
 ## Samplers
