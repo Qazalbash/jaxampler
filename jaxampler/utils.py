@@ -1,7 +1,23 @@
+# Copyright 2023 The JAXampler Authors
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import random
 
 import jax
 from jax import Array
+
+fact = [1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880, 3_628_800]
 
 
 def nPr(n: int, r: int) -> int:
@@ -20,7 +36,6 @@ def nPr(n: int, r: int) -> int:
         number of permutations of `r` objects out of `n`
     """
     assert 0 <= r <= n
-    fact = [1, 1, 2, 6, 24, 120, 720]
     if n <= len(fact):
         return fact[n] / fact[r] / fact[n - r]
     for i in range(len(fact), n + 1):
@@ -44,7 +59,6 @@ def nCr(n: int, r: int) -> int:
         number of combinations of `r` objects out of `n`
     """
     assert 0 <= r <= n
-    fact = [1, 1, 2, 6, 24, 120, 720]
     if n <= len(fact):
         return fact[n] / fact[r] / fact[n - r]
     for i in range(len(fact), n + 1):
