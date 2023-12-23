@@ -48,7 +48,7 @@ class Beta(ContinuousRV):
         return jax.random.beta(key, self._alpha, self._beta, shape=(N,))
 
     def __repr__(self) -> str:
-        string = f"beta(alpha={self._alpha}, beta={self._beta}"
+        string = f"Beta(alpha={self._alpha}, beta={self._beta}"
         if self._name is not None:
             string += f", name={self._name}"
         return string + ")"

@@ -19,7 +19,7 @@ class GenericRV(object):
         name : str, optional
             Name of the random variable, by default None
         """
-        self._name = None if name is None else name
+        self._name = name
 
     def check_params(self) -> None:
         """Check the parameters of the random variable.

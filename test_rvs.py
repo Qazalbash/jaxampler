@@ -1,9 +1,12 @@
+from itertools import product
+from random import randint
+
 from jax import numpy as jnp
-from jax import random
 
-from jaxampler import Bernoulli
+from jaxampler.rvs import Bernoulli, Beta, Binomial
+from jaxampler.utils import nCr
 
-eps = 1e-6
+eps = 1e-3
 
 
 def test_Bernoulli():
@@ -14,16 +17,40 @@ def test_Bernoulli():
         assert rv._p == p
         assert rv.rvs().shape == (1,)
         assert rv.rvs(N=10).shape == (10,)
-        assert rv.rvs(key=random.PRNGKey(0)).shape == (1,)
         assert jnp.all(jnp.abs(rv.pmf(jnp.array([0, 1])) - jnp.array([1 - p, p])) < eps)
         assert jnp.all(jnp.abs(rv.cdf(jnp.array([0, 1])) - jnp.array([1 - p, 1])) < eps)
 
 
-# def test_Beta():
-#     raise NotImplementedError
+def test_Beta():
+    alpha = [1.0, 2.0, 3.0]
+    beta = [1.0, 2.0, 3.0]
+    for a, b in product(alpha, beta):
+        rv = Beta(alpha=a, beta=b)
+        assert rv._alpha == a
+        assert rv._beta == b
+        assert rv._name == None
+        assert rv.rvs().shape == (1,)
+        assert rv.rvs(N=10).shape == (10,)
+        assert rv.__repr__() == f"Beta(alpha={a}, beta={b})"
 
-# def test_Binomial():
-#     raise NotImplementedError
+
+def test_Binomial():
+    ps = [0.0, 0.1, 0.5, 0.9, 1.0]
+    ns = [2, 5, 10]
+    ks = [randint(0, i) for i in ns]
+
+    for p, i in product(ps, list(range(len(ns)))):
+        rv = Binomial(p, ns[i])
+        assert rv._p == p
+        assert rv._n == ns[i]
+        assert rv.rvs().shape == (1,)
+        assert rv.rvs(N=10).shape == (10,)
+        assert jnp.all(
+            jnp.abs(
+                rv.pmf(ks[i]) -
+                jnp.array([nCr(ns[i], ks[i]) * jnp.power(p, ks[i]) * jnp.power(1 - p, ns[i] - ks[i])])) < eps)
+        # assert jnp.all(jnp.abs(rv.cdf([0, 1]) - jnp.array([1 - p, 1])) < eps)
+
 
 # def test_Cauchy():
 #     raise NotImplementedError

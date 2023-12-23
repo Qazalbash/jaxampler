@@ -42,6 +42,7 @@ class Binomial(DiscreteRV):
 
     @partial(jit, static_argnums=(0,))
     def pmf(self, k: ArrayLike) -> ArrayLike:
+        k = jnp.asarray(k)
         return jax_binom.pmf(k, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
@@ -62,6 +63,7 @@ class Binomial(DiscreteRV):
         ArrayLike
             Cumulative distribution function evaluated at k.
         """
+        k = jnp.asarray(k)
         x = jnp.arange(0, self._n + 1, dtype=jnp.int32)
         complete_cdf = jnp.cumsum(self.pmf(x))
         cond = [k < 0, k >= self._n, jnp.logical_and(k >= 0, k < self._n)]
