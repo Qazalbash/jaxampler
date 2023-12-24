@@ -17,9 +17,9 @@ limitations under the License. -->
 [![Python package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml)
 [![Upload Python Package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml)
 
-JAXampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. JAXampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions. JAXampler is currently in the early stages of development and is not yet ready for production use.
+JAXampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. JAXampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions.
 
-However, we welcome contributions from the community to help us improve the library. If you are interested in contributing, please refer to our [contribution guidelines](CONTRIBUTING.md).
+JAXampler is currently in the early stages of development and is not yet ready for production use. However, we welcome contributions from the community to help us improve the library. If you are interested in contributing, please refer to our [contribution guidelines](CONTRIBUTING.md).
 
 ## Features
 
@@ -87,14 +87,14 @@ samples = ar_sampler.sample(
 
 JAXampler currently supports the following samplers:
 
-- [x] [Inverse Transform Sampling](jaxampler/sampler/invtranssampler.py)
-- [x] [Accept-Rejection Sampling](jaxampler/sampler/arsampler.py)
-- [x] [Adaptive Accept-Rejection Sampling](jaxampler/sampler/aarsampler.py)
-- [ ] Metropolis-Hastings
-- [ ] Hamiltonian Monte Carlo
-- [ ] Slice Sampling
-- [ ] Gibbs Sampling
-- [ ] Importance Sampling
+- [x] Inverse Transform Sampler
+- [x] Accept-Rejection Sampler
+- [x] Adaptive Accept-Rejection Sampler
+- [ ] Metropolis-Hastings Sampler
+- [ ] Hamiltonian Monte Carlo Sampler
+- [ ] Slice Sampler
+- [ ] Gibbs Sampler
+- [ ] Importance Sampler
 
 ## Random Variables
 
@@ -144,10 +144,6 @@ To cite this repository:
     year    = {2023}
 }
 ```
-
-## Contributing
-
-Contributions are welcome! Please refer to our contribution guidelines for coding standards and pull request processes.
 
 ## Contributors
 
