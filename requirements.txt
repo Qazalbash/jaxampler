@@ -1,6 +1,6 @@
-jax>=0.4.23
-jaxlib>=0.4.23
-matplotlib>=3.8.2
+jax>=0.4.0
+jaxlib>=0.4.0
+matplotlib>=3.8.0
 setuptools
 tfp-nightly
 tqdm

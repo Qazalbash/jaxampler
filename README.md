@@ -19,10 +19,18 @@ limitations under the License. -->
 
 [JAX](https://jax.readthedocs.io/en/latest/) based lib for sampling statistical distributions.
 
+## Features
+
+- **High-Performance Sampling**: Leverage the power of JAX for high-speed, accurate sampling.
+- **Versatile Algorithms**: A wide range of sampling methods to suit various applications.
+- **Easy Integration**: Seamlessly integrates with existing JAX workflows.
+
 ## Install
 
+Install the latest version of JAXampler using pip:
+
 ```bash
-pip install jaxampler
+pip3 install --upgrade jaxampler
 ```
 
 ## Samplers
@@ -66,34 +74,34 @@ To create a new random variable, import the corresponding type from the `jaxampl
 
 ### Discrete Random Variables
 
-- [x] [Bernoulli](jaxampler/rvs/drvs/bernoulli.py)
-- [x] [Binomial](jaxampler/rvs/drvs/binomial.py)
-- [x] [Geometric](jaxampler/rvs/drvs/geometric.py)
-- [x] [Poisson](jaxampler/rvs/drvs/poisson.py)
+- [x] Bernoulli
+- [x] Binomial
+- [x] Geometric
+- [x] Poisson
 - [ ] Rademacher
 
 ### Continuous Random Variables
 
-- [x] [Beta](jaxampler/rvs/crvs/beta.py)
-- [x] [Boltzmann](jaxampler/rvs/crvs/boltzmann.py)
-- [x] [Cauchy](jaxampler/rvs/crvs/cauchy.py)
-- [x] [Chi Square](jaxampler/rvs/crvs/chi2.py)
-- [x] [Exponential](jaxampler/rvs/crvs/exponential.py)
-- [x] [Gamma](jaxampler/rvs/crvs/gamma.py)
+- [x] Beta
+- [x] Boltzmann
+- [x] Cauchy
+- [x] Chi
+- [x] Exponential
+- [x] Gamma
 - [ ] Gumbel
 - [ ] Laplace
-- [x] [Log Normal](jaxampler/rvs/crvs/lognormal.py)
-- [x] [Logistic](jaxampler/rvs/crvs/logistic.py)
+- [x] Log Normal
+- [x] Logistic
 - [ ] Multivariate Normal
-- [x] [Normal](jaxampler/rvs/crvs/normal.py)
-- [x] [Pareto](jaxampler/rvs/crvs/pareto.py)
-- [x] [Rayleigh](jaxampler/rvs/crvs/rayleigh.py)
-- [x] [Student t](jaxampler/rvs/crvs/studentt.py)
-- [x] [Triangular](jaxampler/rvs/crvs/triangular.py)
-- [x] [Truncated Normal](jaxampler/rvs/crvs/truncnormal.py)
-- [x] [Truncated Power Law](jaxampler/rvs/crvs/truncpowerlaw.py)
-- [x] [Uniform](jaxampler/rvs/crvs/uniform.py)
-- [x] [Weibull](jaxampler/rvs/crvs/weibull.py)
+- [x] Normal
+- [x] Pareto
+- [x] Rayleigh
+- [x] Student t
+- [x] Triangular
+- [x] Truncated Normal
+- [x] Truncated Power Law
+- [x] Uniform
+- [x] Weibull
 
 ## Citing Jaxampler
 
@@ -108,6 +116,10 @@ To cite this repository:
     year    = {2023}
 }
 ```
+
+## Contributing
+
+Contributions are welcome! Please refer to our contribution guidelines for coding standards and pull request processes.
 
 ## Contributors
 
