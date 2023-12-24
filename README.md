@@ -19,9 +19,15 @@ limitations under the License. -->
 
 [JAX](https://jax.readthedocs.io/en/latest/) based lib for sampling statistical distributions.
 
+## Install
+
+```bash
+pip install jaxampler
+```
+
 ## Samplers
 
-In order to sample from a distribution, import the corresponding sampler from the `jaxampler.sampler` module and call the `sample` method with the required arguments.
+To sample from a distribution, import the corresponding sampler from the `jaxampler.sampler` module and call the `sample` method with the required arguments.
 
 ```python
 from jaxampler.rvs import Beta, Normal
