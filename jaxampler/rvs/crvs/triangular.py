@@ -91,4 +91,5 @@ class Triangular(ContinuousRV):
         string = f"Triangular(low={self._low}, mode={self._mode}, high={self._high}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

@@ -63,4 +63,5 @@ class Cauchy(ContinuousRV):
         string = f"Cauchy(sigma={self._sigma}, loc={self._loc}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

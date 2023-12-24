@@ -70,4 +70,5 @@ class Pareto(ContinuousRV):
         string = f"Pareto(alpha={self._alpha}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

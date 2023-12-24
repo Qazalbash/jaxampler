@@ -54,4 +54,5 @@ class StudentT(ContinuousRV):
         string = f"StudentT(nu={self._nu}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

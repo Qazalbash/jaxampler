@@ -60,4 +60,5 @@ class Logistic(ContinuousRV):
         string = f"Logistic(mu={self._mu}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

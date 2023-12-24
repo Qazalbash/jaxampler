@@ -64,4 +64,5 @@ class Normal(ContinuousRV):
         string = f"Normal(mu={self._mu}, sigma={self._sigma}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

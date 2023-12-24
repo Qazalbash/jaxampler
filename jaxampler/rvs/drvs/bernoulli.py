@@ -43,4 +43,5 @@ class Bernoulli(Binomial):
         string = f"Bernoulli(p={self._p}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

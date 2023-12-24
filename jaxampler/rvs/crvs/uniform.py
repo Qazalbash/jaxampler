@@ -39,6 +39,10 @@ class Uniform(ContinuousRV):
         return jax_uniform.logpdf(x, loc=self._low, scale=self._high - self._low)
 
     @partial(jit, static_argnums=(0,))
+    def pdf(self, x: ArrayLike) -> ArrayLike:
+        return jax_uniform.pdf(x, loc=self._low, scale=self._high - self._low)
+
+    @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
         conditions = [x < self._low, (self._low <= x) & (x <= self._high), self._high < x]
         choice = [
@@ -47,10 +51,6 @@ class Uniform(ContinuousRV):
             jnp.log(1.0),
         ]
         return jnp.select(conditions, choice)
-
-    @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_uniform.pdf(x, loc=self._low, scale=self._high - self._low)
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
@@ -61,4 +61,5 @@ class Uniform(ContinuousRV):
         string = f"Uniform(low={self._low}, high={self._high}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

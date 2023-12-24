@@ -52,6 +52,7 @@ class Binomial(DiscreteRV):
 
     @partial(jit, static_argnums=(0))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
+        k = jnp.asarray(k)
         return jax_binom.logpmf(k, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
@@ -92,4 +93,5 @@ class Binomial(DiscreteRV):
         string = f"Binomial(p={self._p}, n={self._n}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

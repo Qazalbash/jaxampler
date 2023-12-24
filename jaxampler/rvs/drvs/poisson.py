@@ -54,4 +54,5 @@ class Poisson(DiscreteRV):
         string = f"Poisson(lmbda={self._lmbda}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

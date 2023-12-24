@@ -65,4 +65,5 @@ class Beta(ContinuousRV):
         string = f"Beta(alpha={self._alpha}, beta={self._beta}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

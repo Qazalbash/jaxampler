@@ -69,4 +69,5 @@ class TruncNormal(ContinuousRV):
         string = f"TruncNorm(mu={self._mu}, sigma={self._sigma}, low={self._low}, high={self._high}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

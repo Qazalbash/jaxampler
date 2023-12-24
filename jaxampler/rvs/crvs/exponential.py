@@ -29,7 +29,6 @@ class Exponential(ContinuousRV):
         self._lmbda = lmbda
         self.check_params()
         self._scale = 1.0 / lmbda
-        self._logZ = -jnp.log(self._lmbda)
         super().__init__(name)
 
     def check_params(self) -> None:
@@ -50,18 +49,19 @@ class Exponential(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logppf_val = jnp.log(-jnp.log1p(-x)) + self._logZ
+        logppf_val = jnp.log(-jnp.log1p(-x)) - jnp.log(self._lmbda)
         return jnp.where(x >= 0, logppf_val, -jnp.inf)
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
         U = jax.random.uniform(key, shape=(N,))
-        rvs_val = jnp.log(-jnp.log(U)) + self._logZ
+        rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
         return jnp.exp(rvs_val)
 
     def __repr__(self) -> str:
-        string = f"Exponential(lamda={self._lmbda}"
+        string = f"Exponential(lmbda={self._lmbda}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

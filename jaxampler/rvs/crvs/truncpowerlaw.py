@@ -91,4 +91,5 @@ class TruncPowerLaw(ContinuousRV):
         string = f"TruncPowerLaw(alpha={self._alpha}, low={self._low}, high={self._high}"
         if self._name is not None:
             string += f", name={self._name}"
-        return string + ")"
+        string += ")"
+        return string

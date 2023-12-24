@@ -20,9 +20,33 @@ JAXampler is a tool for sampling statistical distributions using the [JAX](https
 
 ## Samplers
 
+In order to sample from a distribution, import the corresponding sampler from the `jaxampler.sampler` module and call the `sample` method with the required arguments.
+
+```python
+from jaxampler.rvs import Beta, Normal
+from jaxampler.sampler import AcceptRejectSampler
+
+scale = 1.35
+N = 100_000
+
+target_rv = Normal(mu=0.5, sigma=0.2)
+proposal_rv = Beta(alpha=2, beta=2)
+
+ar_sampler = AcceptRejectSampler()
+
+samples = ar_sampler.sample(
+    target_rv=target_rv,
+    proposal_rv=proposal_rv,
+    scale=scale,
+    N=N,
+)
+```
+
+JAXampler currently supports the following samplers:
+
 - [x] [Inverse Transform Sampling](jaxampler/sampler/invtranssampler.py)
-- [x] [Accept-Rejection Sampling](jaxampler/sampler/arampler.py)
-- [x] Adaptive Accept-Rejection Sampling
+- [x] [Accept-Rejection Sampling](jaxampler/sampler/arsampler.py)
+- [x] [Adaptive Accept-Rejection Sampling](jaxampler/sampler/aarsampler.py)
 - [ ] Metropolis-Hastings
 - [ ] Hamiltonian Monte Carlo
 - [ ] Slice Sampling
@@ -30,6 +54,8 @@ JAXampler is a tool for sampling statistical distributions using the [JAX](https
 - [ ] Importance Sampling
 
 ## Random Variables
+
+To create a new random variable, import the corresponding type from the `jaxampler.rvs` i.e. `DiscreteRV` and `ContinuousRV` for discrete and continuous random variables respectively. Then, instantiate the random variable with the required parameters and implement the necessary methods (logpdf, cdf, and ppf etc). JAXampler currently supports the following random variables:
 
 ### Discrete Random Variables
 
