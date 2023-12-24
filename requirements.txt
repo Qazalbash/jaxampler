@@ -1,8 +1,8 @@
+jax>=0.4.23
+jaxlib>=0.4.23
+matplotlib>=3.8.2
 setuptools
-wheel
-twine
-jaxlib
-jax
 tfp-nightly
-numpy
-matplotlib
+tqdm
+twine
+wheel

@@ -14,26 +14,42 @@
 
 from setuptools import find_packages, setup
 
+_current_version = '0.0.2'
+
 with open('README.md', encoding='utf-8') as f:
     _long_description = f.read()
 
 setup(
     name='jaxampler',
-    version='0.0.1',
-    packages=find_packages(),
+    version=_current_version,
+    packages=find_packages(exclude=[
+        'tests',
+        'tests.*',
+        'examples',
+        'examples.*',
+        'plots',
+        'codesnap',
+    ]),
     url='https://github.com/Qazalbash/jaxampler',
     license='Apache 2.0',
     author='Meesum Qazalbash',
     author_email='meesumqazalbash@gmail.com',
-    description='jaxampler is a JAX based lib for sampling statistical distributions.',
+    description='JAX based lib for sampling statistical distributions.',
     long_description=_long_description,
     long_description_content_type='text/markdown',
     python_requires='>=3.9',
-    install_requires=['jaxlib>=0.4.23', 'jax>=0.4.23', 'tfp-nightly', 'matplotlib>=3.8.2'],
+    install_requires=[
+        'jaxlib>=0.4.0',
+        'jax>=0.4.0',
+        'tfp-nightly',
+        'matplotlib>=3.8.0',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: POSIX :: Linux",
     ],
     zip_safe=False,
 )
