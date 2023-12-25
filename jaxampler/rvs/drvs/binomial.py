@@ -87,7 +87,7 @@ class Binomial(DiscreteRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N,))
+        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Binomial(p={self._p}, n={self._n}"

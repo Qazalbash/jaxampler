@@ -20,8 +20,11 @@ from .sampler import Sampler
 
 
 class AcceptRejectSampler(Sampler):
+    """AcceptRejectSampler is a sampler that uses the accept-reject method
+    to sample from a random variable."""
 
     def __init__(self) -> None:
+        """Initializes an AcceptRejectSampler object."""
         super().__init__()
 
     def sample(self,
@@ -30,6 +33,28 @@ class AcceptRejectSampler(Sampler):
                scale: int = 1,
                N: int = 1,
                key: Array = None) -> Array:
+        """Samples from the given random variable using the accept-reject method.
+
+        It runs the accept-reject algorithm and returns the samples.
+
+        Parameters
+        ----------
+        target_rv : ContinuousRV
+            The random variable to sample from.
+        proposal_rv : ContinuousRV
+            The proposal random variable.
+        scale : int, optional
+            Scaler to cover target distribution by proposal distribution, by default 1
+        N : int, optional
+            Number of samples, by default 1
+        key : Array, optional
+            The key to use for sampling, by default None
+
+        Returns
+        -------
+        Array
+            The samples.
+        """
         self.check_rv(target_rv)
         self.check_rv(proposal_rv)
 

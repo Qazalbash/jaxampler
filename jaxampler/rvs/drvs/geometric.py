@@ -56,7 +56,7 @@ class Geometric(DiscreteRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.geometric(key, self._p, shape=(N,))
+        return jax.random.geometric(key, self._p, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Geometric(p={self._p}"

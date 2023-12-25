@@ -20,11 +20,32 @@ from .sampler import Sampler
 
 
 class InverseTransformSampler(Sampler):
+    """InverseTransformSampler is a sampler that uses the inverse transform
+    method to sample from a random variable."""
 
     def __init__(self) -> None:
+        """Initializes an InverseTransformSampler object."""
         super().__init__()
 
     def sample(self, rv: ContinuousRV, N: int = 1, key: Array = None) -> Array:
+        """Samples from the given random variable using the inverse transform method.
+
+        It runs the inverse transform algorithm and returns the samples.
+
+        Parameters
+        ----------
+        rv : ContinuousRV
+            The random variable to sample from.
+        N : int, optional
+            Number of samples, by default 1
+        key : Array, optional
+            The key to use for sampling, by default None
+
+        Returns
+        -------
+        Array
+            The samples.
+        """
         self.check_rv(rv)
 
         if key is None:

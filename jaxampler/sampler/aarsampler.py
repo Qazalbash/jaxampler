@@ -22,6 +22,7 @@ from .arsampler import AcceptRejectSampler
 class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
 
     def __init__(self) -> None:
+        """Initializes an AdaptiveAcceptRejectSampler object."""
         super().__init__()
 
     def sample(self,
@@ -30,6 +31,28 @@ class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
                scale: int = 1,
                N: int = 1,
                key: Array = None) -> Array:
+        """Samples from the given random variable using the adaptive accept-reject method.
+
+        It runs the adaptive accept-reject algorithm and returns the samples.
+
+        Parameters
+        ----------
+        target_rv : ContinuousRV
+            The random variable to sample from.
+        proposal_rv : ContinuousRV
+            The proposal random variable.
+        scale : int, optional
+            Scaler to cover target distribution by proposal distribution, by default 1
+        N : int, optional
+            Number of samples, by default 1
+        key : Array, optional
+            The key to use for sampling, by default None
+
+        Returns
+        -------
+        Array
+            The samples.
+        """
         samples = super().sample(target_rv, proposal_rv, scale, N, key)
         N_res = N - len(samples)
         while N_res != 0:

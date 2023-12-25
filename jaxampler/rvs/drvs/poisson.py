@@ -48,7 +48,7 @@ class Poisson(DiscreteRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.poisson(key, self._lmbda, shape=(N,))
+        return jax.random.poisson(key, self._lmbda, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Poisson(lmbda={self._lmbda}"
