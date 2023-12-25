@@ -54,7 +54,7 @@ class Logistic(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.logistic(key, shape=(N,)) * self._scale + self._mu
+        return jax.random.logistic(key, shape=(N, 1)) * self._scale + self._mu
 
     def __repr__(self) -> str:
         string = f"Logistic(mu={self._mu}, scale={self._scale}"

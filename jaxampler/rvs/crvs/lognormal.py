@@ -60,7 +60,7 @@ class LogNormal(ContinuousRV):
         # return jax.random.lognormal(self.get_key(), shape=(N,)) * self._sigma + self._mu
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N,))
+        U = jax.random.uniform(key, shape=(N, 1))
         return self.ppf(U)
 
     def __repr__(self) -> str:

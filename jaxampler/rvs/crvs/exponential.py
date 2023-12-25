@@ -55,7 +55,7 @@ class Exponential(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N,))
+        U = jax.random.uniform(key, shape=(N, 1))
         rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
         return jnp.exp(rvs_val)
 

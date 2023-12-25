@@ -85,7 +85,7 @@ class Triangular(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.triangular(key, left=self._low, right=self._high, mode=self._mode, shape=(N,))
+        return jax.random.triangular(key, left=self._low, right=self._high, mode=self._mode, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Triangular(low={self._low}, mode={self._mode}, high={self._high}"

@@ -59,7 +59,7 @@ class Beta(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.beta(key, self._alpha, self._beta, shape=(N,))
+        return jax.random.beta(key, self._alpha, self._beta, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Beta(alpha={self._alpha}, beta={self._beta}"

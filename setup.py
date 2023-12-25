@@ -37,7 +37,7 @@ setup(
     description='JAX based lib for sampling statistical distributions.',
     long_description=_long_description,
     long_description_content_type='text/markdown',
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     install_requires=[
         'jaxlib>=0.4.0',
         'jax>=0.4.0',
@@ -45,7 +45,6 @@ setup(
         'matplotlib>=3.8.0',
     ],
     classifiers=[
-        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "License :: OSI Approved :: Apache Software License",

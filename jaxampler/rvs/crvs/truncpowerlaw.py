@@ -83,7 +83,7 @@ class TruncPowerLaw(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N,), dtype=jnp.float32)
+        U = jax.random.uniform(key, shape=(N, 1), dtype=jnp.float32)
         rvs_val = self.ppf(U)
         return rvs_val
 

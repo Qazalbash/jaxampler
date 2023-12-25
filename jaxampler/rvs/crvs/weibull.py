@@ -52,7 +52,7 @@ class Weibull(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N,))
+        U = jax.random.uniform(key, shape=(N, 1))
         return self.ppf(U)
 
     def __repr__(self) -> str:

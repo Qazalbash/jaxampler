@@ -56,7 +56,7 @@ class Chi2(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.chisquare(key, self._nu, shape=(N,))
+        return jax.random.chisquare(key, self._nu, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Chi2(nu={self._nu}"

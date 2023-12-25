@@ -63,7 +63,7 @@ class TruncNormal(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.truncated_normal(key, self._alpha, self._beta, shape=(N,)) * self._sigma + self._mu
+        return jax.random.truncated_normal(key, self._alpha, self._beta, shape=(N, 1)) * self._sigma + self._mu
 
     def __repr__(self) -> str:
         string = f"TruncNorm(mu={self._mu}, sigma={self._sigma}, low={self._low}, high={self._high}"

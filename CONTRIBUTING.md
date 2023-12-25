@@ -1,13 +1,13 @@
-# Contributing to Jaxampler
+# Contributing to JAXampler
 
-First of all, thank you for considering contributing to Jaxampler! 🌟 Your help is essential for making it a better project.
+First of all, thank you for considering contributing to JAXampler! 🌟 Your help is essential for making it a better project.
 
 ## How to Contribute
 
 ### Issues
 
 - **Report issues or bugs** you've discovered. Be as specific as possible about how to reproduce the problem.
-- **Suggest enhancements** or new features you would like to see in Jaxampler.
+- **Suggest enhancements** or new features you would like to see in JAXampler.
 
 ### Pull Requests
 
@@ -21,7 +21,7 @@ First of all, thank you for considering contributing to Jaxampler! 🌟 Your hel
 3. **Create a new branch** and make your changes.
 4. **Commit** changes to your branch.
 5. **Push** your work back up to your fork.
-7. Submit a **Pull Request** so we can review your changes.
+6. Submit a **Pull Request** so we can review your changes.
 
 ### Code of Conduct
 
@@ -37,5 +37,5 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 Before submitting your changes, run all the tests to ensure your changes don't break existing functionality.
 
 ```bash
-python -m pytest
+python3 -m pytest
 ```

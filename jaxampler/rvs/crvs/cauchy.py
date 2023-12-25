@@ -57,7 +57,7 @@ class Cauchy(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.cauchy(key, shape=(N,)) * self._sigma + self._loc
+        return jax.random.cauchy(key, shape=(N, 1)) * self._sigma + self._loc
 
     def __repr__(self) -> str:
         string = f"Cauchy(sigma={self._sigma}, loc={self._loc}"

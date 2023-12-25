@@ -58,7 +58,7 @@ class Gamma(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.gamma(key, self._alpha, shape=(N,)) / self._beta
+        return jax.random.gamma(key, self._alpha, shape=(N, 1)) / self._beta
 
     def __repr__(self) -> str:
         string = f"Gamma(alpha={self._alpha}, beta={self._beta}"

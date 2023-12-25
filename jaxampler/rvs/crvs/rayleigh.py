@@ -50,7 +50,7 @@ class Rayleigh(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.rayleigh(key, scale=self._sigma, shape=(N,))
+        return jax.random.rayleigh(key, scale=self._sigma, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"

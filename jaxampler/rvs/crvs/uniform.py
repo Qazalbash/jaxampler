@@ -55,7 +55,7 @@ class Uniform(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=(N,))
+        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=(N, 1))
 
     def __repr__(self) -> str:
         string = f"Uniform(low={self._low}, high={self._high}"
