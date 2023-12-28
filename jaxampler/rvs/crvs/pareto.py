@@ -65,7 +65,7 @@ class Pareto(ContinuousRV):
         if key is None:
             key = self.get_key(key)
         shape = (N,) + (self._scale.shape or (1,))
-        return jax.random.pareto(key, self._alpha, shape=(N, 1)) * self._scale
+        return jax.random.pareto(key, self._alpha, shape=shape) * self._scale
 
     def __repr__(self) -> str:
         string = f"Pareto(alpha={self._alpha}, scale={self._scale}"
