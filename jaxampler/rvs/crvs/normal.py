@@ -20,14 +20,16 @@ from jax import numpy as jnp
 from jax.scipy.stats import norm as jax_norm
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Normal(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None) -> None:
-        self._mu = mu
-        self._sigma = sigma
+        # self._mu = mu
+        # self._sigma = sigma
+        self._mu, self._sigma = jx_cast(mu, sigma)
         self.check_params()
         self._logZ = 0.0
         super().__init__(name)
@@ -58,7 +60,8 @@ class Normal(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.normal(key, shape=(N, 1)) * self._sigma + self._mu
+        shape = (N,) + (self._mu.shape or (1,))
+        return jax.random.normal(key, shape=shape) * self._sigma + self._mu
 
     def __repr__(self) -> str:
         string = f"Normal(mu={self._mu}, sigma={self._sigma}"

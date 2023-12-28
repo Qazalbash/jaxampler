@@ -21,13 +21,14 @@ from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Logistic(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, scale: ArrayLike = 1.0, name: str = None) -> None:
-        self._scale = scale
+        self._scale, = jx_cast(scale)
         self.check_params()
         self._mu = mu
         super().__init__(name)
@@ -54,7 +55,8 @@ class Logistic(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.logistic(key, shape=(N, 1)) * self._scale + self._mu
+        shape = (N,) + (self._scale.shape or (1,))
+        return jax.random.logistic(key, shape=shape) * self._scale + self._mu
 
     def __repr__(self) -> str:
         string = f"Logistic(mu={self._mu}, scale={self._scale}"

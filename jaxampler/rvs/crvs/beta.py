@@ -21,14 +21,14 @@ from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Beta(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
-        self._alpha = alpha
-        self._beta = beta
+        self._alpha, self._beta = jx_cast(alpha, beta)
         self.check_params()
         super().__init__(name)
 
@@ -59,7 +59,8 @@ class Beta(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.beta(key, self._alpha, self._beta, shape=(N, 1))
+        shape = (N,) + (self._alpha.shape or (1,))
+        return jax.random.beta(key, self._alpha, self._beta, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Beta(alpha={self._alpha}, beta={self._beta}"

@@ -19,15 +19,14 @@ from jax import Array, jit, lax
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Triangular(ContinuousRV):
 
     def __init__(self, low: float = 0, mode: float = 0.5, high: float = 1, name: str = None) -> None:
-        self._low = low
-        self._mode = mode
-        self._high = high
+        self._low, self._mode, self._high = jx_cast(low, mode, high)
         self.check_params()
         super().__init__(name)
 
@@ -85,7 +84,14 @@ class Triangular(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.triangular(key, left=self._low, right=self._high, mode=self._mode, shape=(N, 1))
+        shape = (N,) + (self._low.shape or (1,))
+        return jax.random.triangular(
+            key,
+            left=self._low,
+            right=self._high,
+            mode=self._mode,
+            shape=shape,
+        )
 
     def __repr__(self) -> str:
         string = f"Triangular(low={self._low}, mode={self._mode}, high={self._high}"

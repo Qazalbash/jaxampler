@@ -19,15 +19,14 @@ from jax import Array, jit, lax
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class TruncPowerLaw(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, low: ArrayLike = 0, high: ArrayLike = 1, name: str = None) -> None:
-        self._alpha = alpha
-        self._low = low
-        self._high = high
+        self._alpha, self._low, self._high = jx_cast(alpha, low, high)
         self.check_params()
         self._beta = 1.0 + self._alpha
         self._logZ = self.logZ()
@@ -83,7 +82,8 @@ class TruncPowerLaw(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N, 1), dtype=jnp.float32)
+        shape = (N,) + (self._alpha.shape or (1,))
+        U = jax.random.uniform(key, shape=shape, dtype=jnp.float32)
         rvs_val = self.ppf(U)
         return rvs_val
 

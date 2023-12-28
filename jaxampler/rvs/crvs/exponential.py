@@ -20,13 +20,15 @@ from jax import numpy as jnp
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Exponential(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
-        self._lmbda = lmbda
+        # self._lmbda, = jnp.broadcast_arrays(lmbda)
+        self._lmbda, = jx_cast(lmbda)
         self.check_params()
         self._scale = 1.0 / lmbda
         super().__init__(name)
@@ -55,7 +57,8 @@ class Exponential(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N, 1))
+        shape = (N,) + (self._lmbda.shape or (1,))
+        U = jax.random.uniform(key, shape=shape)
         rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
         return jnp.exp(rvs_val)
 

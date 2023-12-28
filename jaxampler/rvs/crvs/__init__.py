@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from ...utils import jx_cast
 from .beta import Beta
 from .boltzmann import Boltzmann
 from .cauchy import Cauchy

@@ -19,6 +19,7 @@ from jax import Array, jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
@@ -52,7 +53,8 @@ class Weibull(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N, 1))
+        shape = (N,) + (self._lmbda.shape or (1,))
+        U = jax.random.uniform(key, shape=shape)
         return self.ppf(U)
 
     def __repr__(self) -> str:

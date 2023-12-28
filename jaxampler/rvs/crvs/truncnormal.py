@@ -20,6 +20,7 @@ from jax import numpy as jnp
 from jax.scipy.stats import truncnorm as jax_truncnorm
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
@@ -31,10 +32,7 @@ class TruncNormal(ContinuousRV):
                  low: ArrayLike = 0.0,
                  high: ArrayLike = 1.0,
                  name: str = None) -> None:
-        self._mu = mu
-        self._sigma = sigma
-        self._low = low
-        self._high = high
+        self._mu, self._sigma, self._low, self._high = jx_cast(mu, sigma, low, high)
         self.check_params()
         self._alpha = (self._low - self._mu) / self._sigma
         self._beta = (self._high - self._mu) / self._sigma
@@ -63,7 +61,13 @@ class TruncNormal(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.truncated_normal(key, self._alpha, self._beta, shape=(N, 1)) * self._sigma + self._mu
+        shape = (N,) + (self._sigma.shape or (1,))
+        return jax.random.truncated_normal(
+            key,
+            self._alpha,
+            self._beta,
+            shape=shape,
+        ) * self._sigma + self._mu
 
     def __repr__(self) -> str:
         string = f"TruncNorm(mu={self._mu}, sigma={self._sigma}, low={self._low}, high={self._high}"

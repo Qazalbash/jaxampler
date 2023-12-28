@@ -20,13 +20,14 @@ from jax import numpy as jnp
 from jax.scipy.stats import poisson as jax_poisson
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .drvs import DiscreteRV
 
 
 class Poisson(DiscreteRV):
 
     def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
-        self._lmbda = lmbda
+        self._lmbda, = jx_cast(lmbda)
         self.check_params()
         super().__init__(name)
 
@@ -48,7 +49,8 @@ class Poisson(DiscreteRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.poisson(key, self._lmbda, shape=(N, 1))
+        shape = (N,) + (self._lmbda.shape or (1,))
+        return jax.random.poisson(key, self._lmbda, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Poisson(lmbda={self._lmbda}"

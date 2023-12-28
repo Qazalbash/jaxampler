@@ -16,6 +16,26 @@ import random
 
 import jax
 from jax import Array
+from jax import numpy as jnp
+from jax.typing import ArrayLike
+
+
+def jx_cast(*args: ArrayLike) -> list[Array]:
+    """Cast provided arguments to jnp.array and broadcasts them
+    with respect to each other
+
+    Parameters
+    ----------
+    *args:
+        Arguments to cast and broadcast
+
+    Returns
+    -------
+    list[Array]
+        broadcasted arrays
+    """
+    return jnp.broadcast_arrays(*[jnp.asarray(a) for a in args])
+
 
 fact = [1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880, 3_628_800]
 

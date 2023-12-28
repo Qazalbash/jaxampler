@@ -63,7 +63,7 @@ class AcceptRejectSampler(Sampler):
 
         V = proposal_rv.rvs(N, key)
 
-        pdf_ratio = target_rv.pdf(*(V.T))
+        pdf = target_rv.pdf(*(V.T))
 
         key = self.get_key(key)
         U_scaled = jax.random.uniform(
@@ -73,7 +73,7 @@ class AcceptRejectSampler(Sampler):
             maxval=scale * proposal_rv.pdf(*(V.T)),
         )
 
-        accept = U_scaled <= pdf_ratio
+        accept = U_scaled <= pdf
         samples = V[accept]
-
+        samples = samples.flatten()
         return samples

@@ -16,6 +16,7 @@ limitations under the License. -->
 
 [![Python package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml)
 [![Upload Python Package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml)
+[![Versions](https://img.shields.io/pypi/pyversions/jaxampler.svg)](https://pypi.org/project/jaxampler/)
 
 JAXampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. JAXampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions.
 
@@ -140,7 +141,7 @@ To cite this repository:
     author  = {Meesum Qazalbash},
     title   = {{JAXampler}: A JAX-based statistical sampling toolkit},
     url     = {http://github.com/Qazalbash/jaxampler},
-    version = {0.0.3},
+    version = {0.0.4},
     year    = {2023}
 }
 ```

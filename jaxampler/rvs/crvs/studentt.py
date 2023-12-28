@@ -20,13 +20,14 @@ from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class StudentT(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        self._nu = nu
+        self._nu, = jx_cast(nu)
         self.check_params()
         super().__init__(name)
 

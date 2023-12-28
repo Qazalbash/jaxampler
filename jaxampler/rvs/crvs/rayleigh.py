@@ -19,18 +19,19 @@ from jax import Array, jit
 from jax import numpy as jnp
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Rayleigh(ContinuousRV):
 
     def __init__(self, sigma: float, name: str = None) -> None:
-        self._sigma = sigma
+        self._sigma, = jx_cast(sigma)
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert self._sigma > 0.0, "sigma must be positive"
+        assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -50,7 +51,8 @@ class Rayleigh(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.rayleigh(key, scale=self._sigma, shape=(N, 1))
+        shape = (N,) + (self._sigma.shape or (1,))
+        return jax.random.rayleigh(key, scale=self._sigma, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"

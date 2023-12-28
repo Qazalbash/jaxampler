@@ -20,14 +20,14 @@ from jax import numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Uniform(ContinuousRV):
 
     def __init__(self, low: ArrayLike = 0.0, high: ArrayLike = 1.0, name: str = None) -> None:
-        self._low = low
-        self._high = high
+        self._low, self._high = jx_cast(low, high)
         self.check_params()
         super().__init__(name)
 
@@ -55,7 +55,8 @@ class Uniform(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=(N, 1))
+        shape = (N,) + (self._low.shape or (1,))
+        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Uniform(low={self._low}, high={self._high}"

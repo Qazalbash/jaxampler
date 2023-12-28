@@ -20,18 +20,20 @@ from jax import numpy as jnp
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Chi2(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        self._nu = nu
+        # self._nu, = jnp.broadcast_arrays(nu)
+        self._nu, = jx_cast(nu)
         self.check_params()
         super().__init__(name)
 
     def check_params(self) -> None:
-        assert jnp.all(self._nu % 1 == 0), "nu must be an integer"
+        assert jnp.all(self._nu.dtype == jnp.int32), "nu must be an integer"
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
@@ -56,7 +58,8 @@ class Chi2(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.chisquare(key, self._nu, shape=(N, 1))
+        shape = (N,) + (self._nu.shape or (1,))
+        return jax.random.chisquare(key, self._nu, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Chi2(nu={self._nu}"

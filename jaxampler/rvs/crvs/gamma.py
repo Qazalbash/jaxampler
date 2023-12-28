@@ -20,14 +20,15 @@ from jax import numpy as jnp
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Gamma(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
-        self._alpha = alpha
-        self._beta = beta
+        # self._alpha, self._beta = jnp.broadcast_arrays(alpha, beta)
+        self._alpha, self._beta = jx_cast(alpha, beta)
         self.check_params()
         super().__init__(name)
 
@@ -58,7 +59,8 @@ class Gamma(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.gamma(key, self._alpha, shape=(N, 1)) / self._beta
+        shape = (N,) + (self._alpha.shape or (1,))
+        return jax.random.gamma(key, self._alpha, shape=shape) / self._beta
 
     def __repr__(self) -> str:
         string = f"Gamma(alpha={self._alpha}, beta={self._beta}"

@@ -20,6 +20,7 @@ from jax import numpy as jnp
 from jax.scipy.stats import binom as jax_binom
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .drvs import DiscreteRV
 
 
@@ -38,8 +39,7 @@ class Binomial(DiscreteRV):
         name : str, optional
             Name of the random variable, by default None
         """
-        self._p = p
-        self._n = n
+        self._p, self._n = jx_cast(p, n)
         self.check_params()
         self._q = 1.0 - p
         super().__init__(name)
@@ -87,6 +87,7 @@ class Binomial(DiscreteRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape = (N,) + (self._p.shape or (1,))
         return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N, 1))
 
     def __repr__(self) -> str:

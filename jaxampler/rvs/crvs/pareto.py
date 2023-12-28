@@ -20,14 +20,16 @@ from jax import numpy as jnp
 from jax.scipy.stats import pareto as jax_pareto
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Pareto(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, scale: ArrayLike, name: str = None) -> None:
-        self._alpha = alpha
-        self._scale = scale
+        # self._alpha = alpha
+        # self._scale = scale
+        self._alpha, self._scale = jx_cast(alpha, scale)
         self.check_params()
         super().__init__(name)
 
@@ -64,6 +66,7 @@ class Pareto(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape = (N,) + (self._scale.shape or (1,))
         return jax.random.pareto(key, self._alpha, shape=(N, 1)) * self._scale
 
     def __repr__(self) -> str:

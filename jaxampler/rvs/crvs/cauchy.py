@@ -20,14 +20,15 @@ from jax import numpy as jnp
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 
+from ...utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Cauchy(ContinuousRV):
 
     def __init__(self, sigma: ArrayLike, loc: ArrayLike = 0, name: str = None) -> None:
-        self._sigma = sigma
-        self._loc = loc
+        # self._sigma, self._loc = jnp.broadcast_arrays(sigma, loc)
+        self._sigma, self._loc = jx_cast(sigma, loc)
         self.check_params()
         super().__init__(name)
 
@@ -57,7 +58,8 @@ class Cauchy(ContinuousRV):
     def rvs(self, N: int = 1, key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        return jax.random.cauchy(key, shape=(N, 1)) * self._sigma + self._loc
+        shape = (N,) + (self._sigma.shape or (1,))
+        return jax.random.cauchy(key, shape=shape) * self._sigma + self._loc
 
     def __repr__(self) -> str:
         string = f"Cauchy(sigma={self._sigma}, loc={self._loc}"
