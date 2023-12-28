@@ -27,8 +27,6 @@ from .crvs import ContinuousRV
 class Pareto(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, scale: ArrayLike, name: str = None) -> None:
-        # self._alpha = alpha
-        # self._scale = scale
         self._alpha, self._scale = jx_cast(alpha, scale)
         self.check_params()
         super().__init__(name)

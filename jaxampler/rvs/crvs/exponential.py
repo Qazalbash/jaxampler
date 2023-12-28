@@ -27,7 +27,6 @@ from .crvs import ContinuousRV
 class Exponential(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
-        # self._lmbda, = jnp.broadcast_arrays(lmbda)
         self._lmbda, = jx_cast(lmbda)
         self.check_params()
         self._scale = 1.0 / lmbda

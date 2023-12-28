@@ -26,7 +26,7 @@ from .crvs import ContinuousRV
 class Weibull(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike = 1.0, k: ArrayLike = 1.0, name: str = None) -> None:
-        self._lmbda = lmbda
+        self._lmbda, = jx_cast(lmbda)
         self._k = k
         self.check_params()
         super().__init__(name)

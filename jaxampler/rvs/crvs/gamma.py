@@ -27,7 +27,6 @@ from .crvs import ContinuousRV
 class Gamma(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
-        # self._alpha, self._beta = jnp.broadcast_arrays(alpha, beta)
         self._alpha, self._beta = jx_cast(alpha, beta)
         self.check_params()
         super().__init__(name)

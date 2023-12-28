@@ -27,7 +27,6 @@ from .crvs import ContinuousRV
 class Cauchy(ContinuousRV):
 
     def __init__(self, sigma: ArrayLike, loc: ArrayLike = 0, name: str = None) -> None:
-        # self._sigma, self._loc = jnp.broadcast_arrays(sigma, loc)
         self._sigma, self._loc = jx_cast(sigma, loc)
         self.check_params()
         super().__init__(name)

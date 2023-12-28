@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ...utils import jx_cast
 from .bernoulli import Bernoulli
 from .binomial import Binomial
 from .drvs import DiscreteRV

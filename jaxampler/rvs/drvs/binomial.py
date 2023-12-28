@@ -47,8 +47,8 @@ class Binomial(DiscreteRV):
     def check_params(self) -> None:
         """Check the parameters of the random variable."""
         assert jnp.all(self._p >= 0.0) and jnp.all(self._p <= 1.0), "p must be in [0, 1]"
-        assert type(self._n) == int, "n must be an integer"
-        assert self._n > 0, "n must be positive"
+        assert jnp.all(self._n.dtype == jnp.int32), "n must be an integer"
+        assert jnp.all(self._n > 0), "n must be positive"
 
     @partial(jit, static_argnums=(0))
     def logpmf(self, k: ArrayLike) -> ArrayLike:

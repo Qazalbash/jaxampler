@@ -27,7 +27,6 @@ from .crvs import ContinuousRV
 class Chi2(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        # self._nu, = jnp.broadcast_arrays(nu)
         self._nu, = jx_cast(nu)
         self.check_params()
         super().__init__(name)

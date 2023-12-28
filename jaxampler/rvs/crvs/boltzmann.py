@@ -26,7 +26,6 @@ from .crvs import ContinuousRV
 class Boltzmann(ContinuousRV):
 
     def __init__(self, a: ArrayLike, name: str = None) -> None:
-        # self._a, = jnp.broadcast_arrays(a)
         self._a, = jx_cast(a)
         self.check_params()
         super().__init__(name)

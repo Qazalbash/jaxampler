@@ -27,8 +27,6 @@ from .crvs import ContinuousRV
 class LogNormal(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None) -> None:
-        # self._mu = mu
-        # self._sigma = sigma
         self._mu, self._sigma = jx_cast(mu, sigma)
         self.check_params()
         super().__init__(name)
