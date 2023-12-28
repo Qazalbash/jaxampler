@@ -57,10 +57,10 @@ class LogNormal(ContinuousRV):
         return jnp.exp(self._mu + self._sigma * ndtri(x))
 
     def rvs(self, N: int = 1, key: Array = None) -> Array:
-        # return jax.random.lognormal(self.get_key(), shape=(N,)) * self._sigma + self._mu
         if key is None:
             key = self.get_key(key)
-        U = jax.random.uniform(key, shape=(N, 1))
+        shape = (N,) + (self._mu.shape or (1,))
+        U = jax.random.uniform(key, shape=shape)
         return self.ppf(U)
 
     def __repr__(self) -> str:
