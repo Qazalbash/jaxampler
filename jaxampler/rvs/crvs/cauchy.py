@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import cauchy as jax_cauchy
 from jax.typing import ArrayLike
 
@@ -36,28 +37,27 @@ class Cauchy(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_cauchy.logpdf(x, self._loc, self._sigma)
+        return vmap(lambda xx: jax_cauchy.logpdf(xx, self._loc, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_cauchy.pdf(x, self._loc, self._sigma)
+        return vmap(lambda xx: jax_cauchy.pdf(xx, self._loc, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_cauchy.logcdf(x, self._loc, self._sigma)
+        return vmap(lambda xx: jax_cauchy.logcdf(xx, self._loc, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_cauchy.cdf(x, self._loc, self._sigma)
+        return vmap(lambda xx: jax_cauchy.cdf(xx, self._loc, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
-        return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
+        return vmap(lambda xx: self._loc + self._sigma * jnp.tan(jnp.pi * (xx - 0.5)))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._sigma.shape or (1,))
         return jax.random.cauchy(key, shape=shape) * self._sigma + self._loc
 
     def __repr__(self) -> str:

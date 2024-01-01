@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import gamma as jax_gamma
 from jax.typing import ArrayLike
 
@@ -37,28 +38,27 @@ class Gamma(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_gamma.logpdf(x, self._alpha, scale=1 / self._beta)
+        return vmap(lambda xx: jax_gamma.logpdf(xx, self._alpha, scale=1 / self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_gamma.pdf(x, self._alpha, scale=1 / self._beta)
+        return vmap(lambda xx: jax_gamma.pdf(xx, self._alpha, scale=1 / self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_gamma.logcdf(x, self._alpha, scale=1 / self._beta)
+        return vmap(lambda xx: jax_gamma.logcdf(xx, self._alpha, scale=1 / self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
+        return vmap(lambda xx: jax_gamma.cdf(xx, self._alpha, scale=1 / self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._alpha.shape or (1,))
         return jax.random.gamma(key, self._alpha, shape=shape) / self._beta
 
     def __repr__(self) -> str:

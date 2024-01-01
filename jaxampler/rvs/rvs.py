@@ -16,6 +16,7 @@ from functools import partial
 
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.typing import ArrayLike
 
 from ..utils import new_prn_key
@@ -110,20 +111,20 @@ class GenericRV(object):
         """
         return jnp.exp(self.logppf(*x))
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         """Random variates from the distribution of size N.
 
         Parameters
         ----------
-        N : int, optional
-            Number of random variates, by default 1
+        shape : int, optional
+            shape of the rvs output
         key : Array, optional
             JAX random key, by default None
 
         Returns
         -------
         Array
-            Random variates from the distribution of size N.
+            Random variates from the distribution of shape `shape`.
 
         Raises
         ------

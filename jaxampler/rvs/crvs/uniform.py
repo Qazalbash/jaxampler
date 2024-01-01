@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit, lax
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import uniform as jax_uniform
 from jax.typing import ArrayLike
 
@@ -36,26 +37,37 @@ class Uniform(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_uniform.logpdf(x, loc=self._low, scale=self._high - self._low)
+        return vmap(lambda xx: jax_uniform.logpdf(
+            xx,
+            loc=self._low,
+            scale=self._high - self._low,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_uniform.pdf(x, loc=self._low, scale=self._high - self._low)
+        return vmap(lambda xx: jax_uniform.pdf(
+            xx,
+            loc=self._low,
+            scale=self._high - self._low,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        conditions = [x < self._low, (self._low <= x) & (x <= self._high), self._high < x]
-        choice = [
-            -jnp.inf,
-            lax.log(x - self._low) - lax.log(self._high - self._low),
-            jnp.log(1.0),
-        ]
-        return jnp.select(conditions, choice)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+        def logcdf_x(xx: ArrayLike) -> ArrayLike:
+            conditions = [xx < self._low, (self._low <= xx) & (xx <= self._high), self._high < xx]
+            choice = [
+                -jnp.inf,
+                lax.log(xx - self._low) - lax.log(self._high - self._low),
+                jnp.log(1.0),
+            ]
+            return jnp.select(conditions, choice)
+
+        return vmap(logcdf_x)(x)
+
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._low.shape or (1,))
         return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=shape)
 
     def __repr__(self) -> str:

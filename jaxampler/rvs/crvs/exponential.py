@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import expon as jax_expon
 from jax.typing import ArrayLike
 
@@ -37,26 +38,31 @@ class Exponential(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_expon.logpdf(x, scale=self._scale)
+        return vmap(lambda x_: jax_expon.logpdf(x_, scale=self._scale))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_expon.pdf(x, scale=self._scale)
+        return vmap(lambda xx: jax_expon.pdf(xx, scale=self._scale))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        logcdf_val = jnp.log1p(-jnp.exp(-self._lmbda * x))
-        return jnp.where(x >= 0, logcdf_val, -jnp.inf)
+        return vmap(lambda xx: jnp.where(
+            xx >= 0,
+            jnp.log1p(-jnp.exp(-self._lmbda * xx)),
+            -jnp.inf,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logppf_val = jnp.log(-jnp.log1p(-x)) - jnp.log(self._lmbda)
-        return jnp.where(x >= 0, logppf_val, -jnp.inf)
+        return vmap(lambda xx: jnp.where(
+            xx >= 0,
+            jnp.log(-jnp.log1p(-xx)) - jnp.log(self._lmbda),
+            -jnp.inf,
+        ))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._lmbda.shape or (1,))
         U = jax.random.uniform(key, shape=shape)
         rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
         return jnp.exp(rvs_val)

@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.special import log_ndtr, ndtr, ndtri
 from jax.typing import ArrayLike
 
@@ -36,30 +37,33 @@ class LogNormal(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        constants = -(jnp.log(self._sigma) + 0.5 * jnp.log(2 * jnp.pi))
-        logpdf_val = jnp.where(
-            x <= 0,
-            -jnp.inf,
-            constants - jnp.log(x) - (0.5 * jnp.power(self._sigma, -2)) * jnp.power((jnp.log(x) - self._mu), 2),
-        )
-        return logpdf_val
+
+        def logpdf_x(xx: ArrayLike) -> ArrayLike:
+            constants = -(jnp.log(self._sigma) + 0.5 * jnp.log(2 * jnp.pi))
+            logpdf_val = jnp.where(
+                xx <= 0,
+                -jnp.inf,
+                constants - jnp.log(xx) - (0.5 * jnp.power(self._sigma, -2)) * jnp.power((jnp.log(xx) - self._mu), 2),
+            )
+            return logpdf_val
+
+        return vmap(logpdf_x)(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return log_ndtr((jnp.log(x) - self._mu) / self._sigma)
+        return vmap(lambda xx: log_ndtr((jnp.log(xx) - self._mu) / self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return ndtr((jnp.log(x) - self._mu) / self._sigma)
+        return vmap(lambda xx: ndtr((jnp.log(xx) - self._mu) / self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self._mu + self._sigma * ndtri(x))
+        return vmap(lambda xx: jnp.exp(self._mu + self._sigma * ndtri(xx)))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._mu.shape or (1,))
         U = jax.random.uniform(key, shape=shape)
         return self.ppf(U)
 

@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import poisson as jax_poisson
 from jax.typing import ArrayLike
 
@@ -36,20 +37,19 @@ class Poisson(DiscreteRV):
 
     @partial(jit, static_argnums=(0,))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
-        return jax_poisson.logpmf(k, self._lmbda)
+        return vmap(lambda kk: jax_poisson.logpmf(kk, self._lmbda))(k)
 
     @partial(jit, static_argnums=(0,))
     def pmf(self, k: ArrayLike) -> ArrayLike:
-        return jax_poisson.pmf(k, self._lmbda)
+        return vmap(lambda kk: jax_poisson.pmf(kk, self._lmbda))(k)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, k: ArrayLike) -> ArrayLike:
-        return jax_poisson.cdf(k, self._lmbda)
+        return vmap(lambda kk: jax_poisson.cdf(kk, self._lmbda))(k)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._lmbda.shape or (1,))
         return jax.random.poisson(key, self._lmbda, shape=shape)
 
     def __repr__(self) -> str:

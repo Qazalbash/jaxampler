@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import binom as jax_binom
 from jax.typing import ArrayLike
 
@@ -52,13 +53,11 @@ class Binomial(DiscreteRV):
 
     @partial(jit, static_argnums=(0))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
-        k = jnp.asarray(k)
-        return jax_binom.logpmf(k, self._n, self._p)
+        return vmap(lambda kk: jax_binom.logpmf(kk, self._n, self._p))(k)
 
     @partial(jit, static_argnums=(0,))
     def pmf(self, k: ArrayLike) -> ArrayLike:
-        k = jnp.asarray(k)
-        return jax_binom.pmf(k, self._n, self._p)
+        return vmap(lambda kk: jax_binom.pmf(kk, self._n, self._p))(k)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, k: ArrayLike) -> ArrayLike:
@@ -78,17 +77,19 @@ class Binomial(DiscreteRV):
         ArrayLike
             Cumulative distribution function evaluated at k.
         """
-        k = jnp.asarray(k)
-        x = jnp.arange(0, self._n + 1, dtype=jnp.int32)
-        complete_cdf = jnp.cumsum(self.pmf(x))
-        cond = [k < 0, k >= self._n, jnp.logical_and(k >= 0, k < self._n)]
-        return jnp.select(cond, [0.0, 1.0, complete_cdf[k]])
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+        def cdf_k(kk: ArrayLike) -> ArrayLike:
+            x = jnp.arange(0, self._n + 1, dtype=jnp.int32)
+            complete_cdf = jnp.cumsum(self.pmf(x))
+            cond = [kk < 0, kk >= self._n, jnp.logical_and(kk >= 0, kk < self._n)]
+            return jnp.select(cond, [0.0, 1.0, complete_cdf[kk]])
+
+        return vmap(cdf_k)(k)
+
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._p.shape or (1,))
-        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=(N, 1))
+        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Binomial(p={self._p}, n={self._n}"

@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 from jax.typing import ArrayLike
@@ -38,24 +39,23 @@ class Logistic(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_logistic.logpdf(x, self._mu, self._scale)
+        return vmap(lambda xx: jax_logistic.logpdf(xx, self._mu, self._scale))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_logistic.pdf(x, self._mu, self._scale)
+        return vmap(lambda xx: jax_logistic.pdf(xx, self._mu, self._scale))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_logistic.cdf(x, self._mu, self._scale)
+        return vmap(lambda xx: jax_logistic.cdf(xx, self._mu, self._scale))(x)
 
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
-        return self._mu + self._scale * logit(x)
+        return vmap(lambda xx: self._mu + self._scale * logit(xx))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._scale.shape or (1,))
         return jax.random.logistic(key, shape=shape) * self._scale + self._mu
 
     def __repr__(self) -> str:

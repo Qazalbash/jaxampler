@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.typing import ArrayLike
 
 from ...utils import jx_cast
@@ -48,38 +49,59 @@ class TruncPowerLaw(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        logpdf_val = jnp.log(x) * self._alpha - self._logZ
-        logpdf_val = jnp.where((x >= self._low) * (x <= self._high), logpdf_val, -jnp.inf)
-        return logpdf_val
+
+        def logpdf_x(xx: ArrayLike) -> ArrayLike:
+            logpdf_val = jnp.log(xx) * self._alpha - self._logZ
+            logpdf_val = jnp.where((xx >= self._low) * (xx <= self._high), logpdf_val, -jnp.inf)
+            return logpdf_val
+
+        return vmap(logpdf_x)(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        logcdf_val = jnp.where(
-            self._beta == 0.0,
-            jnp.log(jnp.log(x) - jnp.log(self._low)),
-            jnp.log(jnp.abs(jnp.power(x, self._beta) - jnp.power(self._low, self._beta))) -
-            jnp.log(jnp.abs(self._beta)),
-        )
-        logcdf_val -= self._logZ
-        logcdf_val = jnp.where(x >= self._low, logcdf_val, -jnp.inf)
-        logcdf_val = jnp.where(x <= self._high, logcdf_val, jnp.log(1.0))
-        return logcdf_val
+
+        def logcdf_x(xx: ArrayLike) -> ArrayLike:
+            conditions = [
+                xx < self._low,
+                xx > self._high,
+                self._beta == 0.0,
+                self._beta != 0.0,
+            ]
+            choices = [
+                -jnp.inf,
+                jnp.log(1.0),
+                jnp.log(jnp.log(xx) - jnp.log(self._low)) - self._logZ,
+                jnp.log(jnp.abs(jnp.power(xx, self._beta) - jnp.power(self._low, self._beta))) -
+                jnp.log(jnp.abs(self._beta)) - self._logZ,
+            ]
+            return jnp.select(conditions, choices)
+
+        return vmap(logcdf_x)(x)
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logppf_val = jnp.where(
-            self._beta == 0.0,
-            x * jnp.log(self._high) + (1.0 - x) * jnp.log(self._low),
-            jnp.power(self._beta, -1) * jnp.log(x * jnp.power(self._high, self._beta) +
-                                                (1.0 - x) * jnp.power(self._low, self._beta)))
-        logppf_val = jnp.where(x >= 0.0, logppf_val, -jnp.inf)
-        logppf_val = jnp.where(x <= 1.0, logppf_val, jnp.log(1.0))
-        return logppf_val
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+        def logppf_x(xx: ArrayLike) -> ArrayLike:
+            conditions = [
+                xx < 0.0,
+                xx > 1.0,
+                self._beta == 0.0,
+                self._beta != 0.0,
+            ]
+            choices = [
+                -jnp.inf,
+                jnp.log(1.0),
+                xx * jnp.log(self._high) + (1.0 - xx) * jnp.log(self._low),
+                jnp.power(self._beta, -1) * jnp.log(xx * jnp.power(self._high, self._beta) +
+                                                    (1.0 - xx) * jnp.power(self._low, self._beta)),
+            ]
+            return jnp.select(conditions, choices)
+
+        return vmap(logppf_x)(x)
+
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._alpha.shape or (1,))
         U = jax.random.uniform(key, shape=shape, dtype=jnp.float32)
         rvs_val = self.ppf(U)
         return rvs_val

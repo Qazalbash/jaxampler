@@ -16,6 +16,7 @@ from functools import partial
 
 from jax import jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.special import erf
 from jax.typing import ArrayLike
 
@@ -35,18 +36,26 @@ class Boltzmann(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        logpdf_val = 2 * jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
-        logpdf_val -= 0.5 * jnp.log(jnp.pi / 2) + 3 * jnp.log(self._a)
-        logpdf_val = jnp.where(x > 0.0, logpdf_val, jnp.nan)
-        return logpdf_val
+
+        def logpdf_x(x: ArrayLike) -> ArrayLike:
+            logpdf_val = 2 * jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
+            logpdf_val -= 0.5 * jnp.log(jnp.pi / 2) + 3 * jnp.log(self._a)
+            logpdf_val = jnp.where(x > 0.0, logpdf_val, -jnp.inf)
+            return logpdf_val
+
+        return vmap(logpdf_x)(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        cdf_val = jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
-        cdf_val -= 0.5 * jnp.log(jnp.pi / 2) + jnp.log(self._a)
-        cdf_val = jnp.exp(cdf_val)
-        cdf_val = erf(x / (jnp.sqrt(2) * self._a)) - cdf_val
-        return cdf_val
+
+        def cdf_x(xx: ArrayLike) -> ArrayLike:
+            cdf_val = jnp.log(xx) - 0.5 * jnp.power(xx / self._a, 2)
+            cdf_val -= 0.5 * jnp.log(jnp.pi / 2) + jnp.log(self._a)
+            cdf_val = jnp.exp(cdf_val)
+            cdf_val = erf(xx / (jnp.sqrt(2) * self._a)) - cdf_val
+            return cdf_val
+
+        return vmap(cdf_x)(x)
 
     def __repr__(self) -> str:
         string = f"Boltzmann(a={self._a}"

@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import beta as jax_beta
 from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
@@ -38,28 +39,27 @@ class Beta(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_beta.logpdf(x, self._alpha, self._beta)
+        return vmap(lambda xx: jax_beta.logpdf(xx, self._alpha, self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_beta.pdf(x, self._alpha, self._beta)
+        return vmap(lambda xx: jax_beta.pdf(xx, self._alpha, self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_beta.logcdf(x, self._alpha, self._beta)
+        return vmap(lambda xx: jax_beta.logcdf(xx, self._alpha, self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_beta.cdf(x, self._alpha, self._beta)
+        return vmap(lambda xx: jax_beta.cdf(xx, self._alpha, self._beta))(x)
 
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
-        return tfp.math.betaincinv(self._alpha, self._beta, x)
+        return vmap(lambda xx: tfp.math.betaincinv(self._alpha, self._beta, xx))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._alpha.shape or (1,))
         return jax.random.beta(key, self._alpha, self._beta, shape=shape)
 
     def __repr__(self) -> str:

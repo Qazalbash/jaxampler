@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import truncnorm as jax_truncnorm
 from jax.typing import ArrayLike
 
@@ -44,24 +45,47 @@ class TruncNormal(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_truncnorm.logpdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
+        return vmap(lambda xx: jax_truncnorm.logpdf(
+            xx,
+            self._alpha,
+            self._beta,
+            loc=self._mu,
+            scale=self._sigma,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_truncnorm.pdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
+        return vmap(lambda xx: jax_truncnorm.pdf(
+            xx,
+            self._alpha,
+            self._beta,
+            loc=self._mu,
+            scale=self._sigma,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_truncnorm.logcdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
+        return vmap(lambda xx: jax_truncnorm.logcdf(
+            xx,
+            self._alpha,
+            self._beta,
+            loc=self._mu,
+            scale=self._sigma,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_truncnorm.cdf(x, self._alpha, self._beta, loc=self._mu, scale=self._sigma)
+        return vmap(lambda xx: jax_truncnorm.cdf(
+            xx,
+            self._alpha,
+            self._beta,
+            loc=self._mu,
+            scale=self._sigma,
+        ))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._sigma.shape or (1,))
         return jax.random.truncated_normal(
             key,
             self._alpha,

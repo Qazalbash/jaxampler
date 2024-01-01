@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.typing import ArrayLike
 
 from ...utils import jx_cast
@@ -35,23 +36,31 @@ class Rayleigh(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        logpdf_val = jnp.log(x) - 0.5 * jnp.power(x / self._sigma, 2) - 2 * jnp.log(self._sigma)
-        return jnp.where(x >= 0, logpdf_val, -jnp.inf)
+        return vmap(lambda xx: jnp.where(
+            xx >= 0,
+            jnp.log(xx) - 0.5 * jnp.power(xx / self._sigma, 2) - 2 * jnp.log(self._sigma),
+            -jnp.inf,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        logcdf_val = jnp.log1p(-jnp.exp(-0.5 * jnp.power(x / self._sigma, 2)))
-        return jnp.where(x >= 0, logcdf_val, -jnp.inf)
+        return vmap(lambda xx: jnp.where(
+            xx >= 0,
+            jnp.log1p(-jnp.exp(-0.5 * jnp.power(xx / self._sigma, 2))),
+            -jnp.inf,
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
-        logppf_val = jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x))
-        return jnp.where(x >= 0, logppf_val, -jnp.inf)
+        return vmap(lambda xx: jnp.where(
+            xx >= 0,
+            jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-xx)),
+            -jnp.inf,
+        ))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._sigma.shape or (1,))
         return jax.random.rayleigh(key, scale=self._sigma, shape=shape)
 
     def __repr__(self) -> str:

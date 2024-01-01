@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import geom as jax_geom
 from jax.typing import ArrayLike
 
@@ -38,26 +39,29 @@ class Geometric(DiscreteRV):
 
     @partial(jit, static_argnums=(0,))
     def logpmf(self, k: ArrayLike) -> ArrayLike:
-        return jax_geom.logpmf(k, self._p)
+        return vmap(lambda kk: jax_geom.logpmf(kk, self._p))(k)
 
     @partial(jit, static_argnums=(0,))
     def pmf(self, k: ArrayLike) -> ArrayLike:
-        return jax_geom.pmf(k, self._p)
+        return vmap(lambda kk: jax_geom.pmf(kk, self._p))(k)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, k: ArrayLike) -> ArrayLike:
-        conditions = [k < 0, k >= 0]
-        choices = [jnp.zeros_like(k), 1.0 - jnp.power(self._q, jnp.floor(k))]
-        return jnp.select(conditions, choices)
+
+        def cdf_k(kk: ArrayLike) -> ArrayLike:
+            conditions = [kk < 0, kk >= 0]
+            choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(kk))]
+            return jnp.select(conditions, choices)
+
+        return vmap(cdf_k)(k)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, k: ArrayLike) -> ArrayLike:
         return jnp.log(self.cdf(k))
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._p.shape or (1,))
         return jax.random.geometric(key, self._p, shape=shape)
 
     def __repr__(self) -> str:

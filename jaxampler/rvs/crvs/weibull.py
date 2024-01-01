@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.typing import ArrayLike
 
 from ...utils import jx_cast
@@ -37,23 +38,28 @@ class Weibull(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.where(
-            x < 0, -jnp.inf,
-            jnp.log(self._k) - (self._k * jnp.log(self._lmbda)) + (self._k - 1.0) * jnp.log(x) -
-            jnp.power(x / self._lmbda, self._k))
+        return vmap(lambda xx: jnp.where(
+            xx < 0,
+            -jnp.inf,
+            jnp.log(self._k) - (self._k * jnp.log(self._lmbda)) +
+            (self._k - 1.0) * jnp.log(xx) - jnp.power(xx / self._lmbda, self._k),
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jnp.where(x < 0, 0.0, 1.0 - jnp.exp(-jnp.power(x / self._lmbda, self._k)))
+        return vmap(lambda xx: jnp.where(
+            xx < 0,
+            0.0,
+            1.0 - jnp.exp(-jnp.power(xx / self._lmbda, self._k)),
+        ))(x)
 
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
-        return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
+        return vmap(lambda xx: self._lmbda * jnp.power(-jnp.log1p(-xx), 1.0 / self._k))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._lmbda.shape or (1,))
         U = jax.random.uniform(key, shape=shape)
         return self.ppf(U)
 

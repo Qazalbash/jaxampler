@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import norm as jax_norm
 from jax.typing import ArrayLike
 
@@ -37,28 +38,27 @@ class Normal(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_norm.logpdf(x, self._mu, self._sigma)
+        return vmap(lambda xx: jax_norm.logpdf(xx, self._mu, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_norm.logcdf(x, self._mu, self._sigma)
+        return vmap(lambda xx: jax_norm.logcdf(xx, self._mu, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_norm.pdf(x, self._mu, self._sigma)
+        return vmap(lambda xx: jax_norm.pdf(xx, self._mu, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_norm.cdf(x, self._mu, self._sigma)
+        return vmap(lambda xx: jax_norm.cdf(xx, self._mu, self._sigma))(x)
 
     @partial(jit, static_argnums=(0,))
     def ppf(self, x: ArrayLike) -> ArrayLike:
-        return jax_norm.ppf(x, self._mu, self._sigma)
+        return vmap(lambda xx: jax_norm.ppf(xx, self._mu, self._sigma))(x)
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._mu.shape or (1,))
         return jax.random.normal(key, shape=shape) * self._sigma + self._mu
 
     def __repr__(self) -> str:

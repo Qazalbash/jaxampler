@@ -17,6 +17,7 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 
@@ -36,28 +37,27 @@ class Chi2(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_chi2.logpdf(x, self._nu)
+        return vmap(lambda xx: jax_chi2.logpdf(xx, self._nu))(x)
 
     @partial(jit, static_argnums=(0,))
     def pdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_chi2.pdf(x, self._nu)
+        return vmap(lambda xx: jax_chi2.pdf(xx, self._nu))(x)
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_chi2.logcdf(x, self._nu)
+        return vmap(lambda xx: jax_chi2.logcdf(xx, self._nu))(x)
 
     @partial(jit, static_argnums=(0,))
     def cdf(self, x: ArrayLike) -> ArrayLike:
-        return jax_chi2.cdf(x, self._nu)
+        return vmap(lambda xx: jax_chi2.cdf(xx, self._nu))(x)
 
     @partial(jit, static_argnums=(0,))
     def logppf(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, N: int = 1, key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
-        shape = (N,) + (self._nu.shape or (1,))
         return jax.random.chisquare(key, self._nu, shape=shape)
 
     def __repr__(self) -> str:
