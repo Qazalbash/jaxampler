@@ -37,31 +37,31 @@ class Weibull(ContinuousRV):
         assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx < 0,
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x < 0,
             -jnp.inf,
-            jnp.log(self._k) - (self._k * jnp.log(self._lmbda)) +
-            (self._k - 1.0) * jnp.log(xx) - jnp.power(xx / self._lmbda, self._k),
-        ))(x)
+            jnp.log(self._k) - (self._k * jnp.log(self._lmbda)) + (self._k - 1.0) * jnp.log(x) -
+            jnp.power(x / self._lmbda, self._k),
+        )
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx < 0,
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x < 0,
             0.0,
-            1.0 - jnp.exp(-jnp.power(xx / self._lmbda, self._k)),
-        ))(x)
+            1.0 - jnp.exp(-jnp.power(x / self._lmbda, self._k)),
+        )
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: self._lmbda * jnp.power(-jnp.log1p(-xx), 1.0 / self._k))(x)
+    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+        return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
         U = jax.random.uniform(key, shape=shape)
-        return self.ppf(U)
+        return self.ppf_x(U)
 
     def __repr__(self) -> str:
         string = f"Weibull(lambda={self._lmbda}, k={self._k}"

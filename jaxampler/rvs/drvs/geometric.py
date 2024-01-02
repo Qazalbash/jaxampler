@@ -38,26 +38,22 @@ class Geometric(DiscreteRV):
         assert jnp.all(self._p >= 0.0), "All p must be greater than or equals to 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_geom.logpmf(kk, self._p))(k)
+    def logpmf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_geom.logpmf(x, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def pmf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_geom.pmf(kk, self._p))(k)
+    def pmf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_geom.pmf(x, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, k: ArrayLike) -> ArrayLike:
-
-        def cdf_k(kk: ArrayLike) -> ArrayLike:
-            conditions = [kk < 0, kk >= 0]
-            choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(kk))]
-            return jnp.select(conditions, choices)
-
-        return vmap(cdf_k)(k)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        conditions = [x < 0, x >= 0]
+        choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(x))]
+        return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, k: ArrayLike) -> ArrayLike:
-        return jnp.log(self.cdf(k))
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.log(self.cdf_x(x))
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

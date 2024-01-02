@@ -52,39 +52,23 @@ class Binomial(DiscreteRV):
         assert jnp.all(self._n > 0), "n must be positive"
 
     @partial(jit, static_argnums=(0))
-    def logpmf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_binom.logpmf(kk, self._n, self._p))(k)
+    def logpmf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_binom.logpmf(x, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def pmf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_binom.pmf(kk, self._n, self._p))(k)
+    def pmf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_binom.pmf(x, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, k: ArrayLike) -> ArrayLike:
-        return jnp.log(self.cdf(k))
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.log(self.cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, k: ArrayLike) -> ArrayLike:
-        """Cumulative distribution function.
-
-        Parameters
-        ----------
-        k : ArrayLike
-            Input values.
-
-        Returns
-        -------
-        ArrayLike
-            Cumulative distribution function evaluated at k.
-        """
-
-        def cdf_k(kk: ArrayLike) -> ArrayLike:
-            x = jnp.arange(0, self._n + 1, dtype=jnp.int32)
-            complete_cdf = jnp.cumsum(self.pmf(x))
-            cond = [kk < 0, kk >= self._n, jnp.logical_and(kk >= 0, kk < self._n)]
-            return jnp.select(cond, [0.0, 1.0, complete_cdf[kk]])
-
-        return vmap(cdf_k)(k)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        xx = jnp.arange(0, self._n + 1, dtype=jnp.int32)
+        complete_cdf = jnp.cumsum(self.pmf_x(xx))
+        cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
+        return jnp.select(cond, [0.0, 1.0, complete_cdf[x]])
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

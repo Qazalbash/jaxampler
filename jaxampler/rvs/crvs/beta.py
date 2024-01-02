@@ -38,24 +38,24 @@ class Beta(ContinuousRV):
         assert jnp.all(self._beta > 0.0), "beta must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_beta.logpdf(xx, self._alpha, self._beta))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_beta.logpdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_beta.pdf(xx, self._alpha, self._beta))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_beta.pdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_beta.logcdf(xx, self._alpha, self._beta))(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_beta.logcdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_beta.cdf(xx, self._alpha, self._beta))(x)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_beta.cdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: tfp.math.betaincinv(self._alpha, self._beta, xx))(x)
+    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+        return tfp.math.betaincinv(self._alpha, self._beta, x)
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

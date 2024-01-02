@@ -37,23 +37,23 @@ class Gamma(ContinuousRV):
         assert jnp.all(self._beta > 0), "All beta must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_gamma.logpdf(xx, self._alpha, scale=1 / self._beta))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_gamma.logpdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_gamma.pdf(xx, self._alpha, scale=1 / self._beta))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_gamma.pdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_gamma.logcdf(xx, self._alpha, scale=1 / self._beta))(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_gamma.logcdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_gamma.cdf(xx, self._alpha, scale=1 / self._beta))(x)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, x: ArrayLike) -> ArrayLike:
+    def logppf_x(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:

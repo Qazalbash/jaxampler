@@ -31,8 +31,8 @@ if __name__ == "__main__":
     xx = jnp.linspace(0, 1, N)
 
     plt.hist(samples, bins=100, density=True, label=f"samples", alpha=0.5, color="brown")
-    plt.plot(xx, target_rv.pdf(xx), label=f"target: {target_rv}", color="red")
-    plt.plot(xx, scale * proposal_rv.pdf(xx), label=f"proposal: {proposal_rv}", linestyle="--")
+    plt.plot(xx, target_rv.pdf_v(xx), label=f"target: {target_rv}", color="red")
+    plt.plot(xx, scale * proposal_rv.pdf_v(xx), label=f"proposal: {proposal_rv}", linestyle="--")
 
     plt.legend()
     plt.tight_layout()

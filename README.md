@@ -88,14 +88,14 @@ samples = ar_sampler.sample(
 
 JAXampler currently supports the following samplers:
 
-- [x] Inverse Transform Sampler
 - [x] Accept-Rejection Sampler
 - [x] Adaptive Accept-Rejection Sampler
-- [ ] Metropolis-Hastings Sampler
-- [ ] Hamiltonian Monte Carlo Sampler
-- [ ] Slice Sampler
 - [ ] Gibbs Sampler
+- [ ] Hamiltonian Monte Carlo Sampler
 - [ ] Importance Sampler
+- [x] Inverse Transform Sampler
+- [x] Metropolis-Hastings Sampler
+- [ ] Slice Sampler
 
 ## Random Variables
 

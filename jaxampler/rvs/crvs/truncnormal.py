@@ -44,44 +44,44 @@ class TruncNormal(ContinuousRV):
         assert jnp.all(self._sigma > 0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_truncnorm.logpdf(
-            xx,
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_truncnorm.logpdf(
+            x,
             self._alpha,
             self._beta,
             loc=self._mu,
             scale=self._sigma,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_truncnorm.pdf(
-            xx,
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_truncnorm.pdf(
+            x,
             self._alpha,
             self._beta,
             loc=self._mu,
             scale=self._sigma,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_truncnorm.logcdf(
-            xx,
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_truncnorm.logcdf(
+            x,
             self._alpha,
             self._beta,
             loc=self._mu,
             scale=self._sigma,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_truncnorm.cdf(
-            xx,
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_truncnorm.cdf(
+            x,
             self._alpha,
             self._beta,
             loc=self._mu,
             scale=self._sigma,
-        ))(x)
+        )
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

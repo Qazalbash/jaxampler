@@ -16,6 +16,7 @@ from functools import partial
 
 from jax import jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.typing import ArrayLike
 
 from ..rvs import GenericRV
@@ -26,42 +27,25 @@ class DiscreteRV(GenericRV):
     def __init__(self, name: str = None) -> None:
         super().__init__(name)
 
+    # POINT VALUED
+
     @partial(jit, static_argnums=(0,))
-    def logpmf(self, *k: ArrayLike) -> ArrayLike:
-        """Logarithm of the probability mass function.
-
-        Parameters
-        ----------
-        *k : ArrayLike
-            Input values.   
-
-        Returns
-        -------
-        ArrayLike
-            Logarithm of the probability mass function evaluated at *k.
-
-        Raises
-        ------
-        NotImplementedError
-            If the child class has not implemented this method.
-        """
+    def logpmf_x(self, *k: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pmf(self, *k: ArrayLike) -> ArrayLike:
-        """Probability mass function.
+    def pmf_x(self, *k: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logpmf_x(*k))
 
-        Parameters
-        ----------
-        *k : ArrayLike
-            Input values.
+    # VECTOR VALUED
 
-        Returns
-        -------
-        ArrayLike
-            Probability mass function evaluated at *k.
-        """
-        return jnp.exp(self.logpmf(*k))
+    @partial(jit, static_argnums=(0,))
+    def logpmf_v(self, *k: ArrayLike) -> ArrayLike:
+        return vmap(self.logpmf_x, in_axes=0)(*k)
+
+    @partial(jit, static_argnums=(0,))
+    def pmf_v(self, *k: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logpmf_v(*k))
 
     def __str__(self) -> str:
         return super().__str__()

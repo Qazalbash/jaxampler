@@ -36,16 +36,16 @@ class Poisson(DiscreteRV):
         assert jnp.all(self._lmbda > 0.0), "Lambda must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_poisson.logpmf(kk, self._lmbda))(k)
+    def logpmf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_poisson.logpmf(x, self._lmbda)
 
     @partial(jit, static_argnums=(0,))
-    def pmf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_poisson.pmf(kk, self._lmbda))(k)
+    def pmf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_poisson.pmf(x, self._lmbda)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, k: ArrayLike) -> ArrayLike:
-        return vmap(lambda kk: jax_poisson.cdf(kk, self._lmbda))(k)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_poisson.cdf(x, self._lmbda)
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

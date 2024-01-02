@@ -36,24 +36,24 @@ class Cauchy(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_cauchy.logpdf(xx, self._loc, self._sigma))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_cauchy.logpdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_cauchy.pdf(xx, self._loc, self._sigma))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_cauchy.pdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_cauchy.logcdf(xx, self._loc, self._sigma))(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_cauchy.logcdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_cauchy.cdf(xx, self._loc, self._sigma))(x)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_cauchy.cdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: self._loc + self._sigma * jnp.tan(jnp.pi * (xx - 0.5)))(x)
+    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+        return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
