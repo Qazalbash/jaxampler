@@ -15,4 +15,5 @@
 from .aarsampler import AdaptiveAcceptRejectSampler
 from .arsampler import AcceptRejectSampler
 from .invtranssampler import InverseTransformSampler
+from .mhsampler import MetropolisHastingSampler
 from .sampler import Sampler

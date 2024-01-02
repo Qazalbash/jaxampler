@@ -61,19 +61,19 @@ class AcceptRejectSampler(Sampler):
         if key is None:
             key = self.get_key(key)
 
-        V = proposal_rv.rvs(N, key)
+        V = proposal_rv.rvs((1, N), key)
 
-        pdf = target_rv.pdf(*(V.T))
+        pdf = target_rv.pdf(*V)
 
         key = self.get_key(key)
         U_scaled = jax.random.uniform(
             key,
             shape=(N,),
             minval=0.0,
-            maxval=scale * proposal_rv.pdf(*(V.T)),
+            maxval=scale * proposal_rv.pdf(*V),
         )
 
         accept = U_scaled <= pdf
-        samples = V[accept]
+        samples = (V.T)[accept]
         samples = samples.flatten()
         return samples
