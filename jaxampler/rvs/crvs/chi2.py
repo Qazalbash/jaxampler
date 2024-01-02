@@ -36,23 +36,23 @@ class Chi2(ContinuousRV):
         assert jnp.all(self._nu.dtype == jnp.int32), "nu must be an integer"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_chi2.logpdf(xx, self._nu))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_chi2.logpdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_chi2.pdf(xx, self._nu))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_chi2.pdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_chi2.logcdf(xx, self._nu))(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_chi2.logcdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_chi2.cdf(xx, self._nu))(x)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_chi2.cdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, x: ArrayLike) -> ArrayLike:
+    def logppf_x(self, x: ArrayLike) -> ArrayLike:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:

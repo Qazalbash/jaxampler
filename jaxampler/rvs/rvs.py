@@ -26,111 +26,48 @@ class GenericRV(object):
     """Generic random variable class."""
 
     def __init__(self, name: str = None) -> None:
-        """Initialize the random variable.
-
-        Parameters
-        ----------
-        name : str, optional
-            Name of the random variable, by default None
-        """
         self._name = name
 
     def check_params(self) -> None:
-        """Check the parameters of the random variable.
+        raise NotImplementedError
 
-        This method should be implemented by the child class.
+    # POINT VALUED
 
-        Raises
-        ------
-        NotImplementedError
-            If the child class has not implemented this method.
-        """
+    @partial(jit, static_argnums=(0,))
+    def logcdf_x(self, *x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, *x: ArrayLike) -> ArrayLike:
-        """Logarithm of the cumulative distribution function.
-        
-        Parameters
-        ----------
-        *x : ArrayLike
-            Input values.
+    def cdf_x(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logcdf_x(*x))
 
-        Returns
-        -------
-        ArrayLike
-            The logarithm of the cumulative distribution function.
-
-        Raises
-        ------
-        NotImplementedError
-            If the child class has not implemented this method.
-        """
+    @partial(jit, static_argnums=(0,))
+    def logppf_x(self, *x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, *x: ArrayLike) -> ArrayLike:
-        """Cumulative distribution function.
-        
-        Parameters
-        ----------
-        *x : ArrayLike
-            Input values.
+    def ppf_x(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logppf_x(*x))
 
-        Returns
-        -------
-        ArrayLike
-            The cumulative distribution function evaluated at x.
-        """
-        return jnp.exp(self.logcdf(*x))
+    # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, *x: ArrayLike) -> ArrayLike:
-        """Logarithm of the percent point function.
-
-        Returns
-        -------
-        ArrayLike
-            The logarithm of the percent point function evaluated at x.
-
-        Raises
-        ------
-        NotImplementedError
-            If the child class has not implemented this method.
-        """
-        raise NotImplementedError
+    def logcdf_v(self, *x: ArrayLike) -> ArrayLike:
+        return vmap(self.logcdf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, *x: ArrayLike) -> ArrayLike:
-        """Percent point function.
+    def cdf_v(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logcdf_v(*x))
 
-        Returns
-        -------
-        ArrayLike
-            The percent point function evaluated at x.
-        """
-        return jnp.exp(self.logppf(*x))
+    @partial(jit, static_argnums=(0,))
+    def logppf_v(self, *x: ArrayLike) -> ArrayLike:
+        return vmap(self.logppf_x, in_axes=0)(*x)
+
+    @partial(jit, static_argnums=(0,))
+    def ppf_v(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logppf_v(*x))
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
-        """Random variates from the distribution of size N.
-
-        Parameters
-        ----------
-        shape : int, optional
-            shape of the rvs output
-        key : Array, optional
-            JAX random key, by default None
-
-        Returns
-        -------
-        Array
-            Random variates from the distribution of shape `shape`.
-
-        Raises
-        ------
-        NotImplementedError
-            If the child class has not implemented this method.
-        """
         raise NotImplementedError
 
     @staticmethod
@@ -138,26 +75,7 @@ class GenericRV(object):
         return new_prn_key(key)
 
     def __str__(self) -> str:
-        """String representation of the random variable.
-
-        Returns
-        -------
-        str
-            String representation of the random variable.
-        """
         return self.__repr__()
 
     def __repr__(self) -> str:
-        """String representation of the random variable.
-
-        Returns
-        -------
-        str
-            String representation of the random variable.
-
-        Raises
-        ------
-        NotImplementedError
-            If the child class has not implemented this method.
-        """
         raise NotImplementedError

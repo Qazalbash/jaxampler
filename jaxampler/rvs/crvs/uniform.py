@@ -36,34 +36,30 @@ class Uniform(ContinuousRV):
         assert jnp.all(self._low < self._high), "All low must be less than high"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_uniform.logpdf(
-            xx,
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_uniform.logpdf(
+            x,
             loc=self._low,
             scale=self._high - self._low,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_uniform.pdf(
-            xx,
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_uniform.pdf(
+            x,
             loc=self._low,
             scale=self._high - self._low,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-
-        def logcdf_x(xx: ArrayLike) -> ArrayLike:
-            conditions = [xx < self._low, (self._low <= xx) & (xx <= self._high), self._high < xx]
-            choice = [
-                -jnp.inf,
-                lax.log(xx - self._low) - lax.log(self._high - self._low),
-                jnp.log(1.0),
-            ]
-            return jnp.select(conditions, choice)
-
-        return vmap(logcdf_x)(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        conditions = [x < self._low, (self._low <= x) & (x <= self._high), self._high < x]
+        choice = [
+            -jnp.inf,
+            lax.log(x - self._low) - lax.log(self._high - self._low),
+            jnp.log(1.0),
+        ]
+        return jnp.select(conditions, choice)
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

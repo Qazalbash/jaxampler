@@ -14,8 +14,10 @@
 
 from functools import partial
 
+import jax
 from jax import jit
 from jax import numpy as jnp
+from jax import vmap
 from jax.typing import ArrayLike
 
 from ..rvs import GenericRV
@@ -30,12 +32,25 @@ class ContinuousRV(GenericRV):
     def Z(self) -> ArrayLike:
         return jnp.exp(self._logZ)
 
-    def logpdf(self, *x: ArrayLike) -> ArrayLike:
+    # POINT VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def logpdf_x(self, *x: ArrayLike) -> ArrayLike:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, *x: ArrayLike) -> ArrayLike:
-        return jnp.exp(self.logpdf(*x))
+    def pdf_x(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logpdf_x(*x))
+
+    # VECTOR VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def logpdf_v(self, *x: ArrayLike) -> ArrayLike:
+        return vmap(self.logpdf_x, in_axes=0)(*x)
+
+    @partial(jit, static_argnums=(0,))
+    def pdf_v(self, *x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self.logpdf_v(*x))
 
     def __str__(self) -> str:
         return super().__str__()

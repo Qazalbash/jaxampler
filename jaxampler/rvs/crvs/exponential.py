@@ -37,35 +37,35 @@ class Exponential(ContinuousRV):
         assert jnp.all(self._lmbda > 0.0), "lmbda must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda x_: jax_expon.logpdf(x_, scale=self._scale))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_expon.logpdf(x, scale=self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_expon.pdf(xx, scale=self._scale))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_expon.pdf(x, scale=self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx >= 0,
-            jnp.log1p(-jnp.exp(-self._lmbda * xx)),
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x >= 0,
+            jnp.log1p(-jnp.exp(-self._lmbda * x)),
             -jnp.inf,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx >= 0,
-            jnp.log(-jnp.log1p(-xx)) - jnp.log(self._lmbda),
+    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x >= 0,
+            jnp.log(-jnp.log1p(-x)) - jnp.log(self._lmbda),
             -jnp.inf,
-        ))(x)
+        )
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
         U = jax.random.uniform(key, shape=shape)
-        rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
-        return jnp.exp(rvs_val)
+        rvs_xal = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
+        return jnp.exp(rvs_xal)
 
     def __repr__(self) -> str:
         string = f"Exponential(lmbda={self._lmbda}"

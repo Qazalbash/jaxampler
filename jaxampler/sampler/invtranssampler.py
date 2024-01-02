@@ -52,6 +52,6 @@ class InverseTransformSampler(Sampler):
             key = self.get_key(key)
 
         U = jax.random.uniform(key, shape=(N, 1))
-        samples = rv.ppf(U)
+        samples = rv.ppf_v(U)
 
         return samples

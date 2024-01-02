@@ -37,38 +37,34 @@ class Pareto(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_pareto.logpdf(xx, self._alpha, scale=self._scale))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_pareto.logpdf(x, self._alpha, scale=self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_pareto.pdf(xx, self._alpha, scale=self._scale))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_pareto.pdf(x, self._alpha, scale=self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            self._scale <= xx,
-            jnp.log1p(-jnp.power(self._scale / xx, self._alpha)),
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            self._scale <= x,
+            jnp.log1p(-jnp.power(self._scale / x, self._alpha)),
             -jnp.inf,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, x: ArrayLike) -> ArrayLike:
-
-        def logppf_x(x: ArrayLike) -> ArrayLike:
-            conditions = [
-                x < 0.0,
-                (0.0 <= x) & (x < 1.0),
-                1.0 <= x,
-            ]
-            choices = [
-                -jnp.inf,
-                jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log1p(-x),
-                jnp.log(1.0),
-            ]
-            return jnp.select(conditions, choices)
-
-        return vmap(logppf_x)(x)
+    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+        conditions = [
+            x < 0.0,
+            (0.0 <= x) & (x < 1.0),
+            1.0 <= x,
+        ]
+        choices = [
+            -jnp.inf,
+            jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log1p(-x),
+            jnp.log(1.0),
+        ]
+        return jnp.select(conditions, choices)
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

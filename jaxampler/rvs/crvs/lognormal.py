@@ -36,36 +36,32 @@ class LogNormal(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-
-        def logpdf_x(xx: ArrayLike) -> ArrayLike:
-            constants = -(jnp.log(self._sigma) + 0.5 * jnp.log(2 * jnp.pi))
-            logpdf_val = jnp.where(
-                xx <= 0,
-                -jnp.inf,
-                constants - jnp.log(xx) - (0.5 * jnp.power(self._sigma, -2)) * jnp.power((jnp.log(xx) - self._mu), 2),
-            )
-            return logpdf_val
-
-        return vmap(logpdf_x)(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        constants = -(jnp.log(self._sigma) + 0.5 * jnp.log(2 * jnp.pi))
+        logpdf_val = jnp.where(
+            x <= 0,
+            -jnp.inf,
+            constants - jnp.log(x) - (0.5 * jnp.power(self._sigma, -2)) * jnp.power((jnp.log(x) - self._mu), 2),
+        )
+        return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: log_ndtr((jnp.log(xx) - self._mu) / self._sigma))(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return log_ndtr((jnp.log(x) - self._mu) / self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: ndtr((jnp.log(xx) - self._mu) / self._sigma))(x)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return ndtr((jnp.log(x) - self._mu) / self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.exp(self._mu + self._sigma * ndtri(xx)))(x)
+    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.exp(self._mu + self._sigma * ndtri(x))
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
         U = jax.random.uniform(key, shape=shape)
-        return self.ppf(U)
+        return self.ppf_x(U)
 
     def __repr__(self) -> str:
         string = f"LogNormal(mu={self._mu}, sigma={self._sigma}"

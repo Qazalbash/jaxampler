@@ -24,7 +24,7 @@ if __name__ == "__main__":
     xx = jnp.linspace(0, 1, N)
 
     plt.hist(samples, bins=100, density=True, label=f"samples", alpha=0.5, color="brown")
-    plt.plot(xx, rv.pdf(xx), label=f"target: {rv}", color="red")
+    plt.plot(xx, rv.pdf_v(xx), label=f"target: {rv}", color="red")
     plt.legend()
     plt.tight_layout()
     plt.show()

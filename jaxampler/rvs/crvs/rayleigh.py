@@ -35,28 +35,28 @@ class Rayleigh(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx >= 0,
-            jnp.log(xx) - 0.5 * jnp.power(xx / self._sigma, 2) - 2 * jnp.log(self._sigma),
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x >= 0,
+            jnp.log(x) - 0.5 * jnp.power(x / self._sigma, 2) - 2 * jnp.log(self._sigma),
             -jnp.inf,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx >= 0,
-            jnp.log1p(-jnp.exp(-0.5 * jnp.power(xx / self._sigma, 2))),
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x >= 0,
+            jnp.log1p(-jnp.exp(-0.5 * jnp.power(x / self._sigma, 2))),
             -jnp.inf,
-        ))(x)
+        )
 
     @partial(jit, static_argnums=(0,))
-    def logppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jnp.where(
-            xx >= 0,
-            jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-xx)),
+    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.where(
+            x >= 0,
+            jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x)),
             -jnp.inf,
-        ))(x)
+        )
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:

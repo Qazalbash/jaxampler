@@ -37,24 +37,24 @@ class Normal(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_norm.logpdf(xx, self._mu, self._sigma))(x)
+    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_norm.logpdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_norm.logcdf(xx, self._mu, self._sigma))(x)
+    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_norm.logcdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def pdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_norm.pdf(xx, self._mu, self._sigma))(x)
+    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_norm.pdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_norm.cdf(xx, self._mu, self._sigma))(x)
+    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_norm.cdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def ppf(self, x: ArrayLike) -> ArrayLike:
-        return vmap(lambda xx: jax_norm.ppf(xx, self._mu, self._sigma))(x)
+    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+        return jax_norm.ppf(x, self._mu, self._sigma)
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
