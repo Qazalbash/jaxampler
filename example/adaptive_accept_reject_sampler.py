@@ -10,7 +10,7 @@ if __name__ == "__main__":
     scale = 1.35
     N = 10_000
 
-    target_rv = Normal(mu=0.5, sigma=0.2)
+    target_rv = TruncNormal(mu=0.5, sigma=0.2)
     proposal_rv = Beta(alpha=2, beta=2)
 
     ar_sampler = AdaptiveAcceptRejectSampler()

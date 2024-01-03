@@ -3,14 +3,14 @@ from time import time
 from jax import numpy as jnp
 from matplotlib import pyplot as plt
 
-from jaxampler.rvs import Beta, Normal
+from jaxampler.rvs import Beta, TruncNormal
 from jaxampler.sampler import AcceptRejectSampler
 
 if __name__ == "__main__":
     scale = 1.35
     N = 100_000
 
-    target_rv = Normal(mu=0.5, sigma=0.2)
+    target_rv = TruncNormal(mu=0.5, sigma=0.2)
     proposal_rv = Beta(alpha=2, beta=2)
 
     ar_sampler = AcceptRejectSampler()

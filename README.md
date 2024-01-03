@@ -1,4 +1,4 @@
-<!-- Copyright 2023 The JAXampler Authors
+<!-- Copyright 2023 The Jaxampler Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -12,15 +12,16 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. -->
 
-# JAXampler 🧪 - A JAX-based statistical sampling toolkit
+# Jaxampler 🧪 - A JAX-based statistical sampling toolkit
 
 [![Python package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml)
 [![Upload Python Package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml)
+[![CodeQL](https://github.com/Qazalbash/jaxampler/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/github-code-scanning/codeql)
 [![Versions](https://img.shields.io/pypi/pyversions/jaxampler.svg)](https://pypi.org/project/jaxampler/)
 
-JAXampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. JAXampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions.
+Jaxampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. Jaxampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions.
 
-JAXampler is currently in the early stages of development and is not yet ready for production use. However, we welcome contributions from the community to help us improve the library. If you are interested in contributing, please refer to our [contribution guidelines](CONTRIBUTING.md).
+Jaxampler is currently in the early stages of development and is not yet ready for production use. However, we welcome contributions from the community to help us improve the library. If you are interested in contributing, please refer to our [contribution guidelines](CONTRIBUTING.md).
 
 ## Features
 
@@ -30,7 +31,7 @@ JAXampler is currently in the early stages of development and is not yet ready f
 
 ## Install
 
-You may install the latest released version of JAXampler through pip by doing
+You may install the latest released version of Jaxampler through pip by doing
 
 ```bash
 pip3 install --upgrade jaxampler
@@ -50,7 +51,7 @@ pip install --upgrade "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-re
 
 ## Requirements
 
-JAXampler requires Python 3.10 or later. It also requires the following packages:
+Jaxampler requires Python 3.10 or later. It also requires the following packages:
 
 ```bash
 jax>=0.4.0
@@ -86,7 +87,7 @@ samples = ar_sampler.sample(
 )
 ```
 
-JAXampler currently supports the following samplers:
+Jaxampler currently supports the following samplers:
 
 - [x] Accept-Rejection Sampler
 - [x] Adaptive Accept-Rejection Sampler
@@ -99,7 +100,7 @@ JAXampler currently supports the following samplers:
 
 ## Random Variables
 
-To create a new random variable, import the corresponding type from the `jaxampler.rvs` i.e. `DiscreteRV` and `ContinuousRV` for discrete and continuous random variables respectively. Then, instantiate the random variable with the required parameters and implement the necessary methods (logpdf, cdf, and ppf etc). JAXampler currently supports the following random variables:
+To create a new random variable, import the corresponding type from the `jaxampler.rvs` i.e. `DiscreteRV` and `ContinuousRV` for discrete and continuous random variables respectively. Then, instantiate the random variable with the required parameters and implement the necessary methods (logpdf, cdf, and ppf etc). Jaxampler currently supports the following random variables:
 
 ### Discrete Random Variables
 
@@ -139,7 +140,7 @@ To cite this repository:
 ```bibtex
 @software{jaxampler2023github,
     author  = {Meesum Qazalbash},
-    title   = {{JAXampler}: A JAX-based statistical sampling toolkit},
+    title   = {{Jaxampler}: A JAX-based statistical sampling toolkit},
     url     = {http://github.com/Qazalbash/jaxampler},
     version = {0.0.4},
     year    = {2023}
