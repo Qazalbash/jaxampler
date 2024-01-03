@@ -1,13 +1,13 @@
-# Contributing to JAXampler
+# Contributing to Jaxampler
 
-First of all, thank you for considering contributing to JAXampler! 🌟 Your help is essential for making it a better project.
+First of all, thank you for considering contributing to Jaxampler! 🌟 Your help is essential for making it a better project.
 
 ## How to Contribute
 
 ### Issues
 
 - **Report issues or bugs** you've discovered. Be as specific as possible about how to reproduce the problem.
-- **Suggest enhancements** or new features you would like to see in JAXampler.
+- **Suggest enhancements** or new features you would like to see in Jaxampler.
 
 ### Pull Requests
 
