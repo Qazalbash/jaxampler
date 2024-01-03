@@ -63,29 +63,20 @@ tqdm
 
 The test suite is based on `pytest`. To run the tests, one needs to install pytest and run `pytest` at the root directory of this repo.
 
+## Monte Carlo Methods
+
+Jaxampler currently supports the following Monte Carlo methods:
+
+- [x] Monte Carlo Box Integration
+- [x] Monte Carlo Integration
+- [x] Importance Sampling
+- [ ] Markov Chain Monte Carlo
+- [ ] Sequential Monte Carlo
+- [ ] Variational Inference
+- [ ] Wang-Landau Sampling
+- [ ] Worm Algorithm
+
 ## Samplers
-
-To sample from a distribution, import the corresponding sampler from the `jaxampler.sampler` module and call the `sample` method with the required arguments.
-
-```python
-from jaxampler.rvs import Beta, Normal
-from jaxampler.sampler import AcceptRejectSampler
-
-scale = 1.35
-N = 100_000
-
-target_rv = Normal(mu=0.5, sigma=0.2)
-proposal_rv = Beta(alpha=2, beta=2)
-
-ar_sampler = AcceptRejectSampler()
-
-samples = ar_sampler.sample(
-    target_rv=target_rv,
-    proposal_rv=proposal_rv,
-    scale=scale,
-    N=N,
-)
-```
 
 Jaxampler currently supports the following samplers:
 
@@ -93,14 +84,14 @@ Jaxampler currently supports the following samplers:
 - [x] Adaptive Accept-Rejection Sampler
 - [ ] Gibbs Sampler
 - [ ] Hamiltonian Monte Carlo Sampler
-- [ ] Importance Sampler
+- [x] Hastings Sampler
 - [x] Inverse Transform Sampler
 - [x] Metropolis-Hastings Sampler
 - [ ] Slice Sampler
 
 ## Random Variables
 
-To create a new random variable, import the corresponding type from the `jaxampler.rvs` i.e. `DiscreteRV` and `ContinuousRV` for discrete and continuous random variables respectively. Then, instantiate the random variable with the required parameters and implement the necessary methods (logpdf, cdf, and ppf etc). Jaxampler currently supports the following random variables:
+Jaxampler currently supports the following random variables:
 
 ### Discrete Random Variables
 
