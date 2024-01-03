@@ -19,10 +19,10 @@ from jax import numpy as jnp
 from jax import vmap
 from jax.typing import ArrayLike
 
-from ..utils import new_prn_key
+from ..jobj import JObj
 
 
-class GenericRV(object):
+class GenericRV(JObj):
     """Generic random variable class."""
 
     def __init__(self, name: str = None) -> None:
@@ -68,14 +68,4 @@ class GenericRV(object):
         return jnp.exp(self.logppf_v(*x))
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
-        raise NotImplementedError
-
-    @staticmethod
-    def get_key(key: Array = None) -> Array:
-        return new_prn_key(key)
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __repr__(self) -> str:
         raise NotImplementedError

@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import jobj, montecarlo, rvs, sampler, utils
-
-__version__ = "0.0.4"
+from .integration import Integration
+from .montecarlo import MonteCarloBoxIntegration

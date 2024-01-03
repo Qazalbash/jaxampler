@@ -46,6 +46,3 @@ class DiscreteRV(GenericRV):
     @partial(jit, static_argnums=(0,))
     def pmf_v(self, *k: ArrayLike) -> ArrayLike:
         return jnp.exp(self.logpmf_v(*k))
-
-    def __str__(self) -> str:
-        return super().__str__()
