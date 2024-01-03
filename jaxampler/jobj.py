@@ -12,6 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import jobj, montecarlo, rvs, sampler, utils
+from jax import Array
 
-__version__ = "0.0.4"
+from .utils import new_prn_key
+
+
+class JObj(object):
+    """Jaxampler generic object class"""
+
+    def __init__(self, name: str = None) -> None:
+        self._name = name
+
+    @staticmethod
+    def get_key(key: Array = None) -> Array:
+        return new_prn_key(key)
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+    def __repr__(self) -> str:
+        raise NotImplementedError

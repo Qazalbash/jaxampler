@@ -14,7 +14,6 @@
 
 from functools import partial
 
-import jax
 from jax import jit
 from jax import numpy as jnp
 from jax import vmap
@@ -51,6 +50,3 @@ class ContinuousRV(GenericRV):
     @partial(jit, static_argnums=(0,))
     def pdf_v(self, *x: ArrayLike) -> ArrayLike:
         return jnp.exp(self.logpdf_v(*x))
-
-    def __str__(self) -> str:
-        return super().__str__()

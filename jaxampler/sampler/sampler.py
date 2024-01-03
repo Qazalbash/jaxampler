@@ -16,11 +16,11 @@ from abc import abstractmethod
 
 from jax import Array
 
+from ..jobj import JObj
 from ..rvs import ContinuousRV, GenericRV
-from ..utils import new_prn_key
 
 
-class Sampler(object):
+class Sampler(JObj):
     """Sampler is a base class for all samplers."""
 
     def __init__(self) -> None:
@@ -66,21 +66,3 @@ class Sampler(object):
             This method must be implemented by the subclass.
         """
         raise NotImplementedError
-
-    @staticmethod
-    def get_key(key: Array = None) -> Array:
-        """Returns a new key for sampling.
-
-        If the key is None, a new key is generated. Otherwise, a new key is generated from the given key.
-
-        Parameters
-        ----------
-        key : Array, optional
-            The key, by default None
-
-        Returns
-        -------
-        Array
-            The new key.
-        """
-        return new_prn_key(key)
