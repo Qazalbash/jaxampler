@@ -13,4 +13,5 @@
 # limitations under the License.
 
 from .integration import Integration
-from .montecarlo import MonteCarloBoxIntegration
+from .montecarlobox import MonteCarloBoxIntegration
+from .montecarlogeneric import MonteCarloGenericIntegration
