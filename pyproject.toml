@@ -1,3 +1,58 @@
 [build-system]
-requires = ["setuptools","wheel"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["jaxampler"]
+
+[tool.setuptools.dynamic]
+version = { attr = "jaxampler.__version__" }
+
+[project]
+name = "jaxampler"
+dynamic = ["version"]
+authors = [{ name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" }]
+maintainers = [
+    { name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" },
+]
+description = "A JAX-based statistical sampling toolkit"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    "jax>=0.4.0",
+    "jaxlib>=0.4.0",
+    "matplotlib>=3.8.0",
+    "setuptools",
+    "tfp-nightly",
+    "tqdm",
+    "twine",
+    "wheel",
+]
+keywords = [
+    "jax",
+    "statistics",
+    "optimization",
+    "sampler",
+    "sampling",
+    "mcmc",
+    "hmc",
+    "monte-carlo",
+    "markov-chain",
+    "scientific",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/Qazalbash/jaxampler"
+Issues = "https://github.com/Qazalbash/jaxampler/issues"
+Discussion = "https://github.com/Qazalbash/jaxampler/discussions"
+Changelog = "https://github.com/Qazalbash/jaxampler/blob/master/CHANGELOG.md"
