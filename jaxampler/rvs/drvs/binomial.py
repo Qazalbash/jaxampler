@@ -17,7 +17,6 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax import vmap
 from jax.scipy.stats import binom as jax_binom
 from jax.typing import ArrayLike
 

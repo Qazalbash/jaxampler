@@ -17,7 +17,6 @@ from functools import partial
 import jax
 from jax import Array, jit
 from jax import numpy as jnp
-from jax import vmap
 from jax.scipy.stats import chi2 as jax_chi2
 from jax.typing import ArrayLike
 

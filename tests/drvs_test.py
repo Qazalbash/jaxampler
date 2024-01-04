@@ -13,13 +13,8 @@
 # limitations under the License.
 
 import sys
-from itertools import product
-from random import randint
-
-from jax import numpy as jnp
 
 sys.path.append("../jaxampler")
-from jaxampler.rvs.drvs import Bernoulli, Binomial
 
 eps = 1e-3
 

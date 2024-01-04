@@ -34,7 +34,7 @@ setup(
     license='Apache 2.0',
     author='Meesum Qazalbash',
     author_email='meesumqazalbash@gmail.com',
-    description='JAX based lib for sampling statistical distributions.',
+    description='A JAX-based statistical sampling toolkit',
     long_description=_long_description,
     long_description_content_type='text/markdown',
     python_requires='>=3.10',

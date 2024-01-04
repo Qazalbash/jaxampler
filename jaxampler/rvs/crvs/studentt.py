@@ -16,7 +16,6 @@ from functools import partial
 
 from jax import jit
 from jax import numpy as jnp
-from jax import vmap
 from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
 from jax.typing import ArrayLike

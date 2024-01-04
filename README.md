@@ -67,10 +67,10 @@ The test suite is based on `pytest`. To run the tests, one needs to install pyte
 
 Jaxampler currently supports the following Monte Carlo methods:
 
-- [x] Monte Carlo Box Integration
-- [x] Monte Carlo Integration
 - [x] Importance Sampling
 - [ ] Markov Chain Monte Carlo
+- [x] Monte Carlo Box Integration
+- [x] Monte Carlo Integration
 - [ ] Sequential Monte Carlo
 - [ ] Variational Inference
 - [ ] Wang-Landau Sampling
@@ -140,8 +140,4 @@ To cite this repository:
 
 ## Contributors
 
-<a href="https://github.com/Qazalbash/jaxampler/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Qazalbash/jaxampler" />
-</a>
-
-Made with [contrib.rocks](https://contrib.rocks).
+[![List of contributors](https://contrib.rocks/image?repo=Qazalbash/jaxampler)](https://github.com/Qazalbash/jaxampler/graphs/contributors)
