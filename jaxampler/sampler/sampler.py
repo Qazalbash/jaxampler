@@ -23,9 +23,9 @@ from ..rvs import ContinuousRV, GenericRV
 class Sampler(JObj):
     """Sampler is a base class for all samplers."""
 
-    def __init__(self) -> None:
+    def __init__(self, name: str = None) -> None:
         """Initializes a Sampler object."""
-        pass
+        super().__init__(name)
 
     def check_rv(self, rv: GenericRV) -> None:
         """Checks if the given random variable is a valid random variable for the sampler.

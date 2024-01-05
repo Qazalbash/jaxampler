@@ -27,6 +27,9 @@ from .sampler import Sampler
 class MetropolisHastingSampler(Sampler):
     """Metropolis-Hasting Sampler Class"""
 
+    def __init__(self, name: str = None) -> None:
+        super().__init__(name)
+
     def _walk(self,
               q: Callable[[Any], ContinuousRV],
               alpha: Callable,

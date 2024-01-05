@@ -23,9 +23,8 @@ class InverseTransformSampler(Sampler):
     """InverseTransformSampler is a sampler that uses the inverse transform
     method to sample from a random variable."""
 
-    def __init__(self) -> None:
-        """Initializes an InverseTransformSampler object."""
-        super().__init__()
+    def __init__(self, name: str = None) -> None:
+        super().__init__(name)
 
     def sample(self, rv: ContinuousRV, N: int = 1, key: Array = None) -> Array:
         """Samples from the given random variable using the inverse transform method.
@@ -51,7 +50,7 @@ class InverseTransformSampler(Sampler):
         if key is None:
             key = self.get_key(key)
 
-        U = jax.random.uniform(key, shape=(N, 1))
+        U = jax.random.uniform(key, shape=(N,))
         samples = rv.ppf_v(U)
 
         return samples

@@ -21,9 +21,8 @@ from .arsampler import AcceptRejectSampler
 
 class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
 
-    def __init__(self) -> None:
-        """Initializes an AdaptiveAcceptRejectSampler object."""
-        super().__init__()
+    def __init__(self, name: str = None) -> None:
+        super().__init__(name)
 
     def sample(self,
                target_rv: ContinuousRV,

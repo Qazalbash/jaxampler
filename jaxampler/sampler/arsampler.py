@@ -23,9 +23,8 @@ class AcceptRejectSampler(Sampler):
     """AcceptRejectSampler is a sampler that uses the accept-reject method
     to sample from a random variable."""
 
-    def __init__(self) -> None:
-        """Initializes an AcceptRejectSampler object."""
-        super().__init__()
+    def __init__(self, name: str = None) -> None:
+        super().__init__(name)
 
     def sample(self,
                target_rv: ContinuousRV,

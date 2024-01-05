@@ -21,9 +21,11 @@ from .sampler import Sampler
 
 
 class ImportanceSampler(Sampler):
+    """ImportanceSampler is a sampler that uses the importance sampling method
+    to sample from a random variable."""
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, name: str = None) -> None:
+        super().__init__(name)
 
     def sample(
         self,
@@ -33,6 +35,28 @@ class ImportanceSampler(Sampler):
         N: int = 1,
         key: Array = None,
     ) -> Array:
+        """Samples from the given random variable using the importance sampling method.
+
+        It runs the importance sampling algorithm and returns the samples.
+
+        Parameters
+        ----------
+        h : Callable
+            function to be integrated
+        p : ContinuousRV
+            target distribution
+        q : ContinuousRV
+            proxy distribution
+        N : int, optional
+            Number of samples, by default 1
+        key : Array, optional
+            JAX PRNGKey, by default None
+
+        Returns
+        -------
+        Array
+            Samples from the target distribution
+        """
         if key is None:
             key = self.get_key()
         q_rv = q.rvs(shape=(N,), key=key)
