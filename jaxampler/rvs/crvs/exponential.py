@@ -63,8 +63,8 @@ class Exponential(ContinuousRV):
         if key is None:
             key = self.get_key(key)
         U = jax.random.uniform(key, shape=shape)
-        rvs_xal = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
-        return jnp.exp(rvs_xal)
+        rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
+        return jnp.exp(rvs_val)
 
     def __repr__(self) -> str:
         string = f"Exponential(lmbda={self._lmbda}"

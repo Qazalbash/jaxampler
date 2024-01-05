@@ -17,6 +17,8 @@ limitations under the License. -->
 [![Python package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-package.yml)
 [![Upload Python Package](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/python-publish.yml)
 [![CodeQL](https://github.com/Qazalbash/jaxampler/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Qazalbash/jaxampler/actions/workflows/github-code-scanning/codeql)
+
+![PyPI version](https://img.shields.io/pypi/v/jaxampler)
 [![Versions](https://img.shields.io/pypi/pyversions/jaxampler.svg)](https://pypi.org/project/jaxampler/)
 
 Jaxampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. Jaxampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions.
@@ -65,12 +67,15 @@ The test suite is based on `pytest`. To run the tests, one needs to install pyte
 
 ## Monte Carlo Methods
 
-Jaxampler currently supports the following Monte Carlo methods:
+Jaxampler supports the following Monte Carlo methods:
 
+- [ ] Hamiltonian Monte Carlo
 - [x] Importance Sampling
 - [ ] Markov Chain Monte Carlo
+- [ ] Metropolis Adjusted Langevin Algorithm
 - [x] Monte Carlo Box Integration
 - [x] Monte Carlo Integration
+- [ ] Multiple-Try Metropolis
 - [ ] Sequential Monte Carlo
 - [ ] Variational Inference
 - [ ] Wang-Landau Sampling
@@ -78,12 +83,11 @@ Jaxampler currently supports the following Monte Carlo methods:
 
 ## Samplers
 
-Jaxampler currently supports the following samplers:
+Jaxampler supports the following samplers:
 
 - [x] Accept-Rejection Sampler
 - [x] Adaptive Accept-Rejection Sampler
 - [ ] Gibbs Sampler
-- [ ] Hamiltonian Monte Carlo Sampler
 - [x] Hastings Sampler
 - [x] Inverse Transform Sampler
 - [x] Metropolis-Hastings Sampler
@@ -91,7 +95,7 @@ Jaxampler currently supports the following samplers:
 
 ## Random Variables
 
-Jaxampler currently supports the following random variables:
+Jaxampler supports the following random variables:
 
 ### Discrete Random Variables
 
