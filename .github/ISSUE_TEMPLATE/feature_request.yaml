@@ -1,0 +1,64 @@
+# This template is borrowed from https://github.com/google/jax/blob/main/.github/ISSUE_TEMPLATE/bug-report.yml
+---
+name: Bug report
+description: >-
+    Report a bug or unexpected behavior to help us improve the package
+labels:
+    - bug
+
+body:
+    - type: markdown
+      attributes:
+          value: >
+              ## Thank you for helping us improve Jaxampler!
+
+              * Please first verify that your feature request is not already reported using the
+              [Issue search][issue search].
+
+              * If you are asking a question or seeking support, please
+              consider [starting a discussion][Discussions].
+
+              * If you prefer a non-templated issue report, click [here][Raw report].
+
+
+              [Discussions]: https://github.com/Qazalbash/jaxampler/discussions
+
+              [issue search]: https://github.com/Qazalbash/jaxampler/search?q=is%3Aissue&type=issues
+
+              [Raw report]: http://github.com/Qazalbash/jaxampler/issues/new
+    - type: textarea
+      attributes:
+          label: Description
+          description: >-
+              A concise description of the feature.
+          placeholder: |
+              Text may use markdown formatting.
+              ```python
+              # for codeblocks, use triple backticks
+              ```
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: Code
+          description: >-
+              Code to demonstrate the use case.
+          placeholder: |
+              Text may use markdown formatting.
+              ```python
+              # for codeblocks, use triple backticks
+              ```
+      validations:
+          required: true
+    - type: textarea
+      attributes:
+          label: Output
+          description: >-
+              Output of the code.
+          placeholder: |
+              Text may use markdown formatting.
+              ```python
+              # for codeblocks, use triple backticks
+              ```
+      validations:
+          required: true
