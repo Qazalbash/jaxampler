@@ -27,9 +27,9 @@ from .drvs import DiscreteRV
 class Poisson(DiscreteRV):
 
     def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
-        self._lmbda, = jx_cast(lmbda)
+        shape, self._lmbda, = jx_cast(lmbda)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._lmbda > 0.0), "Lambda must be positive"
@@ -49,6 +49,7 @@ class Poisson(DiscreteRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.poisson(key, self._lmbda, shape=shape)
 
     def __repr__(self) -> str:

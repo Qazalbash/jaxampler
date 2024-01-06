@@ -32,11 +32,11 @@ class TruncNormal(ContinuousRV):
                  low: ArrayLike = 0.0,
                  high: ArrayLike = 1.0,
                  name: str = None) -> None:
-        self._mu, self._sigma, self._low, self._high = jx_cast(mu, sigma, low, high)
+        shape, self._mu, self._sigma, self._low, self._high = jx_cast(mu, sigma, low, high)
         self.check_params()
         self._alpha = (self._low - self._mu) / self._sigma
         self._beta = (self._high - self._mu) / self._sigma
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._low < self._high), "low must be smaller than high"
@@ -85,6 +85,7 @@ class TruncNormal(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.truncated_normal(
             key,
             self._alpha,

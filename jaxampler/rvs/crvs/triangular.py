@@ -26,9 +26,9 @@ from .crvs import ContinuousRV
 class Triangular(ContinuousRV):
 
     def __init__(self, low: float = 0, mode: float = 0.5, high: float = 1, name: str = None) -> None:
-        self._low, self._mode, self._high = jx_cast(low, mode, high)
+        shape, self._low, self._mode, self._high = jx_cast(low, mode, high)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._low <= self._high), "low must be less than or equal to high"
@@ -84,6 +84,7 @@ class Triangular(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.triangular(
             key,
             left=self._low,

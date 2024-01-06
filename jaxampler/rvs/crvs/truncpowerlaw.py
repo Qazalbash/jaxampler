@@ -26,11 +26,11 @@ from .crvs import ContinuousRV
 class TruncPowerLaw(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, low: ArrayLike = 0, high: ArrayLike = 1, name: str = None) -> None:
-        self._alpha, self._low, self._high = jx_cast(alpha, low, high)
+        shape, self._alpha, self._low, self._high = jx_cast(alpha, low, high)
         self.check_params()
         self._beta = 1.0 + self._alpha
         self._logZ = self.logZ()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._low > 0.0), "low must be greater than 0"

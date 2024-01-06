@@ -27,9 +27,9 @@ from .crvs import ContinuousRV
 class Uniform(ContinuousRV):
 
     def __init__(self, low: ArrayLike = 0.0, high: ArrayLike = 1.0, name: str = None) -> None:
-        self._low, self._high = jx_cast(low, high)
+        shape, self._low, self._high = jx_cast(low, high)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name, shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._low < self._high), "All low must be less than high"
@@ -63,6 +63,7 @@ class Uniform(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=shape)
 
     def __repr__(self) -> str:

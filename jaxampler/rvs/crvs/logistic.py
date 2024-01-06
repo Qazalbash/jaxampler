@@ -28,10 +28,10 @@ from .crvs import ContinuousRV
 class Logistic(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, scale: ArrayLike = 1.0, name: str = None) -> None:
-        self._scale, = jx_cast(scale)
+        shape, self._scale, = jx_cast(scale)
         self.check_params()
         self._mu = mu
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._scale > 0.0), "scale must be positive"
@@ -55,6 +55,7 @@ class Logistic(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.logistic(key, shape=shape) * self._scale + self._mu
 
     def __repr__(self) -> str:

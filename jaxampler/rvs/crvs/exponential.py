@@ -27,10 +27,10 @@ from .crvs import ContinuousRV
 class Exponential(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
-        self._lmbda, = jx_cast(lmbda)
+        shape, self._lmbda, = jx_cast(lmbda)
         self.check_params()
         self._scale = 1.0 / lmbda
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._lmbda > 0.0), "lmbda must be positive"
@@ -62,6 +62,7 @@ class Exponential(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         U = jax.random.uniform(key, shape=shape)
         rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
         return jnp.exp(rvs_val)

@@ -27,10 +27,10 @@ from .crvs import ContinuousRV
 class Normal(ContinuousRV):
 
     def __init__(self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None) -> None:
-        self._mu, self._sigma = jx_cast(mu, sigma)
+        shape, self._mu, self._sigma = jx_cast(mu, sigma)
         self.check_params()
         self._logZ = 0.0
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
@@ -58,6 +58,7 @@ class Normal(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.normal(key, shape=shape) * self._sigma + self._mu
 
     def __repr__(self) -> str:
