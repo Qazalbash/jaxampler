@@ -25,7 +25,8 @@ from jaxampler.utils import jx_cast, nCr, new_prn_key, nPr
 def test_jx_cast_success():
     a = 1
     b = [1, 2, 3]
-    casted_a, casted_b = jx_cast(a, b)
+    shape, casted_a, casted_b = jx_cast(a, b)
+    assert shape == (3,)
     assert isinstance(casted_a, jnp.ndarray)
     assert isinstance(casted_b, jnp.ndarray)
     assert casted_a.shape == ()
