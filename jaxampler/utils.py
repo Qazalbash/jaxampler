@@ -15,26 +15,33 @@
 import random
 
 import jax
-from jax import Array
+import numpy as np
+from jax import Array, lax
 from jax import numpy as jnp
+from jax._src import core
 from jax.typing import ArrayLike
 
 
 def jx_cast(*args: ArrayLike) -> list[Array]:
-    """Cast provided arguments to jnp.array and broadcasts them
-    with respect to each other
+    """Cast provided arguments to jnp.array and checks if they can be
+    broadcasted.
 
     Parameters
     ----------
     *args:
-        Arguments to cast and broadcast
+        Arguments to cast and check.
 
     Returns
     -------
     list[Array]
-        broadcasted arrays
+        List of casted arguments.
     """
-    return jnp.broadcast_arrays(*[jnp.asarray(a) for a in args])
+    # partially taken from the implementation of `jnp.broadcast_arrays`
+    shapes = [np.shape(arg) for arg in args]
+    if not shapes or all(core.definitely_equal_shape(shapes[0], s) for s in shapes):
+        return [jnp.asarray(arg) for arg in args]
+    result_shape = lax.broadcast_shapes(*shapes)
+    return [jnp.asarray(a) for a in args]
 
 
 fact = [1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880, 3_628_800]
@@ -57,7 +64,7 @@ def nPr(n: int, r: int) -> int:
     """
     assert 0 <= r <= n
     if n <= len(fact):
-        return fact[n] / fact[r] / fact[n - r]
+        return fact[n] / fact[n - r]
     for i in range(len(fact), n + 1):
         fact.append(fact[i - 1] * i)
     return fact[n] / fact[n - r]
