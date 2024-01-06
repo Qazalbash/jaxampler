@@ -14,7 +14,8 @@
 
 from functools import partial
 
-from jax import jit
+import jax
+from jax import Array, jit
 from jax import numpy as jnp
 from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
@@ -27,9 +28,9 @@ from .crvs import ContinuousRV
 class StudentT(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        self._nu, = jx_cast(nu)
+        shape, self._nu, = jx_cast(nu)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._nu > 0.0), "nu must be positive"
@@ -50,6 +51,12 @@ class StudentT(ContinuousRV):
     def ppf_x(self, x: ArrayLike) -> ArrayLike:
         """A method is addressed in this paper https://www.homepages.ucl.ac.uk/~ucahwts/lgsnotes/JCF_Student.pdf"""
         raise NotImplementedError
+
+    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+        if key is None:
+            key = self.get_key(key)
+        shape += self._shape
+        return jax.random.t(key=key, df=self._nu, shape=shape)
 
     def __repr__(self) -> str:
         string = f"StudentT(nu={self._nu}"

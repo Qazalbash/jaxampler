@@ -24,8 +24,8 @@ from ..rvs import GenericRV
 
 class DiscreteRV(GenericRV):
 
-    def __init__(self, name: str = None) -> None:
-        super().__init__(name)
+    def __init__(self, name: str = None, shape: tuple[int, ...] = None) -> None:
+        super().__init__(name=name, shape=shape)
 
     # POINT VALUED
 

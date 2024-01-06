@@ -27,9 +27,9 @@ from .crvs import ContinuousRV
 class Pareto(ContinuousRV):
 
     def __init__(self, alpha: ArrayLike, scale: ArrayLike, name: str = None) -> None:
-        self._alpha, self._scale = jx_cast(alpha, scale)
+        shape, self._alpha, self._scale = jx_cast(alpha, scale)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._alpha > 0.0), "alpha must be greater than 0"
@@ -68,6 +68,7 @@ class Pareto(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.pareto(key, self._alpha, shape=shape) * self._scale
 
     def __repr__(self) -> str:

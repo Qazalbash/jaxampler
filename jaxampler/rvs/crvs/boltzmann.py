@@ -26,9 +26,9 @@ from .crvs import ContinuousRV
 class Boltzmann(ContinuousRV):
 
     def __init__(self, a: ArrayLike, name: str = None) -> None:
-        self._a, = jx_cast(a)
+        shape, self._a, = jx_cast(a)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._a > 0.0), "a must be positive"

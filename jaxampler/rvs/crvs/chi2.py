@@ -27,9 +27,9 @@ from .crvs import ContinuousRV
 class Chi2(ContinuousRV):
 
     def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        self._nu, = jx_cast(nu)
+        shape, self._nu, = jx_cast(nu)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._nu.dtype == jnp.int32), "nu must be an integer"
@@ -57,6 +57,7 @@ class Chi2(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.chisquare(key, self._nu, shape=shape)
 
     def __repr__(self) -> str:

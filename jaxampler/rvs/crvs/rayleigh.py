@@ -26,9 +26,9 @@ from .crvs import ContinuousRV
 class Rayleigh(ContinuousRV):
 
     def __init__(self, sigma: float, name: str = None) -> None:
-        self._sigma, = jx_cast(sigma)
+        shape, self._sigma, = jx_cast(sigma)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
@@ -60,6 +60,7 @@ class Rayleigh(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.rayleigh(key, scale=self._sigma, shape=shape)
 
     def __repr__(self) -> str:

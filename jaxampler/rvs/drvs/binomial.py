@@ -39,10 +39,10 @@ class Binomial(DiscreteRV):
         name : str, optional
             Name of the random variable, by default None
         """
-        self._p, self._n = jx_cast(p, n)
+        shape, self._p, self._n = jx_cast(p, n)
         self.check_params()
         self._q = 1.0 - p
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         """Check the parameters of the random variable."""
@@ -72,6 +72,7 @@ class Binomial(DiscreteRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.binomial(key=key, n=self._n, p=self._p, shape=shape)
 
     def __repr__(self) -> str:

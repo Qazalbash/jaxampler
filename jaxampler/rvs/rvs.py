@@ -25,8 +25,9 @@ from ..jobj import JObj
 class GenericRV(JObj):
     """Generic random variable class."""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: str = None, shape: tuple[int, ...] = None) -> None:
         self._name = name
+        self._shape = shape
 
     def check_params(self) -> None:
         raise NotImplementedError

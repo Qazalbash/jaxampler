@@ -26,10 +26,10 @@ from .crvs import ContinuousRV
 class Weibull(ContinuousRV):
 
     def __init__(self, lmbda: ArrayLike = 1.0, k: ArrayLike = 1.0, name: str = None) -> None:
-        self._lmbda, = jx_cast(lmbda)
+        shape, self._lmbda, = jx_cast(lmbda)
         self._k = k
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._lmbda > 0.0), "scale must be greater than 0"
@@ -59,6 +59,7 @@ class Weibull(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         U = jax.random.uniform(key, shape=shape)
         return self.ppf_x(U)
 

@@ -28,10 +28,10 @@ class Geometric(DiscreteRV):
     """Geometric Random Variable"""
 
     def __init__(self, p: ArrayLike, name: str = None) -> None:
-        self._p, = jx_cast(p)
+        shape, self._p, = jx_cast(p)
         self.check_params()
         self._q = 1.0 - self._p
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._p >= 0.0), "All p must be greater than or equals to 0"
@@ -57,6 +57,7 @@ class Geometric(DiscreteRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.geometric(key, self._p, shape=shape)
 
     def __repr__(self) -> str:

@@ -27,9 +27,9 @@ from .crvs import ContinuousRV
 class Cauchy(ContinuousRV):
 
     def __init__(self, sigma: ArrayLike, loc: ArrayLike = 0, name: str = None) -> None:
-        self._sigma, self._loc = jx_cast(sigma, loc)
+        shape, self._sigma, self._loc = jx_cast(sigma, loc)
         self.check_params()
-        super().__init__(name)
+        super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
@@ -57,6 +57,7 @@ class Cauchy(ContinuousRV):
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
             key = self.get_key(key)
+        shape += self._shape
         return jax.random.cauchy(key, shape=shape) * self._sigma + self._loc
 
     def __repr__(self) -> str:
