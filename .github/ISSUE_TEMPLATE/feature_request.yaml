@@ -4,7 +4,7 @@ name: Feature request
 description: >-
     Suggest a new feature or enhancement for Jaxampler.
 labels:
-    - "type: feature request"
+    - enhancement
 
 body:
     - type: markdown
@@ -12,7 +12,7 @@ body:
           value: >
               ## Thank you for helping us improve Jaxampler!
 
-              * Please first verify that your feature request is not already reported using the
+              * Please first verify that your feature request has not already been reported using the
               [Issue search][issue search].
 
               * If you are asking a question or seeking support, please
