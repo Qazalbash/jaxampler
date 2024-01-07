@@ -71,7 +71,7 @@ class Binomial(DiscreteRV):
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
         shape += self._shape
         return jax.random.binomial(key=key, n=self._n, p=self._p, shape=shape)
 

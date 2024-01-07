@@ -31,12 +31,13 @@ class MetropolisHastingSampler(Sampler):
 
     def sample(self,
                p: ContinuousRV,
-               q: Callable[[Any], ContinuousRV] = None,
+               q: Callable[[Any], ContinuousRV],
                burn_in: int = 100,
                n_chains: int = 5,
                x_curr: Array = None,
                N: int = 1000,
-               key: Array = None) -> Array:
+               key: Array = None,
+               hasting_ratio: bool = False) -> Array:
         """Sample function for Metropolis-Hasting Sampler
 
         First, the sampler will run a burn-in phase to get the chain to
@@ -59,6 +60,8 @@ class MetropolisHastingSampler(Sampler):
             Number of samples, by default 1000
         key : Array, optional
             JAX PRNG key, by default None
+        hasting_ratio : bool, optional
+            Whether to use the Hasting ratio, by default False
 
         Returns
         -------
@@ -68,16 +71,16 @@ class MetropolisHastingSampler(Sampler):
         x_curr = jnp.asarray(x_curr)
         assert x_curr.shape == (n_chains,), f"got x_curr={x_curr}, n_chains={n_chains}"
 
-        if q is None:
-            alpha = lambda x1, x2: (p.pdf_x(x2) / p.pdf_x(x1)).clip(0.0, 1.0)
-        else:
+        if hasting_ratio:
             alpha = lambda x1, x2: ((p.pdf_x(x2) / p.pdf_x(x1)) * (q(x1).pdf_x(x2) / q(x2).pdf_x(x1))).clip(0.0, 1.0)
+        else:
+            alpha = lambda x1, x2: (p.pdf_x(x2) / p.pdf_x(x1)).clip(0.0, 1.0)
 
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
 
         for _ in trange(burn_in, desc="Burn-in".ljust(15), unit="samples", colour="red", ascii=True, unit_scale=True):
-            x_curr = q(x_curr).rvs(shape=(n_chains,), key=key)
+            x_curr = q(x_curr).rvs(shape=(), key=key)
             key = self.get_key(key)
 
         pbars = [

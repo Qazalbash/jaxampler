@@ -39,9 +39,10 @@ def jx_cast(*args: ArrayLike) -> list[Array]:
     # partially taken from the implementation of `jnp.broadcast_arrays`
     shapes = [np.shape(arg) for arg in args]
     if not shapes or all(core.definitely_equal_shape(shapes[0], s) for s in shapes):
-        return [jnp.asarray(arg) for arg in args]
-    result_shape = lax.broadcast_shapes(*shapes)
-    return [result_shape] + [jnp.asarray(a) for a in args]
+        result_shape = shapes[0]
+    else:
+        result_shape = lax.broadcast_shapes(*shapes)
+    return [result_shape] + [jnp.asarray(arg) for arg in args]
 
 
 fact = [1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880, 3_628_800]

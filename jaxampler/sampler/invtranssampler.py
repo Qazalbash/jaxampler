@@ -48,7 +48,7 @@ class InverseTransformSampler(Sampler):
         self.check_rv(rv)
 
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
 
         U = jax.random.uniform(key, shape=(N,))
         samples = rv.ppf_v(U)

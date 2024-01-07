@@ -60,9 +60,13 @@ class Uniform(ContinuousRV):
         ]
         return jnp.select(conditions, choice)
 
+    @partial(jit, static_argnums=(0,))
+    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+        return jnp.log(x * (self._high - self._low) + self._low)
+
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
         shape += self._shape
         return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=shape)
 

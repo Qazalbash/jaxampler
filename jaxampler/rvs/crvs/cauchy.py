@@ -56,7 +56,7 @@ class Cauchy(ContinuousRV):
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
         shape += self._shape
         return jax.random.cauchy(key, shape=shape) * self._sigma + self._loc
 

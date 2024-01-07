@@ -59,7 +59,7 @@ class Rayleigh(ContinuousRV):
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
         shape += self._shape
         return jax.random.rayleigh(key, scale=self._sigma, shape=shape)
 

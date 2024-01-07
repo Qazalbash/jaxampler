@@ -49,7 +49,7 @@ body:
               # for codeblocks, use triple backticks
               ```
       validations:
-          required: true
+          required: false
     - type: textarea
       attributes:
           label: Output
@@ -61,4 +61,4 @@ body:
               # for codeblocks, use triple backticks
               ```
       validations:
-          required: true
+          required: false

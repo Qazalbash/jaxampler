@@ -61,7 +61,7 @@ class Exponential(ContinuousRV):
 
     def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
         shape += self._shape
         U = jax.random.uniform(key, shape=shape)
         rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)

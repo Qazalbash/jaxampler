@@ -58,7 +58,7 @@ class AcceptRejectSampler(Sampler):
         self.check_rv(proposal_rv)
 
         if key is None:
-            key = self.get_key(key)
+            key = self.get_key()
 
         V = proposal_rv.rvs((1, N), key)
 
