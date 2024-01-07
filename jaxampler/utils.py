@@ -16,14 +16,13 @@ import random
 
 import jax
 import numpy as np
-from jax import Array, lax
-from jax import numpy as jnp
+from jax import Array, lax, numpy as jnp
 from jax._src import core
 from jax.typing import ArrayLike
 
 
 def jx_cast(*args: ArrayLike) -> list[Array]:
-    """Cast provided arguments to jnp.array and checks if they can be
+    """Cast provided arguments to `jnp.array` and checks if they can be
     broadcasted.
 
     Parameters

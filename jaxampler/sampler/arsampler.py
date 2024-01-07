@@ -15,8 +15,8 @@
 import jax
 from jax import Array
 
-from ..rvs import ContinuousRV
 from .sampler import Sampler
+from ..rvs import ContinuousRV
 
 
 class AcceptRejectSampler(Sampler):

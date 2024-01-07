@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from jax import Array
-from jax import numpy as jnp
+from jax import Array, numpy as jnp
 
-from ..rvs import ContinuousRV
 from .arsampler import AcceptRejectSampler
+from ..rvs import ContinuousRV
 
 
 class AdaptiveAcceptRejectSampler(AcceptRejectSampler):

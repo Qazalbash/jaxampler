@@ -14,13 +14,12 @@
 
 from typing import Any, Callable
 
-from jax import Array
-from jax import numpy as jnp
+from jax import Array, numpy as jnp
 from jax.random import uniform
 from tqdm import tqdm, trange
 
-from ..rvs import ContinuousRV
 from .sampler import Sampler
+from ..rvs import ContinuousRV
 
 
 class MetropolisHastingSampler(Sampler):

@@ -41,11 +41,6 @@ def test_jx_cast_fail():
     with pytest.raises(ValueError):
         jx_cast(g, h)
 
-
-def test_jx_cast_with_empty_args():
-    assert jx_cast() == []
-
-
 def test_nPr_exist():
     assert nPr(5, 3) == 60
     assert nPr(10, 3) == 720

@@ -15,12 +15,11 @@
 from functools import partial
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.typing import ArrayLike
 
-from ...utils import jx_cast
 from .crvs import ContinuousRV
+from ...utils import jx_cast
 
 
 class Weibull(ContinuousRV):

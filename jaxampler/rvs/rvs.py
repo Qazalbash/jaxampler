@@ -14,9 +14,7 @@
 
 from functools import partial
 
-from jax import Array, jit
-from jax import numpy as jnp
-from jax import vmap
+from jax import Array, jit, numpy as jnp, vmap
 from jax.typing import ArrayLike
 
 from ..jobj import JObj

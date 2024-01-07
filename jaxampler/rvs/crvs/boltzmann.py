@@ -14,13 +14,12 @@
 
 from functools import partial
 
-from jax import jit
-from jax import numpy as jnp
+from jax import jit, numpy as jnp
 from jax.scipy.special import erf
 from jax.typing import ArrayLike
 
-from ...utils import jx_cast
 from .crvs import ContinuousRV
+from ...utils import jx_cast
 
 
 class Boltzmann(ContinuousRV):

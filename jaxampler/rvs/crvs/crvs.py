@@ -14,9 +14,7 @@
 
 from functools import partial
 
-from jax import jit
-from jax import numpy as jnp
-from jax import vmap
+from jax import jit, numpy as jnp, vmap
 from jax.typing import ArrayLike
 
 from ..rvs import GenericRV

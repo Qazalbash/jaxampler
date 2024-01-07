@@ -15,13 +15,12 @@
 from functools import partial
 
 import jax
-from jax import Array, jit, lax
-from jax import numpy as jnp
+from jax import Array, jit, lax, numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jax.typing import ArrayLike
 
-from ...utils import jx_cast
 from .crvs import ContinuousRV
+from ...utils import jx_cast
 
 
 class Uniform(ContinuousRV):

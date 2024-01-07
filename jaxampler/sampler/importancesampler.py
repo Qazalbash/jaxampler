@@ -16,8 +16,8 @@ from typing import Callable
 
 from jax import Array, vmap
 
-from ..rvs import ContinuousRV
 from .sampler import Sampler
+from ..rvs import ContinuousRV
 
 
 class ImportanceSampler(Sampler):

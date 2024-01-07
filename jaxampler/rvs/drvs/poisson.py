@@ -15,13 +15,12 @@
 from functools import partial
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import poisson as jax_poisson
 from jax.typing import ArrayLike
 
-from ...utils import jx_cast
 from .drvs import DiscreteRV
+from ...utils import jx_cast
 
 
 class Poisson(DiscreteRV):

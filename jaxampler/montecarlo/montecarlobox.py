@@ -14,13 +14,12 @@
 
 from typing import Callable
 
-from jax import Array
-from jax import numpy as jnp
+from jax import Array, numpy as jnp
 from jax.typing import ArrayLike
 
+from .montecarlogeneric import MonteCarloGenericIntegration
 from ..rvs import Uniform
 from ..utils import jx_cast
-from .montecarlogeneric import MonteCarloGenericIntegration
 
 
 class MonteCarloBoxIntegration(MonteCarloGenericIntegration):

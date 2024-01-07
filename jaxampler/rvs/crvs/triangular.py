@@ -15,12 +15,11 @@
 from functools import partial
 
 import jax
-from jax import Array, jit, lax
-from jax import numpy as jnp
+from jax import Array, jit, lax, numpy as jnp
 from jax.typing import ArrayLike
 
-from ...utils import jx_cast
 from .crvs import ContinuousRV
+from ...utils import jx_cast
 
 
 class Triangular(ContinuousRV):
@@ -66,7 +65,7 @@ class Triangular(ContinuousRV):
             -jnp.inf,
             2 * jnp.log(x - self._low) - jnp.log(self._high - self._low) - jnp.log(self._mode - self._low),
             jnp.log(0.5),
-            jnp.log(1 - ((self._high - x)**2 / ((self._high - self._low) * (self._high - self._mode)))),
+            jnp.log(1 - ((self._high - x) ** 2 / ((self._high - self._low) * (self._high - self._mode)))),
             jnp.log(1),
         ]
         return jnp.select(conditions, choices)
