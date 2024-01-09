@@ -12,18 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from typing import Any
+from typing_extensions import Unpack
 
 import numpy as np
 from jax import lax, numpy as jnp
 from jax._src import core
-from jax.typing import ArrayLike
+from jaxtyping import Integer
+
+from .typing import Numeric
 
 
-def jx_cast(*args: ArrayLike) -> list[Any]:
+def jx_cast(
+    *args: Numeric,
+) -> tuple[tuple[Any, ...], Unpack[tuple[Any, ...]]]:
     """Cast provided arguments to `jnp.array` and checks if they can be
-    broadcasted.
+    broadcast.
 
     Parameters
     ----------
@@ -33,21 +37,21 @@ def jx_cast(*args: ArrayLike) -> list[Any]:
     Returns
     -------
     list[Array]
-        List of casted arguments.
+        List of cast arguments.
     """
     # partially taken from the implementation of `jnp.broadcast_arrays`
     shapes = [np.shape(arg) for arg in args]
     if not shapes or all(core.definitely_equal_shape(shapes[0], s) for s in shapes):
         result_shape = shapes[0]
     else:
-        result_shape = lax.broadcast_shapes(*shapes)
-    return [result_shape] + [jnp.asarray(arg) for arg in args]
+        result_shape: tuple[int, ...] = lax.broadcast_shapes(*shapes)
+    return result_shape, *tuple(jnp.asarray(arg) for arg in args)
 
 
 fact = [1, 1, 2, 6, 24, 120, 720, 5_040, 40_320, 362_880, 3_628_800]
 
 
-def nPr(n: int, r: int) -> int:
+def nPr(n: Integer, r: Integer) -> Integer:
     """Calculates the number of permutations of `r` objects out of `n`
 
     Parameters
@@ -70,7 +74,7 @@ def nPr(n: int, r: int) -> int:
     return fact[n] // fact[n - r]
 
 
-def nCr(n: int, r: int) -> int:
+def nCr(n: Integer, r: Integer) -> Integer:
     """Calculates the number of combinations of `r` objects out of `n`
 
     Parameters

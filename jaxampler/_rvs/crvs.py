@@ -13,39 +13,36 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
-from jax import jit
-from jax import numpy as jnp
-from jax import vmap
-from jax.typing import ArrayLike
+from jax import jit, numpy as jnp, vmap
 
+from ..typing import Numeric
 from .rvs import GenericRV
 
 
 class ContinuousRV(GenericRV):
-    def __init__(self, name: str = None, shape: tuple[int, ...] = None) -> None:
+    def __init__(self, name: Optional[str] = None, shape: tuple[int, ...] = ()) -> None:
+        if name is None:
+            name = ""
         super().__init__(name=name, shape=shape)
-
-    @partial(jit, static_argnums=(0,))
-    def Z(self) -> ArrayLike:
-        return jnp.exp(self._logZ)
 
     # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, *x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, *x: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, *x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, *x: Numeric) -> Numeric:
         return jnp.exp(self.logpdf_x(*x))
 
     # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_v(self, *x: ArrayLike) -> ArrayLike:
+    def logpdf_v(self, *x: Numeric) -> Numeric:
         return vmap(self.logpdf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_v(self, *x: ArrayLike) -> ArrayLike:
+    def pdf_v(self, *x: Numeric) -> Numeric:
         return jnp.exp(self.logpdf_v(*x))

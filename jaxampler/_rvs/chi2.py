@@ -13,23 +13,20 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import chi2 as jax_chi2
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Chi2(ContinuousRV):
-    def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        (
-            shape,
-            self._nu,
-        ) = jx_cast(nu)
+    def __init__(self, nu: Numeric, name: Optional[str] = None) -> None:
+        shape, self._nu = jx_cast(nu)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -37,32 +34,30 @@ class Chi2(ContinuousRV):
         assert jnp.all(self._nu.dtype == jnp.int32), "nu must be an integer"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.logpdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.pdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.logcdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.cdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: ArrayLike) -> ArrayLike:
-        raise NotImplementedError(
-            "Not able to find sufficient information to implement"
-        )
+    def logppf_x(self, x: Numeric) -> Numeric:
+        raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.chisquare(key, self._nu, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.chisquare(key, self._nu, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Chi2(nu={self._nu}"

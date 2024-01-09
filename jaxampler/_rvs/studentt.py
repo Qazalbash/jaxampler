@@ -13,24 +13,21 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class StudentT(ContinuousRV):
-    def __init__(self, nu: ArrayLike, name: str = None) -> None:
-        (
-            shape,
-            self._nu,
-        ) = jx_cast(nu)
+    def __init__(self, nu: Numeric, name: Optional[str] = None) -> None:
+        shape, self._nu = jx_cast(nu)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -38,29 +35,27 @@ class StudentT(ContinuousRV):
         assert jnp.all(self._nu > 0.0), "nu must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_t.logpdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_t.pdf(x, self._nu)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
-        return 1 - 0.5 * betainc(
-            self._nu * 0.5, 0.5, 1 / (1 + (jnp.power(x, 2) / self._nu))
-        )
+    def cdf_x(self, x: Numeric) -> Numeric:
+        return 1 - 0.5 * betainc(self._nu * 0.5, 0.5, 1 / (1 + (jnp.power(x, 2) / self._nu)))
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         """A method is addressed in this paper https://www.homepages.ucl.ac.uk/~ucahwts/lgsnotes/JCF_Student.pdf"""
         raise NotImplementedError
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.t(key=key, df=self._nu, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.t(key=key, df=self._nu, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"StudentT(nu={self._nu}"

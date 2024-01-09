@@ -13,26 +13,21 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Logistic(ContinuousRV):
-    def __init__(
-        self, mu: ArrayLike = 0.0, scale: ArrayLike = 1.0, name: str = None
-    ) -> None:
-        (
-            shape,
-            self._scale,
-        ) = jx_cast(scale)
+    def __init__(self, mu: Numeric = 0.0, scale: Numeric = 1.0, name: Optional[str] = None) -> None:
+        shape, self._scale = jx_cast(scale)
         self.check_params()
         self._mu = mu
         super().__init__(name=name, shape=shape)
@@ -41,26 +36,26 @@ class Logistic(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "scale must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_logistic.logpdf(x, self._mu, self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_logistic.pdf(x, self._mu, self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_logistic.cdf(x, self._mu, self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return self._mu + self._scale * logit(x)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.logistic(key, shape=shape) * self._scale + self._mu
+        new_shape = shape + self._shape
+        return jax.random.logistic(key, shape=new_shape) * self._scale + self._mu
 
     def __repr__(self) -> str:
         string = f"Logistic(mu={self._mu}, scale={self._scale}"

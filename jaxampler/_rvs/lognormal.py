@@ -13,21 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.special import log_ndtr, ndtr, ndtri
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class LogNormal(ContinuousRV):
-    def __init__(
-        self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None
-    ) -> None:
+    def __init__(self, mu: Numeric = 0.0, sigma: Numeric = 1.0, name: Optional[str] = None) -> None:
         shape, self._mu, self._sigma = jx_cast(mu, sigma)
         self.check_params()
         super().__init__(name=name, shape=shape)
@@ -36,35 +34,32 @@ class LogNormal(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         constants = -(jnp.log(self._sigma) + 0.5 * jnp.log(2 * jnp.pi))
         logpdf_val = jnp.where(
             x <= 0,
             -jnp.inf,
-            constants
-            - jnp.log(x)
-            - (0.5 * jnp.power(self._sigma, -2))
-            * jnp.power((jnp.log(x) - self._mu), 2),
+            constants - jnp.log(x) - (0.5 * jnp.power(self._sigma, -2)) * jnp.power((jnp.log(x) - self._mu), 2),
         )
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return log_ndtr((jnp.log(x) - self._mu) / self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return ndtr((jnp.log(x) - self._mu) / self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return jnp.exp(self._mu + self._sigma * ndtri(x))
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        U = jax.random.uniform(key, shape=shape)
+        new_shape = shape + self._shape
+        U = jax.random.uniform(key, shape=new_shape)
         return self.ppf_x(U)
 
     def __repr__(self) -> str:

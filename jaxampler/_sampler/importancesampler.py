@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable
+from typing import Callable, Optional
 
 from jax import Array, vmap
 
@@ -24,7 +24,7 @@ class ImportanceSampler(Sampler):
     """ImportanceSampler is a sampler that uses the importance sampling method
     to sample from a random variable."""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
     def sample(
@@ -32,8 +32,10 @@ class ImportanceSampler(Sampler):
         h: Callable,
         p: ContinuousRV,
         q: ContinuousRV,
+        *args,
         N: int = 1,
-        key: Array = None,
+        key: Optional[Array] = None,
+        **kwargs,
     ) -> Array:
         """Samples from the given random variable using the importance sampling method.
 

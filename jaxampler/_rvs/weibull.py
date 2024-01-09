@@ -13,24 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
-from jax.typing import ArrayLike
+from jax import Array, jit, numpy as jnp
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Weibull(ContinuousRV):
-    def __init__(
-        self, lmbda: ArrayLike = 1.0, k: ArrayLike = 1.0, name: str = None
-    ) -> None:
-        (
-            shape,
-            self._lmbda,
-        ) = jx_cast(lmbda)
+    def __init__(self, lmbda: Numeric = 1.0, k: Numeric = 1.0, name: Optional[str] = None) -> None:
+        shape, self._lmbda = jx_cast(lmbda)
         self._k = k
         self.check_params()
         super().__init__(name=name, shape=shape)
@@ -40,7 +35,7 @@ class Weibull(ContinuousRV):
         assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x < 0,
             -jnp.inf,
@@ -51,7 +46,7 @@ class Weibull(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x < 0,
             0.0,
@@ -59,14 +54,14 @@ class Weibull(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        U = jax.random.uniform(key, shape=shape)
+        new_shape = shape + self._shape
+        U = jax.random.uniform(key, shape=new_shape)
         return self.ppf_x(U)
 
     def __repr__(self) -> str:

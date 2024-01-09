@@ -13,13 +13,13 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import binom as jax_binom
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .drvs import DiscreteRV
 
@@ -27,12 +27,12 @@ from .drvs import DiscreteRV
 class Binomial(DiscreteRV):
     """Binomial random variable"""
 
-    def __init__(self, p: ArrayLike, n: int, name: str = None) -> None:
+    def __init__(self, p: Numeric, n: int, name: Optional[str] = None) -> None:
         """Initialize the Binomial random variable.
 
         Parameters
         ----------
-        p : ArrayLike
+        p : Numeric
             Probability of success.
         n : int
             Number of trials.
@@ -51,29 +51,29 @@ class Binomial(DiscreteRV):
         assert jnp.all(self._n > 0), "n must be positive"
 
     @partial(jit, static_argnums=(0))
-    def logpmf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpmf_x(self, x: Numeric) -> Numeric:
         return jax_binom.logpmf(x, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, x: ArrayLike) -> ArrayLike:
+    def pmf_x(self, x: Numeric) -> Numeric:
         return jax_binom.pmf(x, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.log(self.cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         xx = jnp.arange(0, self._n + 1, dtype=jnp.int32)
         complete_cdf = jnp.cumsum(self.pmf_x(xx))
         cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
         return jnp.select(cond, [0.0, 1.0, complete_cdf[x]])
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Binomial(p={self._p}, n={self._n}"

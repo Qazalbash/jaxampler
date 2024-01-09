@@ -12,21 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable
+from typing import Callable, Optional
 
-from jax import Array
-from jax import numpy as jnp
-from jax.typing import ArrayLike
+from jax import Array, numpy as jnp
 
 from .._rvs import Uniform
-from ..jobj import JObj
-from ..utils import jx_cast
+from .integration import Integration
 from .montecarlogeneric import MonteCarloGenericIntegration
+
 
 MCGenInt = MonteCarloGenericIntegration(name="forMonteCarloBoxIntegration")
 
 
-class MonteCarloBoxIntegration(JObj):
+class MonteCarloBoxIntegration(Integration):
     """Monte Carlo Integration with a uniform probability distribution.
 
     .. math::
@@ -38,26 +36,28 @@ class MonteCarloBoxIntegration(JObj):
     distribution.
     """
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
     def compute_integral(
         self,
         h: Callable,
-        low: ArrayLike,
-        high: ArrayLike,
+        low: Array,
+        high: Array,
         N: int,
-        key: Array = None,
-    ) -> float:
+        *args,
+        key: Optional[Array] = None,
+        **kwargs,
+    ) -> Array:
         """Computes the integral of a function using Monte Carlo integration.
 
         Parameters
         ----------
         h : Callable
             First part of the integrand.
-        low : ArrayLike
+        low : Numeric
             lower bound of the integral.
-        high : ArrayLike
+        high : Numeric
             upper bound of the integral.
         N : int
             number of samples.
@@ -69,9 +69,7 @@ class MonteCarloBoxIntegration(JObj):
         float
             integral of the function.
         """
-        low, high = jx_cast(low, high)
-        volume = jnp.prod(high - low)
-        return volume * MCGenInt.compute_integral(
+        integral = MCGenInt.compute_integral(
             h=h,
             p=Uniform(low=low, high=high),
             low=low,
@@ -79,9 +77,11 @@ class MonteCarloBoxIntegration(JObj):
             N=N,
             key=key,
         )
+        volume = jnp.prod(high - low, axis=0, dtype=jnp.float32)
+        return volume * integral
 
     def __repr__(self) -> str:
-        string = f"MonteCarloBoxIntegration(p={self._p}, q={self._q}"
+        string = "MonteCarloBoxIntegration("
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"

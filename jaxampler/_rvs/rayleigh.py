@@ -13,22 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
-from jax.typing import ArrayLike
+from jax import Array, jit, numpy as jnp
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Rayleigh(ContinuousRV):
-    def __init__(self, sigma: float, name: str = None) -> None:
-        (
-            shape,
-            self._sigma,
-        ) = jx_cast(sigma)
+    def __init__(self, sigma: float, name: Optional[str] = None) -> None:
+        shape, self._sigma = jx_cast(sigma)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -36,7 +33,7 @@ class Rayleigh(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log(x) - 0.5 * jnp.power(x / self._sigma, 2) - 2 * jnp.log(self._sigma),
@@ -44,7 +41,7 @@ class Rayleigh(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log1p(-jnp.exp(-0.5 * jnp.power(x / self._sigma, 2))),
@@ -52,18 +49,18 @@ class Rayleigh(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+    def logppf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x)),
             -jnp.inf,
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.rayleigh(key, scale=self._sigma, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.rayleigh(key, scale=self._sigma, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"

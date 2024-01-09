@@ -13,23 +13,20 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import poisson as jax_poisson
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .drvs import DiscreteRV
 
 
 class Poisson(DiscreteRV):
-    def __init__(self, lmbda: ArrayLike, name: str = None) -> None:
-        (
-            shape,
-            self._lmbda,
-        ) = jx_cast(lmbda)
+    def __init__(self, lmbda: Numeric, name: Optional[str] = None) -> None:
+        shape, self._lmbda = jx_cast(lmbda)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -37,22 +34,22 @@ class Poisson(DiscreteRV):
         assert jnp.all(self._lmbda > 0.0), "Lambda must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpmf_x(self, x: Numeric) -> Numeric:
         return jax_poisson.logpmf(x, self._lmbda)
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, x: ArrayLike) -> ArrayLike:
+    def pmf_x(self, x: Numeric) -> Numeric:
         return jax_poisson.pmf(x, self._lmbda)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_poisson.cdf(x, self._lmbda)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.poisson(key, self._lmbda, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.poisson(key, self._lmbda, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Poisson(lmbda={self._lmbda}"

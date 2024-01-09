@@ -13,19 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import cauchy as jax_cauchy
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Cauchy(ContinuousRV):
-    def __init__(self, sigma: ArrayLike, loc: ArrayLike = 0, name: str = None) -> None:
+    def __init__(self, sigma: Numeric, loc: Numeric = 0, name: Optional[str] = None) -> None:
         shape, self._sigma, self._loc = jx_cast(sigma, loc)
         self.check_params()
         super().__init__(name=name, shape=shape)
@@ -34,30 +34,30 @@ class Cauchy(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.logpdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.pdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.logcdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.cdf(x, self._loc, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.cauchy(key, shape=shape) * self._sigma + self._loc
+        new_shape = shape + self._shape
+        return jax.random.cauchy(key, shape=new_shape) * self._sigma + self._loc
 
     def __repr__(self) -> str:
         string = f"Cauchy(sigma={self._sigma}, loc={self._loc}"

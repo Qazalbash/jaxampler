@@ -13,35 +13,33 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
-from jax import jit
-from jax import numpy as jnp
-from jax import vmap
-from jax.typing import ArrayLike
+from jax import Array, jit, numpy as jnp, vmap
 
 from .rvs import GenericRV
 
 
 class DiscreteRV(GenericRV):
-    def __init__(self, name: str = None, shape: tuple[int, ...] = None) -> None:
+    def __init__(self, name: Optional[str] = None, shape: tuple[int, ...] = ()) -> None:
         super().__init__(name=name, shape=shape)
 
     # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, *k: ArrayLike) -> ArrayLike:
+    def logpmf_x(self, *k: Array) -> Array:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, *k: ArrayLike) -> ArrayLike:
+    def pmf_x(self, *k: Array) -> Array:
         return jnp.exp(self.logpmf_x(*k))
 
     # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_v(self, *k: ArrayLike) -> ArrayLike:
+    def logpmf_v(self, *k: Array) -> Array:
         return vmap(self.logpmf_x, in_axes=0)(*k)
 
     @partial(jit, static_argnums=(0,))
-    def pmf_v(self, *k: ArrayLike) -> ArrayLike:
+    def pmf_v(self, *k: Array) -> Array:
         return jnp.exp(self.logpmf_v(*k))

@@ -13,35 +13,35 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit, lax
-from jax import numpy as jnp
-from jax.typing import ArrayLike
+from jax import Array, jit, lax, numpy as jnp
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Triangular(ContinuousRV):
     def __init__(
-        self, low: float = 0, mode: float = 0.5, high: float = 1, name: str = None
+        self,
+        low: float = 0,
+        mode: float = 0.5,
+        high: float = 1,
+        name: Optional[str] = None,
     ) -> None:
         shape, self._low, self._mode, self._high = jx_cast(low, mode, high)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(
-            self._low <= self._high
-        ), "low must be less than or equal to high"
+        assert jnp.all(self._low <= self._high), "low must be less than or equal to high"
         assert jnp.all(self._low <= self._mode), "low must be less than or equal to mid"
-        assert jnp.all(
-            self._mode <= self._high
-        ), "mid must be less than or equal to high"
+        assert jnp.all(self._mode <= self._high), "mid must be less than or equal to high"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             (self._low <= x) & (x < self._mode),
@@ -51,21 +51,15 @@ class Triangular(ContinuousRV):
         ]
         choices = [
             -jnp.inf,
-            jnp.log(2)
-            + jnp.log(x - self._low)
-            - jnp.log(self._high - self._low)
-            - jnp.log(self._mode - self._low),
+            jnp.log(2) + jnp.log(x - self._low) - jnp.log(self._high - self._low) - jnp.log(self._mode - self._low),
             jnp.log(2) - jnp.log(self._high - self._low),
-            jnp.log(2)
-            + jnp.log(self._high - x)
-            - jnp.log(self._high - self._low)
-            - jnp.log(self._high - self._mode),
+            jnp.log(2) + jnp.log(self._high - x) - jnp.log(self._high - self._low) - jnp.log(self._high - self._mode),
             -jnp.inf,
         ]
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             (self._low <= x) & (x < self._mode),
@@ -75,43 +69,33 @@ class Triangular(ContinuousRV):
         ]
         choices = [
             -jnp.inf,
-            2 * jnp.log(x - self._low)
-            - jnp.log(self._high - self._low)
-            - jnp.log(self._mode - self._low),
+            2 * jnp.log(x - self._low) - jnp.log(self._high - self._low) - jnp.log(self._mode - self._low),
             jnp.log(0.5),
-            jnp.log(
-                1
-                - (
-                    (self._high - x) ** 2
-                    / ((self._high - self._low) * (self._high - self._mode))
-                )
-            ),
+            jnp.log(1 - ((self._high - x) ** 2 / ((self._high - self._low) * (self._high - self._mode)))),
             jnp.log(1),
         ]
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         _Fc = self.cdf_v(self._mode)
         ppf_val = jnp.where(
             x < _Fc,
-            self._low
-            + lax.sqrt(x * (self._mode - self._low) * (self._high - self._low)),
-            self._high
-            - lax.sqrt((1 - x) * (self._high - self._low) * (self._high - self._mode)),
+            self._low + lax.sqrt(x * (self._mode - self._low) * (self._high - self._low)),
+            self._high - lax.sqrt((1 - x) * (self._high - self._low) * (self._high - self._mode)),
         )
         return ppf_val
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
+        new_shape = shape + self._shape
         return jax.random.triangular(
             key,
             left=self._low,
             right=self._high,
             mode=self._mode,
-            shape=shape,
+            shape=new_shape,
         )
 
     def __repr__(self) -> str:

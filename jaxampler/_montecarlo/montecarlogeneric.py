@@ -12,14 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable
+from typing import Callable, Optional
 
-from jax import Array
-from jax import numpy as jnp
-from jax import vmap
-from jax.typing import ArrayLike
+from jax import Array, numpy as jnp, vmap
 
 from .._rvs import ContinuousRV
+from ..typing import Numeric
 from ..utils import jx_cast
 from .integration import Integration
 
@@ -35,18 +33,20 @@ class MonteCarloGenericIntegration(Integration):
     integration, and is not optimized for any particular probability distribution.
     """
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
     def compute_integral(
         self,
         h: Callable,
         p: ContinuousRV,
-        low: ArrayLike,
-        high: ArrayLike,
+        low: Numeric,
+        high: Numeric,
         N: int,
-        key: Array = None,
-    ) -> float:
+        *args,
+        key: Optional[Array] = None,
+        **kwargs,
+    ) -> Array:
         """Computes the integral of a function using Monte Carlo integration.
 
         Parameters
@@ -55,9 +55,9 @@ class MonteCarloGenericIntegration(Integration):
             First part of the integrand.
         p : ContinuousRV
             Probability distribution. It is part of the integrand.
-        low : ArrayLike
+        low : Numeric
             lower bound of the integral.
-        high : ArrayLike
+        high : Numeric
             upper bound of the integral.
         N : int
             Number of samples.
@@ -71,9 +71,8 @@ class MonteCarloGenericIntegration(Integration):
         """
         if key is None:
             key = self.get_key()
-        low, high = jx_cast(low, high)
-        p_rv = p.rvs(shape=(N,) + low.shape, key=key)
-        low, high = jx_cast(low, high)
+        param_shape, low, high = jx_cast(low, high)
+        p_rv = p.rvs(shape=(N,) + param_shape, key=key)
         p_rv = p_rv[(p_rv >= low) & (p_rv <= high)]
         hx = vmap(h)(p_rv)
         return jnp.mean(hx)

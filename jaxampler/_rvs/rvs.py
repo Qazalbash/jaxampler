@@ -13,19 +13,21 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
-from jax import Array, jit, numpy as jnp, vmap
-from jax.typing import ArrayLike
+from jax import jit, numpy as jnp, vmap
+from jaxtyping import Array
 
 from ..jobj import JObj
+from ..typing import Numeric
 
 
 class GenericRV(JObj):
     """Generic random variable class."""
 
-    def __init__(self, name: str = None, shape: tuple[int, ...] = None) -> None:
-        self._name = name
+    def __init__(self, name: Optional[str] = None, shape: tuple[int, ...] = ()) -> None:
         self._shape = shape
+        super().__init__(name=name)
 
     def check_params(self) -> None:
         raise NotImplementedError
@@ -33,38 +35,38 @@ class GenericRV(JObj):
     # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, *x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, *x: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, *x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, *x: Numeric) -> Numeric:
         return jnp.exp(self.logcdf_x(*x))
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, *x: ArrayLike) -> ArrayLike:
+    def logppf_x(self, *x: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, *x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, *x: Numeric) -> Numeric:
         return jnp.exp(self.logppf_x(*x))
 
     # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_v(self, *x: ArrayLike) -> ArrayLike:
+    def logcdf_v(self, *x: Numeric) -> Numeric:
         return vmap(self.logcdf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_v(self, *x: ArrayLike) -> ArrayLike:
+    def cdf_v(self, *x: Numeric) -> Numeric:
         return jnp.exp(self.logcdf_v(*x))
 
     @partial(jit, static_argnums=(0,))
-    def logppf_v(self, *x: ArrayLike) -> ArrayLike:
+    def logppf_v(self, *x: Numeric) -> Numeric:
         return vmap(self.logppf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_v(self, *x: ArrayLike) -> ArrayLike:
+    def ppf_v(self, *x: Numeric) -> Numeric:
         return jnp.exp(self.logppf_v(*x))
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         raise NotImplementedError

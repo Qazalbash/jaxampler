@@ -13,19 +13,20 @@
 # limitations under the License.
 
 import random
+from typing import Optional
 
 import jax
-from jax import Array
+from jaxtyping import Array
 
 
 class JObj(object):
     """Jaxampler generic object class"""
 
-    def __init__(self, name: str | None = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         self._name = name
 
     @staticmethod
-    def get_key(key: Array | None = None) -> Array:
+    def get_key(key: Optional[Array] = None) -> Array:
         """Get a new JAX random key.
 
         This function is used to generate a new JAX random key if

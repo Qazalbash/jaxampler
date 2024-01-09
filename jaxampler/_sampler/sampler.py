@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from abc import abstractmethod
+from typing import Optional
 
 from jax import Array
 
@@ -23,7 +23,7 @@ from ..jobj import JObj
 class Sampler(JObj):
     """Sampler is a base class for all samplers."""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         """Initializes a Sampler object."""
         super().__init__(name)
 
@@ -40,7 +40,6 @@ class Sampler(JObj):
         assert isinstance(rv, GenericRV), f"rv must be a GenericRV object, got {rv}"
         assert isinstance(rv, ContinuousRV), f"rv must be a ContinuousRV object, got {rv}"
 
-    @abstractmethod
     def sample(self, *args, **kwargs) -> Array:
         """Samples from the given random variable.
 

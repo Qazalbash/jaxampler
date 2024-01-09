@@ -13,12 +13,13 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
-from jax.typing import ArrayLike
+from jax import jit, numpy as jnp
+from jaxtyping import Array, ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
@@ -26,10 +27,10 @@ from .crvs import ContinuousRV
 class TruncPowerLaw(ContinuousRV):
     def __init__(
         self,
-        alpha: ArrayLike,
-        low: ArrayLike = 0,
-        high: ArrayLike = 1,
-        name: str = None,
+        alpha: Numeric,
+        low: Numeric = 0,
+        high: Numeric = 1,
+        name: Optional[str] = None,
     ) -> None:
         shape, self._alpha, self._low, self._high = jx_cast(alpha, low, high)
         self.check_params()
@@ -46,25 +47,23 @@ class TruncPowerLaw(ContinuousRV):
         logZ_val = jnp.where(
             self._beta == 0.0,
             jnp.log(jnp.log(self._high) - jnp.log(self._low)),
-            jnp.log(
-                jnp.abs(
-                    jnp.power(self._high, self._beta) - jnp.power(self._low, self._beta)
-                )
-            )
+            jnp.log(jnp.abs(jnp.power(self._high, self._beta) - jnp.power(self._low, self._beta)))
             - jnp.log(jnp.abs(self._beta)),
         )
         return logZ_val
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def Z(self) -> ArrayLike:
+        return jnp.exp(self._logZ)
+
+    @partial(jit, static_argnums=(0,))
+    def logpdf_x(self, x: Numeric) -> Numeric:
         logpdf_val = jnp.log(x) * self._alpha - self._logZ
-        logpdf_val = jnp.where(
-            (x >= self._low) * (x <= self._high), logpdf_val, -jnp.inf
-        )
+        logpdf_val = jnp.where((x >= self._low) * (x <= self._high), logpdf_val, -jnp.inf)
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             x > self._high,
@@ -75,16 +74,14 @@ class TruncPowerLaw(ContinuousRV):
             -jnp.inf,
             jnp.log(1.0),
             jnp.log(jnp.log(x) - jnp.log(self._low)) - self._logZ,
-            jnp.log(
-                jnp.abs(jnp.power(x, self._beta) - jnp.power(self._low, self._beta))
-            )
+            jnp.log(jnp.abs(jnp.power(x, self._beta) - jnp.power(self._low, self._beta)))
             - jnp.log(jnp.abs(self._beta))
             - self._logZ,
         ]
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+    def logppf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < 0.0,
             x > 1.0,
@@ -96,14 +93,11 @@ class TruncPowerLaw(ContinuousRV):
             jnp.log(1.0),
             x * jnp.log(self._high) + (1.0 - x) * jnp.log(self._low),
             jnp.power(self._beta, -1)
-            * jnp.log(
-                x * jnp.power(self._high, self._beta)
-                + (1.0 - x) * jnp.power(self._low, self._beta)
-            ),
+            * jnp.log(x * jnp.power(self._high, self._beta) + (1.0 - x) * jnp.power(self._low, self._beta)),
         ]
         return jnp.select(conditions, choices)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
         U = jax.random.uniform(key, shape=shape, dtype=jnp.float32)
@@ -111,9 +105,7 @@ class TruncPowerLaw(ContinuousRV):
         return rvs_val
 
     def __repr__(self) -> str:
-        string = (
-            f"TruncPowerLaw(alpha={self._alpha}, low={self._low}, high={self._high}"
-        )
+        string = f"TruncPowerLaw(alpha={self._alpha}, low={self._low}, high={self._high}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"

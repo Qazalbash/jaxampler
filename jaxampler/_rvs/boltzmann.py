@@ -13,22 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
-from jax import jit
-from jax import numpy as jnp
+from jax import jit, numpy as jnp
 from jax.scipy.special import erf
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Boltzmann(ContinuousRV):
-    def __init__(self, a: ArrayLike, name: str = None) -> None:
-        (
-            shape,
-            self._a,
-        ) = jx_cast(a)
+    def __init__(self, a: Numeric, name: Optional[str] = None) -> None:
+        shape, self._a = jx_cast(a)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -36,14 +33,14 @@ class Boltzmann(ContinuousRV):
         assert jnp.all(self._a > 0.0), "a must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         logpdf_val = 2 * jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
         logpdf_val -= 0.5 * jnp.log(jnp.pi / 2) + 3 * jnp.log(self._a)
         logpdf_val = jnp.where(x > 0.0, logpdf_val, -jnp.inf)
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         cdf_val = jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
         cdf_val -= 0.5 * jnp.log(jnp.pi / 2) + jnp.log(self._a)
         cdf_val = jnp.exp(cdf_val)

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Optional
+
 import jax
 from jax import Array
 
@@ -23,16 +25,18 @@ class AcceptRejectSampler(Sampler):
     """AcceptRejectSampler is a sampler that uses the accept-reject method
     to sample from a random variable."""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
     def sample(
         self,
         target_rv: ContinuousRV,
         proposal_rv: ContinuousRV,
+        *args,
         scale: int = 1,
         N: int = 1,
-        key: Array = None,
+        key: Optional[Array] = None,
+        **kwargs,
     ) -> Array:
         """Samples from the given random variable using the accept-reject method.
 

@@ -13,13 +13,13 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import geom as jax_geom
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .drvs import DiscreteRV
 
@@ -27,11 +27,8 @@ from .drvs import DiscreteRV
 class Geometric(DiscreteRV):
     """Geometric Random Variable"""
 
-    def __init__(self, p: ArrayLike, name: str = None) -> None:
-        (
-            shape,
-            self._p,
-        ) = jx_cast(p)
+    def __init__(self, p: Numeric, name: Optional[str] = None) -> None:
+        shape, self._p = jx_cast(p)
         self.check_params()
         self._q = 1.0 - self._p
         super().__init__(name=name, shape=shape)
@@ -40,28 +37,28 @@ class Geometric(DiscreteRV):
         assert jnp.all(self._p >= 0.0), "All p must be greater than or equals to 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpmf_x(self, x: Numeric) -> Numeric:
         return jax_geom.logpmf(x, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, x: ArrayLike) -> ArrayLike:
+    def pmf_x(self, x: Numeric) -> Numeric:
         return jax_geom.pmf(x, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         conditions = [x < 0, x >= 0]
         choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(x))]
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.log(self.cdf_x(x))
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.geometric(key, self._p, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.geometric(key, self._p, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Geometric(p={self._p}"

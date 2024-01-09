@@ -12,10 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Callable
+from typing import Callable, Optional
 
-from jax import Array
-from jax import numpy as jnp
+from jax import Array, numpy as jnp
 from jax.random import uniform
 from tqdm import tqdm, trange
 
@@ -26,19 +25,21 @@ from .sampler import Sampler
 class MetropolisHastingSampler(Sampler):
     """Metropolis-Hasting Sampler Class"""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
     def sample(
         self,
         p: ContinuousRV,
-        q: Callable[[Any], ContinuousRV],
-        burn_in: int = 100,
-        n_chains: int = 5,
-        x_curr: Array = None,
+        q: Callable,
+        burn_in: int,
+        n_chains: int,
+        x0: Array | tuple[Array, ...],
+        *args,
         N: int = 1000,
-        key: Array = None,
+        key: Optional[Array] = None,
         hasting_ratio: bool = False,
+        **kwargs,
     ) -> Array:
         """Sample function for Metropolis-Hasting Sampler
 
@@ -56,7 +57,7 @@ class MetropolisHastingSampler(Sampler):
             Burn-in phase, by default 100
         n_chains : int, optional
             Number of chains, by default 5
-        x_curr : Array, optional
+        x0 : Array, optional
             Initial values, by default None
         N : int, optional
             Number of samples, by default 1000
@@ -70,18 +71,18 @@ class MetropolisHastingSampler(Sampler):
         Array
             Samples from the target distribution
         """
-        x_curr = jnp.asarray(x_curr)
-        assert x_curr.shape == (n_chains,), f"got x_curr={x_curr}, n_chains={n_chains}"
+        x0 = jnp.asarray(x0)
+        assert x0.shape == (n_chains,), f"got x0={x0}, n_chains={n_chains}"
 
         if hasting_ratio:
-            alpha = lambda x1, x2: (
-                (p.pdf_x(x2) / p.pdf_x(x1)) * (q(x1).pdf_x(x2) / q(x2).pdf_x(x1))
-            ).clip(0.0, 1.0)
+            alpha = lambda x1, x2: ((p.pdf_x(x2) / p.pdf_x(x1)) * (q(x1).pdf_x(x2) / q(x2).pdf_x(x1))).clip(0.0, 1.0)
         else:
             alpha = lambda x1, x2: (p.pdf_x(x2) / p.pdf_x(x1)).clip(0.0, 1.0)
 
         if key is None:
             key = self.get_key()
+
+        x_curr = x0
 
         for _ in trange(
             burn_in,
@@ -91,7 +92,7 @@ class MetropolisHastingSampler(Sampler):
             ascii=True,
             unit_scale=True,
         ):
-            x_curr = q(x_curr).rvs(shape=(), key=key)
+            x_curr: Array = q(x_curr).rvs(shape=(), key=key)
             key = self.get_key(key)
 
         pbars = [
@@ -121,11 +122,11 @@ class MetropolisHastingSampler(Sampler):
         samples = jnp.empty((N, n_chains))
 
         while jnp.any(T < N):
-            x_prop = q(x_curr).rvs(shape=(), key=key)
+            x_prop: Array = q(x_curr).rvs(shape=(), key=key)
             key = self.get_key(key)
             u = uniform(key, (n_chains,))
             cond = u < alpha(x_curr, x_prop)
-            x_curr = jnp.where(cond == True, x_prop, x_curr)
+            x_curr = jnp.where(cond, x_prop, x_curr)
             for i in range(n_chains):
                 if cond[i] and T[i] < N:
                     samples = samples.at[T[i], i].set(x_prop[i])

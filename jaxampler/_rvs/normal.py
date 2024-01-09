@@ -13,21 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import norm as jax_norm
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Normal(ContinuousRV):
-    def __init__(
-        self, mu: ArrayLike = 0.0, sigma: ArrayLike = 1.0, name: str = None
-    ) -> None:
+    def __init__(self, mu: Numeric = 0.0, sigma: Numeric = 1.0, name: Optional[str] = None) -> None:
         shape, self._mu, self._sigma = jx_cast(mu, sigma)
         self.check_params()
         self._logZ = 0.0
@@ -37,30 +35,30 @@ class Normal(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.logpdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.logcdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.pdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.cdf(x, self._mu, self._sigma)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return jax_norm.ppf(x, self._mu, self._sigma)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.normal(key, shape=shape) * self._sigma + self._mu
+        new_shape = shape + self._shape
+        return jax.random.normal(key, shape=new_shape) * self._sigma + self._mu
 
     def __repr__(self) -> str:
         string = f"Normal(mu={self._mu}, sigma={self._sigma}"

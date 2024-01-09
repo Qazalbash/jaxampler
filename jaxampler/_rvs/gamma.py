@@ -13,19 +13,19 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import gamma as jax_gamma
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Gamma(ContinuousRV):
-    def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
+    def __init__(self, alpha: Numeric, beta: Numeric, name: Optional[str] = None) -> None:
         shape, self._alpha, self._beta = jx_cast(alpha, beta)
         self.check_params()
         super().__init__(name=name, shape=shape)
@@ -35,32 +35,30 @@ class Gamma(ContinuousRV):
         assert jnp.all(self._beta > 0), "All beta must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.logpdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.pdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.logcdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: ArrayLike) -> ArrayLike:
-        raise NotImplementedError(
-            "Not able to find sufficient information to implement"
-        )
+    def logppf_x(self, x: Numeric) -> Numeric:
+        raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.gamma(key, self._alpha, shape=shape) / self._beta
+        new_shape = shape + self._shape
+        return jax.random.gamma(key, self._alpha, shape=new_shape) / self._beta
 
     def __repr__(self) -> str:
         string = f"Gamma(alpha={self._alpha}, beta={self._beta}"

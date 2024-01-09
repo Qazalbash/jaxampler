@@ -12,20 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from jax.typing import ArrayLike
+from typing import Optional
 
+from ..typing import Numeric
 from .binomial import Binomial
 
 
 class Bernoulli(Binomial):
     """Bernoulli random variable"""
 
-    def __init__(self, p: ArrayLike, name: str = None) -> None:
+    def __init__(self, p: Numeric, name: Optional[str] = None) -> None:
         """Initialize the Bernoulli random variable.
 
         Parameters
         ----------
-        p : ArrayLike
+        p : Numeric
             Probability of success.
         name : str, optional
             Name of the random variable, by default None

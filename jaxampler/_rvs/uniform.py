@@ -13,21 +13,20 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit, lax
-from jax import numpy as jnp
+from jax import jit, lax, numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
-from jax.typing import ArrayLike
+from jaxtyping import Array
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Uniform(ContinuousRV):
-    def __init__(
-        self, low: ArrayLike = 0.0, high: ArrayLike = 1.0, name: str = None
-    ) -> None:
+    def __init__(self, low: Numeric = 0.0, high: Numeric = 1.0, name: Optional[str] = None) -> None:
         shape, self._low, self._high = jx_cast(low, high)
         self.check_params()
         super().__init__(name, shape)
@@ -36,7 +35,7 @@ class Uniform(ContinuousRV):
         assert jnp.all(self._low < self._high), "All low must be less than high"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_uniform.logpdf(
             x,
             loc=self._low,
@@ -44,7 +43,7 @@ class Uniform(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_uniform.pdf(
             x,
             loc=self._low,
@@ -52,7 +51,7 @@ class Uniform(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             (self._low <= x) & (x <= self._high),
@@ -66,14 +65,14 @@ class Uniform(ContinuousRV):
         return jnp.select(conditions, choice)
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: ArrayLike) -> ArrayLike:
+    def logppf_x(self, x: Numeric) -> Numeric:
         return jnp.log(x * (self._high - self._low) + self._low)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Uniform(low={self._low}, high={self._high}"

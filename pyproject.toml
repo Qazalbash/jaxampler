@@ -5,12 +5,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 py-modules = ["jaxampler"]
 
-[tool.setuptools.dynamic]
-version = { attr = "jaxampler.__version__" }
-
 [project]
 name = "jaxampler"
-dynamic = ["version"]
+version = "0.0.4"
 authors = [{ name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" }]
 maintainers = [
     { name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" },
@@ -30,6 +27,8 @@ classifiers = [
 dependencies = [
     "jax>=0.4.0",
     "jaxlib>=0.4.0",
+    "typing_extensions>=4.5.0",
+    "jaxtyping>=0.2.24",
     "matplotlib>=3.8.0",
     "setuptools",
     "tfp-nightly",

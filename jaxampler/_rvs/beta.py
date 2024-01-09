@@ -13,20 +13,20 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import beta as jax_beta
-from jax.typing import ArrayLike
 from tensorflow_probability.substrates import jax as tfp
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
 
 class Beta(ContinuousRV):
-    def __init__(self, alpha: ArrayLike, beta: ArrayLike, name: str = None) -> None:
+    def __init__(self, alpha: Numeric, beta: Numeric, name: Optional[str] = None) -> None:
         shape, self._alpha, self._beta = jx_cast(alpha, beta)
         self.check_params()
         super().__init__(name=name, shape=shape)
@@ -36,30 +36,30 @@ class Beta(ContinuousRV):
         assert jnp.all(self._beta > 0.0), "beta must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.logpdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.pdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.logcdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.cdf(x, self._alpha, self._beta)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: ArrayLike) -> ArrayLike:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return tfp.math.betaincinv(self._alpha, self._beta, x)
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
-        return jax.random.beta(key, self._alpha, self._beta, shape=shape)
+        new_shape = shape + self._shape
+        return jax.random.beta(key, self._alpha, self._beta, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Beta(alpha={self._alpha}, beta={self._beta}"

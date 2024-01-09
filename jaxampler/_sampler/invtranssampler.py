@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Optional
+
 import jax
 from jax import Array
 
@@ -23,10 +25,10 @@ class InverseTransformSampler(Sampler):
     """InverseTransformSampler is a sampler that uses the inverse transform
     method to sample from a random variable."""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def sample(self, rv: ContinuousRV, N: int = 1, key: Array = None) -> Array:
+    def sample(self, rv: ContinuousRV, *args, N: int = 1, key: Optional[Array] = None, **kwargs) -> Array:
         """Samples from the given random variable using the inverse transform method.
 
         It runs the inverse transform algorithm and returns the samples.

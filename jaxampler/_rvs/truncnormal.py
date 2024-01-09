@@ -13,13 +13,13 @@
 # limitations under the License.
 
 from functools import partial
+from typing import Optional
 
 import jax
-from jax import Array, jit
-from jax import numpy as jnp
+from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import truncnorm as jax_truncnorm
-from jax.typing import ArrayLike
 
+from ..typing import Numeric
 from ..utils import jx_cast
 from .crvs import ContinuousRV
 
@@ -27,15 +27,13 @@ from .crvs import ContinuousRV
 class TruncNormal(ContinuousRV):
     def __init__(
         self,
-        mu: ArrayLike,
-        sigma: ArrayLike,
-        low: ArrayLike = 0.0,
-        high: ArrayLike = 1.0,
-        name: str = None,
+        mu: Numeric,
+        sigma: Numeric,
+        low: Numeric = 0.0,
+        high: Numeric = 1.0,
+        name: Optional[str] = None,
     ) -> None:
-        shape, self._mu, self._sigma, self._low, self._high = jx_cast(
-            mu, sigma, low, high
-        )
+        shape, self._mu, self._sigma, self._low, self._high = jx_cast(mu, sigma, low, high)
         self.check_params()
         self._alpha = (self._low - self._mu) / self._sigma
         self._beta = (self._high - self._mu) / self._sigma
@@ -46,7 +44,7 @@ class TruncNormal(ContinuousRV):
         assert jnp.all(self._sigma > 0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logpdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.logpdf(
             x,
             self._alpha,
@@ -56,7 +54,7 @@ class TruncNormal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: ArrayLike) -> ArrayLike:
+    def pdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.pdf(
             x,
             self._alpha,
@@ -66,7 +64,7 @@ class TruncNormal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: ArrayLike) -> ArrayLike:
+    def logcdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.logcdf(
             x,
             self._alpha,
@@ -76,7 +74,7 @@ class TruncNormal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: ArrayLike) -> ArrayLike:
+    def cdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.cdf(
             x,
             self._alpha,
@@ -85,16 +83,16 @@ class TruncNormal(ContinuousRV):
             scale=self._sigma,
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Array = None) -> Array:
+    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
-        shape += self._shape
+        new_shape = shape + self._shape
         return (
             jax.random.truncated_normal(
                 key,
                 self._alpha,
                 self._beta,
-                shape=shape,
+                shape=new_shape,
             )
             * self._sigma
             + self._mu

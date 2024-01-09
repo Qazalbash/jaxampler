@@ -13,14 +13,14 @@
 # limitations under the License.
 
 from abc import abstractmethod
-
-from jax.typing import ArrayLike
+from typing import Optional
 
 from ..jobj import JObj
+from ..typing import Numeric
 
 
 class Integration(JObj):
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         self._name = name
 
     @abstractmethod
@@ -28,7 +28,7 @@ class Integration(JObj):
         raise NotImplementedError("Function should be implemented in the sub-class.")
 
     @abstractmethod
-    def compute_integral(self, *args, **kwargs) -> ArrayLike:
+    def compute_integral(self, *args, **kwargs) -> Numeric:
         raise NotImplementedError("Function should be implemented in the sub-class.")
 
     def __repr__(self) -> str:

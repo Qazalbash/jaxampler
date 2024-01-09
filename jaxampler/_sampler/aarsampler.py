@@ -12,24 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from jax import Array
-from jax import numpy as jnp
+from typing import Optional
+
+from jax import Array, numpy as jnp
 
 from .._rvs import ContinuousRV
 from .arsampler import AcceptRejectSampler
 
 
 class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
     def sample(
         self,
         target_rv: ContinuousRV,
         proposal_rv: ContinuousRV,
+        *args,
         scale: int = 1,
         N: int = 1,
-        key: Array = None,
+        key: Optional[Array] = None,
+        **kwargs,
     ) -> Array:
         """Samples from the given random variable using the adaptive accept-reject method.
 
