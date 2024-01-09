@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
 
-import jax
+from typing import Any
+
 import numpy as np
-from jax import Array, lax, numpy as jnp
+from jax import lax, numpy as jnp
 from jax._src import core
 from jax.typing import ArrayLike
 
 
-def jx_cast(*args: ArrayLike) -> list[Array]:
+def jx_cast(*args: ArrayLike) -> list[Any]:
     """Cast provided arguments to `jnp.array` and checks if they can be
     broadcasted.
 
@@ -64,10 +64,10 @@ def nPr(n: int, r: int) -> int:
     """
     assert 0 <= r <= n
     if n <= len(fact):
-        return fact[n] / fact[n - r]
+        return fact[n] // fact[n - r]
     for i in range(len(fact), n + 1):
         fact.append(fact[i - 1] * i)
-    return fact[n] / fact[n - r]
+    return fact[n] // fact[n - r]
 
 
 def nCr(n: int, r: int) -> int:
@@ -87,33 +87,7 @@ def nCr(n: int, r: int) -> int:
     """
     assert 0 <= r <= n
     if n <= len(fact):
-        return fact[n] / fact[r] / fact[n - r]
+        return (fact[n] // fact[r]) // fact[n - r]
     for i in range(len(fact), n + 1):
         fact.append(fact[i - 1] * i)
-    return fact[n] / fact[r] / fact[n - r]
-
-
-def new_prn_key(key: Array = None) -> Array:
-    """Get a new JAX random key.
-
-    This function is used to generate a new JAX random key if
-    the user does not provide one. The key is generated using
-    the JAX random.PRNGKey function. The key is split into
-    two keys, the first of which is returned. The second key
-    is discarded.
-
-    Parameters
-    ----------
-    key : Array, optional
-        JAX random key, by default None
-
-    Returns
-    -------
-    Array
-        New JAX random key.
-    """
-    if key is None:
-        new_key = jax.random.PRNGKey(random.randint(0, 1000_000))
-    else:
-        new_key, _ = jax.random.split(key)
-    return new_key
+    return fact[n] // (fact[r] * fact[n - r])

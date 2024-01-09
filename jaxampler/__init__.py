@@ -12,6 +12,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from . import jobj, montecarlo, rvs, sampler, utils
 
-__version__ = "0.0.4"
+import importlib.metadata
+
+from ._montecarlo import (
+    Integration as Integration,
+    MonteCarloBoxIntegration as MonteCarloBoxIntegration,
+    MonteCarloGenericIntegration as MonteCarloGenericIntegration,
+)
+from ._rvs import (
+    Bernoulli as Bernoulli,
+    Beta as Beta,
+    Binomial as Binomial,
+    Boltzmann as Boltzmann,
+    Cauchy as Cauchy,
+    Chi2 as Chi2,
+    ContinuousRV as ContinuousRV,
+    DiscreteRV as DiscreteRV,
+    Exponential as Exponential,
+    Gamma as Gamma,
+    GenericRV as GenericRV,
+    Geometric as Geometric,
+    Logistic as Logistic,
+    LogNormal as LogNormal,
+    Normal as Normal,
+    Pareto as Pareto,
+    Poisson as Poisson,
+    Rayleigh as Rayleigh,
+    StudentT as StudentT,
+    Triangular as Triangular,
+    TruncNormal as TruncNormal,
+    TruncPowerLaw as TruncPowerLaw,
+    Uniform as Uniform,
+    Weibull as Weibull,
+)
+from ._sampler import (
+    AcceptRejectSampler as AcceptRejectSampler,
+    AdaptiveAcceptRejectSampler as AdaptiveAcceptRejectSampler,
+    ImportanceSampler as ImportanceSampler,
+    InverseTransformSampler as InverseTransformSampler,
+    MetropolisHastingSampler as MetropolisHastingSampler,
+    Sampler as Sampler,
+)
+from .utils import jx_cast as jx_cast, nCr as nCr, nPr as nPr
+
+
+__version__ = importlib.metadata.version("jaxampler")

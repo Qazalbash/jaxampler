@@ -12,20 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from jax import Array
+import random
 
-from .utils import new_prn_key
+import jax
+from jax import Array
 
 
 class JObj(object):
     """Jaxampler generic object class"""
 
-    def __init__(self, name: str = None) -> None:
+    def __init__(self, name: str | None = None) -> None:
         self._name = name
 
     @staticmethod
-    def get_key(key: Array = None) -> Array:
-        return new_prn_key(key)
+    def get_key(key: Array | None = None) -> Array:
+        """Get a new JAX random key.
+
+        This function is used to generate a new JAX random key if
+        the user does not provide one. The key is generated using
+        the JAX random.PRNGKey function. The key is split into
+        two keys, the first of which is returned. The second key
+        is discarded.
+
+        Parameters
+        ----------
+        key : Array, optional
+            JAX random key, by default None
+
+        Returns
+        -------
+        Array
+            New JAX random key.
+        """
+        if key is None:
+            new_key = jax.random.PRNGKey(random.randint(0, 1000_000))
+        else:
+            new_key, _ = jax.random.split(key)
+        return new_key
 
     def __str__(self) -> str:
         return self.__repr__()

@@ -16,10 +16,9 @@ import sys
 
 sys.path.append("../jaxampler")
 import pytest
-from jax import Array
 from jax import numpy as jnp
 
-from jaxampler.utils import jx_cast, nCr, new_prn_key, nPr
+from jaxampler import jx_cast, nCr, nPr
 
 
 def test_jx_cast_success():
@@ -40,6 +39,7 @@ def test_jx_cast_fail():
     h = jnp.array([[1, 2]])
     with pytest.raises(ValueError):
         jx_cast(g, h)
+
 
 def test_nPr_exist():
     assert nPr(5, 3) == 60
@@ -75,10 +75,3 @@ def test_nCr_not_exist():
         nCr(10, -1)
     with pytest.raises(AssertionError):
         nCr(-1, 10)
-
-
-def test_new_prn_key():
-    key = new_prn_key()
-    assert isinstance(key, Array)
-    assert key.shape == (2,)
-    assert key.dtype == jnp.uint32
