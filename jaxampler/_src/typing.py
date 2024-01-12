@@ -14,7 +14,10 @@
 
 from __future__ import annotations
 
-import importlib.metadata
+from typing import Union
+
+import numpy as np
+from jaxtyping import Array
 
 
-__version__ = importlib.metadata.version("jaxampler")
+Numeric = Union[Array, np.ndarray, np.bool_, np.number, bool, int, float]
