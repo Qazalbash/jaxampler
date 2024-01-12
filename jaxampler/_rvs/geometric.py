@@ -19,8 +19,8 @@ import jax
 from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import geom as jax_geom
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .drvs import DiscreteRV
 
 

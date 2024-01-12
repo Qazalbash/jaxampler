@@ -20,7 +20,7 @@ from jax import lax, numpy as jnp
 from jax._src import core
 from jaxtyping import Integer
 
-from .typing import Numeric
+from ._typing import Numeric
 
 
 def jx_cast(
@@ -56,14 +56,14 @@ def nPr(n: Integer, r: Integer) -> Integer:
 
     Parameters
     ----------
-    n : int
+    n : Integer
         total objects
-    r : int
+    r : Integer
         selected objects
 
     Returns
     -------
-    int
+    Integer
         number of permutations of `r` objects out of `n`
     """
     assert 0 <= r <= n
@@ -79,14 +79,14 @@ def nCr(n: Integer, r: Integer) -> Integer:
 
     Parameters
     ----------
-    n : int
+    n : Integer
         total objects
-    r : int
+    r : Integer
         selected objects
 
     Returns
     -------
-    int
+    Integer
         number of combinations of `r` objects out of `n`
     """
     assert 0 <= r <= n

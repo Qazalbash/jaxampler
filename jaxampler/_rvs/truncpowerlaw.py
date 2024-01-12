@@ -19,8 +19,8 @@ import jax
 from jax import jit, numpy as jnp
 from jaxtyping import Array, ArrayLike
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .crvs import ContinuousRV
 
 

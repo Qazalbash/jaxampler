@@ -15,6 +15,7 @@
 
 import importlib.metadata
 
+from . import _typing as typing
 from ._montecarlo import (
     Integration as Integration,
     MonteCarloBoxIntegration as MonteCarloBoxIntegration,
@@ -54,8 +55,7 @@ from ._sampler import (
     MetropolisHastingSampler as MetropolisHastingSampler,
     Sampler as Sampler,
 )
-from .typing import Numeric as Numeric
-from .utils import jx_cast as jx_cast, nCr as nCr, nPr as nPr
+from ._utils import jx_cast as jx_cast, nCr as nCr, nPr as nPr
 
 
 __version__ = importlib.metadata.version("jaxampler")

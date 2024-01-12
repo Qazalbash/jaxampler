@@ -15,8 +15,8 @@
 from abc import abstractmethod
 from typing import Optional
 
-from ..jobj import JObj
-from ..typing import Numeric
+from .._jobj import JObj
+from .._typing import Numeric
 
 
 class Integration(JObj):

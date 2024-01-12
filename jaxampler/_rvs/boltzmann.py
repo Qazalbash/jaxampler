@@ -18,8 +18,8 @@ from typing import Optional
 from jax import jit, numpy as jnp
 from jax.scipy.special import erf
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .crvs import ContinuousRV
 
 

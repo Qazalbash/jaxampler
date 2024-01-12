@@ -20,8 +20,8 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .crvs import ContinuousRV
 
 

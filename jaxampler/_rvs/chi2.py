@@ -19,8 +19,8 @@ import jax
 from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import chi2 as jax_chi2
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .crvs import ContinuousRV
 
 

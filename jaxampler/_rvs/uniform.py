@@ -20,8 +20,8 @@ from jax import jit, lax, numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jaxtyping import Array
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .crvs import ContinuousRV
 
 

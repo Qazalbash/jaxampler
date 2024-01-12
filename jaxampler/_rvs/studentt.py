@@ -20,8 +20,8 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
 
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .crvs import ContinuousRV
 
 

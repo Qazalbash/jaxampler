@@ -17,8 +17,8 @@ from typing import Callable, Optional
 from jax import Array, numpy as jnp, vmap
 
 from .._rvs import ContinuousRV
-from ..typing import Numeric
-from ..utils import jx_cast
+from .._typing import Numeric
+from .._utils import jx_cast
 from .integration import Integration
 
 

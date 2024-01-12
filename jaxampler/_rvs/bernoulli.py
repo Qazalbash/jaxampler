@@ -14,7 +14,7 @@
 
 from typing import Optional
 
-from ..typing import Numeric
+from .._typing import Numeric
 from .binomial import Binomial
 
 

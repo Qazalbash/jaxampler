@@ -17,7 +17,7 @@ from typing import Optional
 
 from jax import jit, numpy as jnp, vmap
 
-from ..typing import Numeric
+from .._typing import Numeric
 from .rvs import GenericRV
 
 

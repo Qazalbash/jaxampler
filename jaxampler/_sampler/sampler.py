@@ -16,8 +16,8 @@ from typing import Optional
 
 from jax import Array
 
+from .._jobj import JObj
 from .._rvs import ContinuousRV, GenericRV
-from ..jobj import JObj
 
 
 class Sampler(JObj):
