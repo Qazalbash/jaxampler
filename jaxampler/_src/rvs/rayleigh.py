@@ -54,7 +54,7 @@ class Rayleigh(ContinuousRV):
     def logppf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
-            jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log1p(-x)),
+            jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log(1 - x)),
             -jnp.inf,
         )
 

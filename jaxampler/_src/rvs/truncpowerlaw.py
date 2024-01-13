@@ -60,7 +60,7 @@ class TruncPowerLaw(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        logpdf_val = jnp.log(x) * self._alpha - self._logZ
+        logpdf_val: Numeric = jnp.log(x) * self._alpha - self._logZ
         logpdf_val = jnp.where((x >= self._low) * (x <= self._high), logpdf_val, -jnp.inf)
         return logpdf_val
 
