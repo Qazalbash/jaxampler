@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from .aarsampler import AdaptiveAcceptRejectSampler as AdaptiveAcceptRejectSampler
 from .arsampler import AcceptRejectSampler as AcceptRejectSampler
 from .importancesampler import ImportanceSampler as ImportanceSampler

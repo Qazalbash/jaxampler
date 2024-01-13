@@ -34,11 +34,9 @@ from jax import lax, numpy as jnp
 from jax._src import core
 from jaxtyping import Integer
 
-from jaxampler._src.typing import Numeric
-
 
 def jx_cast(
-    *args: Numeric,
+    *args: Any,
 ) -> tuple[tuple[Any, ...], Unpack[tuple[Any, ...]]]:
     """Cast provided arguments to `jnp.array` and checks if they can be
     broadcast.

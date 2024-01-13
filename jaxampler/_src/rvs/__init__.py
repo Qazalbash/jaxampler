@@ -13,6 +13,8 @@
 # limitations under the License.
 
 
+from __future__ import annotations
+
 from jaxampler._src.rvs.crvs import ContinuousRV as ContinuousRV
 from jaxampler._src.rvs.drvs import DiscreteRV as DiscreteRV
 

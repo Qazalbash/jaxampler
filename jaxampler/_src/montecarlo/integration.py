@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from abc import abstractmethod
 from typing import Optional
 
@@ -21,7 +23,7 @@ from jaxampler._src.typing import Numeric
 
 class Integration(JObj):
     def __init__(self, name: Optional[str] = None) -> None:
-        self._name = name
+        super().__init__(name=name)
 
     @abstractmethod
     def check_params(self, *args, **kwargs) -> None:

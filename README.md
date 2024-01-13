@@ -56,8 +56,10 @@ pip install --upgrade "jax[cuda12_pip]" -f https://storage.googleapis.com/jax-re
 Jaxampler requires Python 3.10 or later. It also requires the following packages:
 
 ```bash
-jax>=0.4.0
+jax>=0.4.0 
 jaxlib>=0.4.0
+typing_extensions>=4.5.0
+jaxtyping>=0.2.24
 matplotlib>=3.8.0
 tfp-nightly
 tqdm
@@ -71,7 +73,6 @@ Jaxampler supports the following Monte Carlo methods:
 
 - [ ] Hamiltonian Monte Carlo
 - [x] Importance Sampling
-- [ ] Markov Chain Monte Carlo
 - [ ] Metropolis Adjusted Langevin Algorithm
 - [x] Monte Carlo Box Integration
 - [x] Monte Carlo Integration
@@ -136,7 +137,7 @@ To cite this repository:
 @software{jaxampler2023github,
     author  = {Meesum Qazalbash},
     title   = {{Jaxampler}: A JAX-based statistical sampling toolkit},
-    url     = {http://github.com/Qazalbash/jaxampler},
+    url     = {https://github.com/Qazalbash/jaxampler},
     version = {0.0.4},
     year    = {2023}
 }
