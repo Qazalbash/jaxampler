@@ -57,7 +57,7 @@ class Weibull(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return self._lmbda * jnp.power(-jnp.log1p(-x), 1.0 / self._k)
+        return self._lmbda * jnp.power(-jnp.log(1 - x), 1.0 / self._k)
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:

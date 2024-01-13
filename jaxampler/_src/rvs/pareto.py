@@ -61,7 +61,7 @@ class Pareto(ContinuousRV):
         ]
         choices = [
             -jnp.inf,
-            jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log1p(-x),
+            jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log(1 - x),
             jnp.log(1.0),
         ]
         return jnp.select(conditions, choices)
