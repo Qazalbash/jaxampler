@@ -19,8 +19,7 @@ from typing import Optional
 import jax
 from jax import Array
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-
+from ..rvs.crvs import ContinuousRV
 from .sampler import Sampler
 
 
@@ -31,16 +30,7 @@ class AcceptRejectSampler(Sampler):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def sample(
-        self,
-        target_rv: ContinuousRV,
-        proposal_rv: ContinuousRV,
-        *args,
-        scale: int = 1,
-        N: int = 1,
-        key: Optional[Array] = None,
-        **kwargs,
-    ) -> Array:
+    def sample(self, *args, **kwargs) -> Array:
         """Samples from the given random variable using the accept-reject method.
 
         It runs the accept-reject algorithm and returns the samples.
@@ -63,8 +53,19 @@ class AcceptRejectSampler(Sampler):
         Array
             The samples.
         """
+        target_rv: Optional[ContinuousRV] = kwargs.get("target_rv", None)
+        proposal_rv: Optional[ContinuousRV] = kwargs.get("proposal_rv", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert target_rv is not None, "target_rv is None"
+        assert proposal_rv is not None, "proposal_rv is None"
+        assert N is not None, "N is None"
+
         self.check_rv(target_rv)
         self.check_rv(proposal_rv)
+
+        scale: float = kwargs.get("scale", 1.0)
+        key: Optional[Array] = kwargs.get("key", None)
 
         if key is None:
             key = self.get_key()

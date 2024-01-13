@@ -21,9 +21,9 @@ import jax
 from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import geom as jax_geom
 
-from jaxampler._src.rvs.drvs import DiscreteRV
-from jaxampler._src.typing import Numeric
-from jaxampler._src.utils import jx_cast
+from ..typing import Numeric
+from ..utils import jx_cast
+from .drvs import DiscreteRV
 
 
 class Geometric(DiscreteRV):

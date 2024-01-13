@@ -18,8 +18,7 @@ from typing import Callable, Optional
 
 from jax import Array, vmap
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-
+from ..rvs.crvs import ContinuousRV
 from .sampler import Sampler
 
 
@@ -30,16 +29,7 @@ class ImportanceSampler(Sampler):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def sample(
-        self,
-        h: Callable,
-        p: ContinuousRV,
-        q: ContinuousRV,
-        *args,
-        N: int = 1,
-        key: Optional[Array] = None,
-        **kwargs,
-    ) -> Array:
+    def sample(self, *args, **kwargs) -> Array:
         """Samples from the given random variable using the importance sampling method.
 
         It runs the importance sampling algorithm and returns the samples.
@@ -62,8 +52,20 @@ class ImportanceSampler(Sampler):
         Array
             Samples from the target distribution
         """
+        h: Optional[Callable] = kwargs.get("h", None)
+        p: Optional[ContinuousRV] = kwargs.get("p", None)
+        q: Optional[ContinuousRV] = kwargs.get("q", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert h is not None, "h is None"
+        assert p is not None, "p is None"
+        assert q is not None, "q is None"
+        assert N is not None, "N is None"
+
+        key: Optional[Array] = kwargs.get("key", None)
         if key is None:
             key = self.get_key()
+
         q_rv = q.rvs(shape=(N,), key=key)
         p_theta = p.pdf_v(q_rv)
         q_phi = q.pdf_v(q_rv)

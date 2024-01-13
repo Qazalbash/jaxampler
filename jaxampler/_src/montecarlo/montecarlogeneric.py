@@ -18,10 +18,10 @@ from typing import Callable, Optional
 
 from jax import Array, numpy as jnp, vmap
 
-from jaxampler._src.montecarlo.integration import Integration
-from jaxampler._src.rvs import ContinuousRV
-from jaxampler._src.typing import Numeric
-from jaxampler._src.utils import jx_cast
+from ..rvs.crvs import ContinuousRV
+from ..typing import Numeric
+from ..utils import jx_cast
+from .integration import Integration
 
 
 class MonteCarloGenericIntegration(Integration):
@@ -38,17 +38,7 @@ class MonteCarloGenericIntegration(Integration):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def compute_integral(
-        self,
-        h: Callable,
-        p: ContinuousRV,
-        low: Numeric,
-        high: Numeric,
-        N: int,
-        *args,
-        key: Optional[Array] = None,
-        **kwargs,
-    ) -> Array:
+    def compute_integral(self, *args, **kwargs) -> Array:
         """Computes the integral of a function using Monte Carlo integration.
 
         Parameters
@@ -71,6 +61,19 @@ class MonteCarloGenericIntegration(Integration):
         float
             Integral of the function.
         """
+        h: Optional[Callable] = kwargs.get("h", None)
+        p: Optional[ContinuousRV] = kwargs.get("p", None)
+        low: Optional[Numeric] = kwargs.get("low", None)
+        high: Optional[Numeric] = kwargs.get("high", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert h is not None, "h is None"
+        assert p is not None, "p is None"
+        assert low is not None, "low is None"
+        assert high is not None, "high is None"
+        assert N is not None, "N is None"
+
+        key: Optional[Array] = kwargs.get("key", None)
         if key is None:
             key = self.get_key()
         param_shape, low, high = jx_cast(low, high)

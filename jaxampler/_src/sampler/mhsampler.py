@@ -20,8 +20,7 @@ from jax import Array, numpy as jnp
 from jax.random import uniform
 from tqdm import tqdm, trange
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-
+from ..rvs.crvs import ContinuousRV
 from .sampler import Sampler
 
 
@@ -31,19 +30,7 @@ class MetropolisHastingSampler(Sampler):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def sample(
-        self,
-        p: ContinuousRV,
-        q: Callable,
-        burn_in: int,
-        n_chains: int,
-        x0: Array | tuple[Array, ...],
-        *args,
-        N: int = 1000,
-        key: Optional[Array] = None,
-        hasting_ratio: bool = False,
-        **kwargs,
-    ) -> Array:
+    def sample(self, *args, **kwargs) -> Array:
         """Sample function for Metropolis-Hasting Sampler
 
         First, the sampler will run a burn-in phase to get the chain to
@@ -74,6 +61,23 @@ class MetropolisHastingSampler(Sampler):
         Array
             Samples from the target distribution
         """
+        p: Optional[ContinuousRV] = kwargs.get("p", None)
+        q: Optional[Callable] = kwargs.get("q", None)
+        burn_in: Optional[int] = kwargs.get("burn_in", None)
+        n_chains: Optional[int] = kwargs.get("n_chains", None)
+        x0: Optional[Array | tuple[Array, ...]] = kwargs.get("x0", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert p is not None, "p is None"
+        assert q is not None, "q is None"
+        assert burn_in is not None, "burn_in is None"
+        assert n_chains is not None, "n_chains is None"
+        assert x0 is not None, "x0 is None"
+        assert N is not None, "N is None"
+
+        key: Optional[Array] = kwargs.get("key", None)
+        hasting_ratio: bool = kwargs.get("hasting_ratio", False)
+
         x0 = jnp.asarray(x0)
         assert x0.shape == (n_chains,), f"got x0={x0}, n_chains={n_chains}"
 

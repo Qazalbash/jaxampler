@@ -19,8 +19,7 @@ from typing import Optional
 import jax
 from jax import Array
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-
+from ..rvs.crvs import ContinuousRV
 from .sampler import Sampler
 
 
@@ -31,7 +30,7 @@ class InverseTransformSampler(Sampler):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def sample(self, rv: ContinuousRV, *args, N: int = 1, key: Optional[Array] = None, **kwargs) -> Array:
+    def sample(self, *args, **kwargs) -> Array:
         """Samples from the given random variable using the inverse transform method.
 
         It runs the inverse transform algorithm and returns the samples.
@@ -50,8 +49,15 @@ class InverseTransformSampler(Sampler):
         Array
             The samples.
         """
+        rv: Optional[ContinuousRV] = kwargs.get("rv", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert rv is not None, "rv is None"
+        assert N is not None, "N is None"
+
         self.check_rv(rv)
 
+        key: Optional[Array] = kwargs.get("key", None)
         if key is None:
             key = self.get_key()
 

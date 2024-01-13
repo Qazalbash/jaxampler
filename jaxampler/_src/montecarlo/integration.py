@@ -17,8 +17,8 @@ from __future__ import annotations
 from abc import abstractmethod
 from typing import Optional
 
-from jaxampler._src.jobj import JObj
-from jaxampler._src.typing import Numeric
+from ..jobj import JObj
+from ..typing import Numeric
 
 
 class Integration(JObj):

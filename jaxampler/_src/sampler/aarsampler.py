@@ -18,8 +18,7 @@ from typing import Optional
 
 from jax import Array, numpy as jnp
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-
+from ..rvs.crvs import ContinuousRV
 from .arsampler import AcceptRejectSampler
 
 
@@ -27,16 +26,7 @@ class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def sample(
-        self,
-        target_rv: ContinuousRV,
-        proposal_rv: ContinuousRV,
-        *args,
-        scale: int = 1,
-        N: int = 1,
-        key: Optional[Array] = None,
-        **kwargs,
-    ) -> Array:
+    def sample(self, *args, **kwargs) -> Array:
         """Samples from the given random variable using the adaptive accept-reject method.
 
         It runs the adaptive accept-reject algorithm and returns the samples.
@@ -47,10 +37,10 @@ class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
             The random variable to sample from.
         proposal_rv : ContinuousRV
             The proposal random variable.
-        scale : int, optional
-            Scaler to cover target distribution by proposal distribution, by default 1
-        N : int, optional
-            Number of samples, by default 1
+        scale : float, optional
+            Scaler to cover target distribution by proposal distribution, by default 1.0
+        N : int
+            Number of samples
         key : Array, optional
             The key to use for sampling, by default None
 
@@ -59,6 +49,17 @@ class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
         Array
             The samples.
         """
+        target_rv: Optional[ContinuousRV] = kwargs.get("target_rv", None)
+        proposal_rv: Optional[ContinuousRV] = kwargs.get("proposal_rv", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert target_rv is not None, "target_rv is None"
+        assert proposal_rv is not None, "proposal_rv is None"
+        assert N is not None, "N is None"
+
+        scale: float = kwargs.get("scale", 1.0)
+        key: Optional[Array] = kwargs.get("key", None)
+
         samples = super().sample(target_rv, proposal_rv, scale, N, key)
         N_res = N - len(samples)
         while N_res != 0:

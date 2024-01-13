@@ -18,9 +18,9 @@ from typing import Callable, Optional
 
 from jax import Array, numpy as jnp
 
-from jaxampler._src.montecarlo.integration import Integration
-from jaxampler._src.montecarlo.montecarlogeneric import MonteCarloGenericIntegration
-from jaxampler._src.rvs import Uniform
+from ..rvs.uniform import Uniform
+from .integration import Integration
+from .montecarlogeneric import MonteCarloGenericIntegration
 
 
 MCGenInt = MonteCarloGenericIntegration(name="forMonteCarloBoxIntegration")
@@ -41,16 +41,7 @@ class MonteCarloBoxIntegration(Integration):
     def __init__(self, name: Optional[str] = None) -> None:
         super().__init__(name)
 
-    def compute_integral(
-        self,
-        h: Callable,
-        low: Array,
-        high: Array,
-        N: int,
-        *args,
-        key: Optional[Array] = None,
-        **kwargs,
-    ) -> Array:
+    def compute_integral(self, *args, **kwargs) -> Array:
         """Computes the integral of a function using Monte Carlo integration.
 
         Parameters
@@ -71,6 +62,17 @@ class MonteCarloBoxIntegration(Integration):
         float
             integral of the function.
         """
+        h: Optional[Callable] = kwargs.get("h", None)
+        low: Optional[Array] = kwargs.get("low", None)
+        high: Optional[Array] = kwargs.get("high", None)
+        N: Optional[int] = kwargs.get("N", None)
+
+        assert h is not None, "h is None"
+        assert low is not None, "low is None"
+        assert high is not None, "high is None"
+        assert N is not None, "N is None"
+
+        key: Optional[Array] = kwargs.get("key", None)
         integral = MCGenInt.compute_integral(
             h=h,
             p=Uniform(low=low, high=high),
