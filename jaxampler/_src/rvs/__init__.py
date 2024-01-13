@@ -15,15 +15,14 @@
 
 from __future__ import annotations
 
-from jaxampler._src.rvs.crvs import ContinuousRV as ContinuousRV
-from jaxampler._src.rvs.drvs import DiscreteRV as DiscreteRV
-
 from .bernoulli import Bernoulli as Bernoulli
 from .beta import Beta as Beta
 from .binomial import Binomial as Binomial
 from .boltzmann import Boltzmann as Boltzmann
 from .cauchy import Cauchy as Cauchy
 from .chi2 import Chi2 as Chi2
+from .crvs import ContinuousRV as ContinuousRV
+from .drvs import DiscreteRV as DiscreteRV
 from .exponential import Exponential as Exponential
 from .gamma import Gamma as Gamma
 from .geometric import Geometric as Geometric

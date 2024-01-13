@@ -16,8 +16,7 @@ from __future__ import annotations
 
 from typing import Optional
 
-from jaxampler._src.typing import Numeric
-
+from ..typing import Numeric
 from .binomial import Binomial
 
 

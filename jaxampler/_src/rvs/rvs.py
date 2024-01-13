@@ -20,8 +20,8 @@ from typing import Optional
 from jax import jit, numpy as jnp, vmap
 from jaxtyping import Array
 
-from jaxampler._src.jobj import JObj
-from jaxampler._src.typing import Numeric
+from ..jobj import JObj
+from ..typing import Numeric
 
 
 class GenericRV(JObj):

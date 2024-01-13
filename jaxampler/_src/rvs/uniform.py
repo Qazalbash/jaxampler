@@ -22,9 +22,9 @@ from jax import jit, lax, numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jaxtyping import Array
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-from jaxampler._src.typing import Numeric
-from jaxampler._src.utils import jx_cast
+from ..typing import Numeric
+from ..utils import jx_cast
+from .crvs import ContinuousRV
 
 
 class Uniform(ContinuousRV):

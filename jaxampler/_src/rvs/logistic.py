@@ -22,9 +22,9 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.special import logit
 from jax.scipy.stats import logistic as jax_logistic
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-from jaxampler._src.typing import Numeric
-from jaxampler._src.utils import jx_cast
+from ..typing import Numeric
+from ..utils import jx_cast
+from .crvs import ContinuousRV
 
 
 class Logistic(ContinuousRV):

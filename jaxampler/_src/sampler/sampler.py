@@ -14,12 +14,13 @@
 
 from __future__ import annotations
 
+from abc import abstractmethod
 from typing import Optional
 
 from jax import Array
 
-from jaxampler._src.jobj import JObj
-from jaxampler._src.rvs.crvs import ContinuousRV, GenericRV
+from ..jobj import JObj
+from ..rvs.crvs import ContinuousRV, GenericRV
 
 
 class Sampler(JObj):
@@ -42,6 +43,7 @@ class Sampler(JObj):
         assert isinstance(rv, GenericRV), f"rv must be a GenericRV object, got {rv}"
         assert isinstance(rv, ContinuousRV), f"rv must be a ContinuousRV object, got {rv}"
 
+    @abstractmethod
     def sample(self, *args, **kwargs) -> Array:
         """Samples from the given random variable.
 

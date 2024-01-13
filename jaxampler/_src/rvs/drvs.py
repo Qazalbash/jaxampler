@@ -19,7 +19,7 @@ from typing import Optional
 
 from jax import Array, jit, numpy as jnp, vmap
 
-from jaxampler._src.rvs import GenericRV
+from .rvs import GenericRV
 
 
 class DiscreteRV(GenericRV):

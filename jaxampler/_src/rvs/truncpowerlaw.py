@@ -21,9 +21,9 @@ import jax
 from jax import jit, numpy as jnp
 from jaxtyping import Array
 
-from jaxampler._src.rvs.crvs import ContinuousRV
-from jaxampler._src.typing import Numeric
-from jaxampler._src.utils import jx_cast
+from ..typing import Numeric
+from ..utils import jx_cast
+from .crvs import ContinuousRV
 
 
 class TruncPowerLaw(ContinuousRV):
