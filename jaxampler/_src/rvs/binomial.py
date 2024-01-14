@@ -71,7 +71,6 @@ class Binomial(DiscreteRV):
         xx = jnp.arange(0, self._n + 1, dtype=jnp.int32)
         complete_cdf = jnp.cumsum(self.pmf_x(xx))
         cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
-        print(jnp.select(cond, [0.0, 1.0, complete_cdf[x]]))
         return jnp.select(cond, [0.0, 1.0, complete_cdf[x]])
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
@@ -86,3 +85,6 @@ class Binomial(DiscreteRV):
             string += f", name={self._name}"
         string += ")"
         return string
+
+
+print(Binomial(0.5, (10, 20)).pmf_x(5))
