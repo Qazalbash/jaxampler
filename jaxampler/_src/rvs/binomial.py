@@ -48,9 +48,7 @@ class Binomial(DiscreteRV):
 
     def check_params(self) -> None:
         """Check the parameters of the random variable."""
-        assert jnp.all(self._p >= 0.0) and jnp.all(
-            self._p <= 1.0
-        ), "p must be in [0, 1]"
+        assert jnp.all(self._p >= 0.0) and jnp.all(self._p <= 1.0), "p must be in [0, 1]"
         assert jnp.all(self._n.dtype == jnp.int32), "n must be an integer"
         assert jnp.all(self._n > 0), "n must be positive"
 
@@ -85,6 +83,3 @@ class Binomial(DiscreteRV):
             string += f", name={self._name}"
         string += ")"
         return string
-
-
-print(Binomial(0.5, (10, 20)).pmf_x(5))
