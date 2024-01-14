@@ -21,9 +21,14 @@ limitations under the License. -->
 ![PyPI version](https://img.shields.io/pypi/v/jaxampler)
 [![Versions](https://img.shields.io/pypi/pyversions/jaxampler.svg)](https://pypi.org/project/jaxampler/)
 
-Jaxampler is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling algorithms for a wide range of statistical distributions. Jaxampler is designed to be easy to use and integrate with existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and statistical distributions.
+Jaxampler 🧪 is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling
+algorithms for a wide range of statistical distributions. Jaxampler is designed to be easy to use and integrate with
+existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and
+statistical distributions.
 
-Jaxampler is currently in the early stages of development and is not yet ready for production use. However, we welcome contributions from the community to help us improve the library. If you are interested in contributing, please refer to our [contribution guidelines](CONTRIBUTING.md).
+Jaxampler is currently in the early stages of development and is not yet ready for production use. However, we welcome
+contributions from the community to help us improve the library. If you are interested in contributing, please refer to
+our [contribution guidelines](CONTRIBUTING.md).
 
 ## Features
 
@@ -65,7 +70,8 @@ tfp-nightly
 tqdm
 ```
 
-The test suite is based on `pytest`. To run the tests, one needs to install pytest and run `pytest` at the root directory of this repo.
+The test suite is based on `pytest`. To run the tests, one needs to install pytest and run `pytest` at the root
+directory of this repo.
 
 ## Monte Carlo Methods
 
@@ -129,6 +135,13 @@ Jaxampler supports the following random variables:
 - [x] Uniform
 - [x] Weibull
 
+## Community activity [![Time period](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_badge.svg)](https://repography.com)
+
+[![Timeline graph](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_timeline.svg)](https://github.com/Qazalbash/jaxampler/commits)
+[![Issue status graph](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_issues.svg)](https://github.com/Qazalbash/jaxampler/issues)
+[![Pull request status graph](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_prs.svg)](https://github.com/Qazalbash/jaxampler/pulls)
+[![Trending topics](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_words.svg)](https://github.com/Qazalbash/jaxampler/commits)
+
 ## Citing Jaxampler
 
 To cite this repository:
@@ -145,4 +158,6 @@ To cite this repository:
 
 ## Contributors
 
-[![List of contributors](https://contrib.rocks/image?repo=Qazalbash/jaxampler)](https://github.com/Qazalbash/jaxampler/graphs/contributors)
+<a href="https://github.com/Qazalbash/jaxampler/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=Qazalbash/jaxampler" />
+</a>
