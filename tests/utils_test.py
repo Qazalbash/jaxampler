@@ -32,8 +32,8 @@ class TestUtils:
         assert isinstance(casted_b, jnp.ndarray)
         assert casted_a.shape == ()
         assert casted_b.shape == (3,)
-        assert jnp.all(casted_a == 1)
-        assert jnp.all(casted_b == jnp.array([1, 2, 3]))
+        assert jnp.allclose(casted_a, 1)
+        assert jnp.allclose(casted_b, jnp.array([1, 2, 3]))
 
     def test_jx_cast_fail(self):
         g = jnp.array([[1, 2, 3], [4, 5, 6]])

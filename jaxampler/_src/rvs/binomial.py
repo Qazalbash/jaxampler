@@ -29,7 +29,7 @@ from .drvs import DiscreteRV
 class Binomial(DiscreteRV):
     """Binomial random variable"""
 
-    def __init__(self, p: Numeric, n: int, name: Optional[str] = None) -> None:
+    def __init__(self, p: Numeric, n: Numeric, name: Optional[str] = None) -> None:
         """Initialize the Binomial random variable.
 
         Parameters
@@ -43,7 +43,7 @@ class Binomial(DiscreteRV):
         """
         shape, self._p, self._n = jx_cast(p, n)
         self.check_params()
-        self._q = 1.0 - p
+        self._q = 1.0 - self._p
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
