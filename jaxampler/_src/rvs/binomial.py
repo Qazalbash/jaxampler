@@ -48,7 +48,9 @@ class Binomial(DiscreteRV):
 
     def check_params(self) -> None:
         """Check the parameters of the random variable."""
-        assert jnp.all(self._p >= 0.0) and jnp.all(self._p <= 1.0), "p must be in [0, 1]"
+        assert jnp.all(self._p >= 0.0) and jnp.all(
+            self._p <= 1.0
+        ), "p must be in [0, 1]"
         assert jnp.all(self._n.dtype == jnp.int32), "n must be an integer"
         assert jnp.all(self._n > 0), "n must be positive"
 
@@ -69,6 +71,7 @@ class Binomial(DiscreteRV):
         xx = jnp.arange(0, self._n + 1, dtype=jnp.int32)
         complete_cdf = jnp.cumsum(self.pmf_x(xx))
         cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
+        print(jnp.select(cond, [0.0, 1.0, complete_cdf[x]]))
         return jnp.select(cond, [0.0, 1.0, complete_cdf[x]])
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
