@@ -23,8 +23,7 @@ from jax.scipy.stats import uniform as jax_uniform
 
 sys.path.append("../jaxampler")
 from jaxampler._src.rvs.uniform import Uniform
-
-eps = 1e-3
+from jaxampler._src.rvs.triangular import Triangular
 
 
 class TestUniform:
@@ -51,21 +50,21 @@ class TestUniform:
         assert uniform_cdf.cdf_x(5) <= 1
         assert uniform_cdf.cdf_x(5) >= 0
         assert uniform_cdf.cdf_x(15) == 1
-        assert uniform_cdf.cdf_x(-1) == -jnp.inf
+        assert uniform_cdf.cdf_x(-1) == 0
 
         # when low is negative
         uniform_cdf = Uniform(low=-10, high=10, name="cdf_n10_to_10")
         assert uniform_cdf.cdf_x(0) <= 1
         assert uniform_cdf.cdf_x(0) >= 0
         assert uniform_cdf.cdf_x(15) == 1
-        assert uniform_cdf.cdf_x(-11) == -jnp.inf
+        assert uniform_cdf.cdf_x(-11) == 0
 
         # when low and high are negative
         uniform_cdf = Uniform(low=-10, high=-1, name="cdf_n10_to_n1")
         assert uniform_cdf.cdf_x(-5) <= 1
         assert uniform_cdf.cdf_x(-5) >= 0
         assert uniform_cdf.cdf_x(1) == 1
-        assert uniform_cdf.cdf_x(-20) == -jnp.inf
+        assert uniform_cdf.cdf_x(-20) == 0
 
     def test_rvs(self):
         uniforn_rvs = Uniform(low=0, high=10, name="tets_rvs")
@@ -79,3 +78,9 @@ class TestUniform:
         # without key
         result = uniforn_rvs.rvs(shape)
         assert result.shape, shape + uniforn_rvs._shape
+
+
+class TestTriangular:
+
+    def test_rvs(self):
+        pass
