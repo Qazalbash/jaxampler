@@ -23,7 +23,6 @@ from jax.scipy.stats import uniform as jax_uniform
 
 sys.path.append("../jaxampler")
 from jaxampler._src.rvs.uniform import Uniform
-from jaxampler._src.rvs.triangular import Triangular
 
 
 class TestUniform:
@@ -78,9 +77,3 @@ class TestUniform:
         # without key
         result = uniforn_rvs.rvs(shape)
         assert result.shape, shape + uniforn_rvs._shape
-
-
-class TestTriangular:
-
-    def test_rvs(self):
-        pass
