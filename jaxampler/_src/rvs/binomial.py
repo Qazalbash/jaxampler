@@ -19,6 +19,7 @@ from typing import Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
+from jax.scipy.special import betainc
 from jax.scipy.stats import binom as jax_binom
 
 from ..typing import Numeric
@@ -66,10 +67,9 @@ class Binomial(DiscreteRV):
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        xx = jnp.arange(0, self._n + 1, dtype=jnp.int32)
-        complete_cdf = jnp.cumsum(self.pmf_x(xx))
+        floor_x = jnp.floor(x)
         cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
-        return jnp.select(cond, [0.0, 1.0, complete_cdf[x]])
+        return jnp.select(cond, [0.0, 1.0, betainc(self._n - floor_x, floor_x + 1, self._q)])
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
