@@ -127,7 +127,7 @@ class TestTriangular:
         ## when low is negative
         triangular_cdf = Triangular(low=-5, mode=5, high=10, name="cdf_n5_to_10")
         # when x is equal to mode
-        assert triangular_cdf.cdf_x(5) == 0.5
+        assert triangular_cdf.cdf_x(5) == 0.6666666
         # when x is greater than mid
         assert triangular_cdf.cdf_x(7) == 0.88
         # when x is less than mid
@@ -137,10 +137,10 @@ class TestTriangular:
 
         # when both high and low are negative
         triangular_cdf = Triangular(low=-5, mode=-2.5, high=-1, name="cdf_n5_to_n1")
-        # when x is equal to mode
-        assert triangular_cdf.cdf_x(-2.5) == 0.5
+        # when x is equal to mid
+        assert triangular_cdf.cdf_x(-2.5) == 0.625
         # when x is greater than mid
-        assert triangular_cdf.cdf_x(-2) == 5 / 6
+        assert triangular_cdf.cdf_x(-2) == 0.8333334
         # when x is less than mid
         assert triangular_cdf.cdf_x(-3) == 0.39999998
         # when x is less than low
