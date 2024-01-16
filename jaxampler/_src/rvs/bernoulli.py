@@ -21,28 +21,20 @@ from .binomial import Binomial
 
 
 class Bernoulli(Binomial):
-    """Bernoulli random variable"""
+    """Bernoulli random variable with probability of success ::math::p
+
+    .. math::
+        P\\left(X=x|p\\right)=p^{x}(1-p)^{1-x}
+    """
 
     def __init__(self, p: Numeric, name: Optional[str] = None) -> None:
-        """Initialize the Bernoulli random variable.
-
-        Parameters
-        ----------
-        p : Numeric
-            Probability of success.
-        name : str, optional
-            Name of the random variable, by default None
+        """
+        :param p: Probability of success.
+        :param name: Name of the random variable.
         """
         super().__init__(p, 1, name)
 
     def __repr__(self) -> str:
-        """Return the string representation of the Bernoulli random variable.
-
-        Returns
-        -------
-        str
-            String representation of the Bernoulli random variable.
-        """
         string = f"Bernoulli(p={self._p}"
         if self._name is not None:
             string += f", name={self._name}"

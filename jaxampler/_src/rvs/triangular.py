@@ -53,9 +53,9 @@ class Triangular(ContinuousRV):
         ]
         choices = [
             -jnp.inf,
-            lax.log(2) + lax.log(x - self._low) - lax.log(self._high - self._low) - lax.log(self._mode - self._low),
-            lax.log(2) - lax.log(self._high - self._low),
-            lax.log(2) + lax.log(self._high - x) - lax.log(self._high - self._low) - lax.log(self._high - self._mode),
+            jnp.log(2) + jnp.log(x - self._low) - jnp.log(self._high - self._low) - jnp.log(self._mode - self._low),
+            jnp.log(2) - jnp.log(self._high - self._low),
+            jnp.log(2) + jnp.log(self._high - x) - jnp.log(self._high - self._low) - jnp.log(self._high - self._mode),
             -jnp.inf,
         ]
         return jnp.select(conditions, choices)
@@ -70,14 +70,14 @@ class Triangular(ContinuousRV):
         ]
         choices = [
             -jnp.inf,
-            2 * lax.log(x - self._low) - lax.log(self._high - self._low) - lax.log(self._mode - self._low),
-            lax.log(
+            2 * jnp.log(x - self._low) - jnp.log(self._high - self._low) - jnp.log(self._mode - self._low),
+            jnp.log(
                 1
-                - lax.exp(
-                    (2 * lax.log(self._high - x) - lax.log(self._high - self._low) - lax.log(self._high - self._mode))
+                - jnp.exp(
+                    (2 * jnp.log(self._high - x) - jnp.log(self._high - self._low) - jnp.log(self._high - self._mode))
                 )
             ),
-            lax.log(1.0),
+            jnp.log(1.0),
         ]
         return jnp.select(conditions, choices)
 
