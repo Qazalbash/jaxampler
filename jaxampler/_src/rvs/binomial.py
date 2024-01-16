@@ -53,7 +53,7 @@ class Binomial(DiscreteRV):
         assert jnp.all(self._n.dtype == jnp.int32), "n must be an integer"
         assert jnp.all(self._n > 0), "n must be positive"
 
-    @partial(jit, static_argnums=(0))
+    @partial(jit, static_argnums=(0,))
     def logpmf_x(self, x: Numeric) -> Numeric:
         return jax_binom.logpmf(x, self._n, self._p)
 

@@ -18,7 +18,7 @@ from functools import partial
 from typing import Optional
 
 import jax
-from jax import jit, lax, numpy as jnp
+from jax import jit, numpy as jnp
 from jax.scipy.stats import uniform as jax_uniform
 from jaxtyping import Array
 
@@ -61,7 +61,7 @@ class Uniform(ContinuousRV):
         ]
         choice = [
             -jnp.inf,
-            lax.log(x - self._low) - lax.log(self._high - self._low),
+            jnp.log(x - self._low) - jnp.log(self._high - self._low),
             jnp.log(1.0),
         ]
         return jnp.select(conditions, choice)

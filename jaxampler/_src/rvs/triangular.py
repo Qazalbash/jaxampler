@@ -28,9 +28,9 @@ from .crvs import ContinuousRV
 class Triangular(ContinuousRV):
     def __init__(
         self,
-        low: float = 0,
-        mode: float = 0.5,
-        high: float = 1,
+        low: Numeric = 0,
+        mode: Numeric = 0.5,
+        high: Numeric = 1,
         name: Optional[str] = None,
     ) -> None:
         shape, self._low, self._mode, self._high = jx_cast(low, mode, high)
@@ -38,7 +38,7 @@ class Triangular(ContinuousRV):
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._low <= self._high), "low must be less than or equal to high"
+        assert jnp.all(self._low < self._high), "low must be less than or equal to high"
         assert jnp.all(self._low <= self._mode), "low must be less than or equal to mid"
         assert jnp.all(self._mode <= self._high), "mid must be less than or equal to high"
 
@@ -64,17 +64,20 @@ class Triangular(ContinuousRV):
     def logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
-            (self._low <= x) & (x < self._mode),
-            x == self._mode,
+            (self._low < x) & (x <= self._mode),
             (self._mode < x) & (x < self._high),
             x >= self._high,
         ]
         choices = [
             -jnp.inf,
             2 * jnp.log(x - self._low) - jnp.log(self._high - self._low) - jnp.log(self._mode - self._low),
-            jnp.log(0.5),
-            jnp.log(1 - ((self._high - x) ** 2 / ((self._high - self._low) * (self._high - self._mode)))),
-            jnp.log(1),
+            jnp.log(
+                1
+                - jnp.exp(
+                    (2 * jnp.log(self._high - x) - jnp.log(self._high - self._low) - jnp.log(self._high - self._mode))
+                )
+            ),
+            jnp.log(1.0),
         ]
         return jnp.select(conditions, choices)
 
