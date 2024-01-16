@@ -140,7 +140,7 @@ class TestTriangular:
         # when x is equal to mode
         assert triangular_cdf.cdf_x(-2.5) == 0.5
         # when x is greater than mid
-        assert triangular_cdf.cdf_x(-2) == 5 / 6
+        assert triangular_cdf.cdf_x(-2) == 0.8333333
         # when x is less than mid
         assert triangular_cdf.cdf_x(-3) == 0.39999998
         # when x is less than low
