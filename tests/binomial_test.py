@@ -12,20 +12,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+
 import sys
 
 import jax
 import jax.numpy as jnp
 from jax.scipy.stats import binom as jax_binom
-from jax.scipy.stats import geom as jax_geom
 
 sys.path.append("../jaxampler")
-from jaxampler._src.rvs.binomial import Binomial
-from jaxampler._src.rvs.geometric import Geometric
+from jaxampler.rvs import Binomial
 
 
 class TestBinomial:
-
     def test_shapes(self):
         assert jnp.allclose(Binomial(p=0.5, n=10, name="test_logpmf_p0.5").logpmf_x(5), jax_binom.logpmf(5, 10, 0.5))
 
@@ -36,16 +34,19 @@ class TestBinomial:
 
         # when probability is very small
         assert jnp.allclose(
-            Binomial(p=0.0001, n=10, name="test_logpmf_p0.0001").logpmf_x(5), jax_binom.logpmf(5, 10, 0.0001))
+            Binomial(p=0.0001, n=10, name="test_logpmf_p0.0001").logpmf_x(5), jax_binom.logpmf(5, 10, 0.0001)
+        )
 
         # when n is very large
         assert jnp.allclose(Binomial(p=0.1, n=100).logpmf_x(50), jax_binom.logpmf(50, 100, 0.1))
         assert jnp.allclose(Binomial(p=0.5, n=10, name="test_pmf_p0.5").pmf_x(5), jax_binom.pmf(5, 10, 0.5))
         assert jnp.allclose(
-            Binomial(p=0.5, n=[10, 20], name="test_pmf_n2").pmf_x(5), jax_binom.pmf(5, jnp.asarray([10, 20]), 0.5))
+            Binomial(p=0.5, n=[10, 20], name="test_pmf_n2").pmf_x(5), jax_binom.pmf(5, jnp.asarray([10, 20]), 0.5)
+        )
         assert jnp.allclose(
             Binomial(p=[0.5, 0.1], n=[10, 20], name="test_pmf_p2n2").pmf_x(5),
-            jax_binom.pmf(5, jnp.asarray([10, 20]), jnp.asarray([0.5, 0.1])))
+            jax_binom.pmf(5, jnp.asarray([10, 20]), jnp.asarray([0.5, 0.1])),
+        )
         assert Binomial(p=[[0.5, 0.1], [0.4, 0.1]], n=[[10], [20]], name="test_pmf_p2x3n2").pmf_x(5).shape == (2, 2)
 
         # when probability is very small
@@ -53,7 +54,8 @@ class TestBinomial:
 
         # when n is very large
         assert jnp.allclose(
-            Binomial(p=0.1, n=100000, name="test_pmf_p0.1n100000").pmf_x(50), jax_binom.pmf(50, 100000, 0.1))
+            Binomial(p=0.1, n=100000, name="test_pmf_p0.1n100000").pmf_x(50), jax_binom.pmf(50, 100000, 0.1)
+        )
 
     def test_cdf_x(self):
         bin_cdf = Binomial(p=0.2, n=12, name="test_cdf")
@@ -74,48 +76,3 @@ class TestBinomial:
         # without key
         result = bin_rvs.rvs(shape)
         assert result.shape, shape + bin_rvs._shape
-
-
-class TestGeometric():
-
-    def test_shapes(self):
-        assert jnp.allclose(Geometric(p=0.5, name="test_logpmf_p0.5").logpmf_x(5), jax_geom.logpmf(5, 0.5))
-
-        # for different shapes
-        assert Geometric(p=[0.5, 0.1], name="test_logpmf_p2").logpmf_x(5).shape == (2,)
-        assert Geometric(p=[0.5, 0.1, 0.3], name="test_logpmf_p3").logpmf_x(5).shape == (3,)
-
-        # when probability is very small
-        assert jnp.allclose(Geometric(p=0.0001, name="test_logpmf_p0.0001").logpmf_x(5), jax_geom.logpmf(5, 0.0001))
-
-        # when n is very large
-        assert jnp.allclose(Geometric(p=0.1).logpmf_x(50), jax_geom.logpmf(50, 0.1))
-        assert jnp.allclose(Geometric(p=0.5, name="test_pmf_p0.5").pmf_x(5), jax_geom.pmf(5, 0.5))
-        assert jnp.allclose(
-            Geometric(p=[0.5, 0.1], name="test_pmf_p2").pmf_x(5), jax_geom.pmf(5, jnp.asarray([0.5, 0.1])))
-        assert Geometric(p=[[0.5, 0.1], [0.4, 0.1]], name="test_pmf_p2x3").pmf_x(5).shape == (2, 2)
-
-        # when probability is very small
-        assert jnp.allclose(Geometric(p=0.0001, name="test_pmf_p0.0001").pmf_x(5), jax_geom.pmf(5, 0.0001))
-
-        # when n is very large
-        assert jnp.allclose(Geometric(p=0.1, name="test_pmf_p0.1").pmf_x(50), jax_geom.pmf(50, 0.1))
-
-    def test_cdf_x(self):
-        geom_cdf = Geometric(p=0.2, name="test_cdf")
-        assert geom_cdf.cdf_x(-1) == 0.0
-        assert geom_cdf.cdf_x(9) >= 0.0
-        assert geom_cdf.cdf_x(9) <= 1.0
-
-    def test_rvs(self):
-        geom_rvs = Geometric(p=0.6, name="tets_rvs")
-        shape = (3, 4)
-
-        # with key
-        key = jax.random.PRNGKey(123)
-        result = geom_rvs.rvs(shape, key)
-        assert result.shape, shape + geom_rvs._shape
-
-        # without key
-        result = geom_rvs.rvs(shape)
-        assert result.shape, shape + geom_rvs._shape

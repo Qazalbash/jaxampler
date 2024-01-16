@@ -12,85 +12,27 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-#  limitations under the License.
 
 import sys
 
 import jax
-import pytest
 import jax.numpy as jnp
+import pytest
 from jax.scipy.stats import uniform as jax_uniform
 
 sys.path.append("../jaxampler")
-from jaxampler._src.rvs.uniform import Uniform
-from jaxampler._src.rvs.triangular import Triangular
-
-
-class TestUniform:
-
-    def test_shape(self):
-        assert jnp.allclose(Uniform(low=0.0, high=10.0, name="uniform_0_to_10").pdf_x(5), jax_uniform.pdf(5, 0, 10))
-
-        # when low is negative
-        assert jnp.allclose(
-            Uniform(low=-10.0, high=10.0, name="uniform_n10_to_10").pdf_x(5), jax_uniform.pdf(5, -10, 20))
-
-        # when both low and high are negative
-        assert jnp.allclose(
-            Uniform(low=-10.0, high=-1.0, name="uniform_n10_to_n1").pdf_x(5), jax_uniform.pdf(5, -10, 9))
-
-        # when low is equal to high
-        with pytest.raises(AssertionError):
-            Uniform(low=10.0, high=10.0, name="uniform_10_to_10")
-
-        # when high is greater than low
-        with pytest.raises(AssertionError):
-            Uniform(low=10.0, high=0.0, name="uniform_10_to_0")
-
-    def test_cdf_x(self):
-        uniform_cdf = Uniform(low=0.0, high=10.0, name="cdf_0_to_10")
-        assert uniform_cdf.cdf_x(5) <= 1
-        assert uniform_cdf.cdf_x(5) >= 0
-        assert uniform_cdf.cdf_x(15) == 1
-        assert uniform_cdf.cdf_x(-1) == 0
-
-        # when low is negative
-        uniform_cdf = Uniform(low=-10.0, high=10.0, name="cdf_n10_to_10")
-        assert uniform_cdf.cdf_x(0) <= 1
-        assert uniform_cdf.cdf_x(0) >= 0
-        assert uniform_cdf.cdf_x(15) == 1
-        assert uniform_cdf.cdf_x(-11) == 0
-
-        # when low and high are negative
-        uniform_cdf = Uniform(low=-10.0, high=-1.0, name="cdf_n10_to_n1")
-        assert uniform_cdf.cdf_x(-5) <= 1
-        assert uniform_cdf.cdf_x(-5) >= 0
-        assert uniform_cdf.cdf_x(1) == 1
-        assert uniform_cdf.cdf_x(-20) == 0
-
-    def test_rvs(self):
-        uniform_rvs = Uniform(low=0.0, high=10.0, name="tets_rvs")
-        shape = (3, 4)
-
-        # with key
-        key = jax.random.PRNGKey(123)
-        result = uniform_rvs.rvs(shape, key)
-        assert result.shape, shape + uniform_rvs._shape
-
-        # without key
-        result = uniform_rvs.rvs(shape)
-        assert result.shape, shape + uniform_rvs._shape
+from jaxampler.rvs import Triangular
 
 
 class TestTriangular:
-
     def test_shape(self):
         # when x is less than low
         assert jnp.allclose(Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(-1), 0)
         # when x is less than mid
         assert jnp.allclose(
             Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(2),
-            jnp.exp(jnp.log(2) + jnp.log(2) - jnp.log(10) - jnp.log(5)))
+            jnp.exp(jnp.log(2) + jnp.log(2) - jnp.log(10) - jnp.log(5)),
+        )
         # when x is equal to mid
         assert jnp.allclose(Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(5), 0.2)
         # when x is greater than mid

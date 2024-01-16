@@ -17,7 +17,6 @@ import sys
 import pytest
 from jax import numpy as jnp
 
-
 sys.path.append("../jaxampler")
 from jaxampler.utils import jx_cast, nCr, nPr
 
