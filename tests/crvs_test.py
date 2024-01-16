@@ -84,6 +84,68 @@ class TestUniform:
 
 class TestTriangular:
 
+    def test_shape(self):
+        # when x is less than low
+        assert jnp.allclose(Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(-1), 0)
+        # when x is less than mid
+        assert jnp.allclose(
+            Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(2),
+            jnp.exp(jnp.log(2) + jnp.log(2) - jnp.log(10) - jnp.log(5)))
+        # when x is equal to mid
+        assert jnp.allclose(Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(5), 0.2)
+        # when x is greater than mid
+        assert jnp.allclose(Triangular(low=0.0, mode=5.0, high=10.0, name="triangular_0_to_10").pdf_x(7), 0.12)
+        # when x is greater than high
+        assert jnp.allclose(Triangular(low=0, mode=5, high=10, name="triangular_0_to_10").pdf_x(11), 0)
+
+        # when low is negative
+        assert jnp.allclose(Triangular(low=-10, mode=5, high=10, name="triangular_n10_to_10").pdf_x(2), 0.08)
+        # when both low and high are negative
+        assert jnp.allclose(Triangular(low=-10, mode=-5, high=-1, name="triangular_n10_to_n1").pdf_x(-9), 2 / 45)
+
+        # when low is greater than high
+        with pytest.raises(AssertionError):
+            Triangular(low=10, mode=5, high=0, name="triangular_10_to_0")
+        # when low is greater than mid
+        with pytest.raises(AssertionError):
+            Triangular(low=1, mode=0, high=10, name="triangular_0_to_10")
+        # when mid is greater than high
+        with pytest.raises(AssertionError):
+            Triangular(low=10, mode=30, high=20, name="triangular_10_to_20")
+
+    def test_cdf_x(self):
+        triangular_cdf = Triangular(low=0, mode=5, high=10, name="cdf_0_to_10")
+        # when x is equal to mode
+        assert triangular_cdf.cdf_x(5) == 0.5
+        # when x is greater than mid
+        assert triangular_cdf.cdf_x(7) == 0.82
+        # when x is less than mid
+        assert triangular_cdf.cdf_x(2) == 0.08
+        # when x is less than low
+        assert triangular_cdf.cdf_x(-1) == 0
+
+        ## when low is negative
+        triangular_cdf = Triangular(low=-5, mode=5, high=10, name="cdf_n5_to_10")
+        # when x is equal to mode
+        assert triangular_cdf.cdf_x(5) == 0.6666666
+        # when x is greater than mid
+        assert triangular_cdf.cdf_x(7) == 0.88
+        # when x is less than mid
+        assert triangular_cdf.cdf_x(2) == round(49 / 150, 8)
+        # # when x is less than low
+        assert triangular_cdf.cdf_x(-6) == 0
+
+        # when both high and low are negative
+        triangular_cdf = Triangular(low=-5, mode=-2.5, high=-1, name="cdf_n5_to_n1")
+        # when x is equal to mid
+        assert triangular_cdf.cdf_x(-2.5) == 0.625
+        # when x is greater than mid
+        assert triangular_cdf.cdf_x(-2) == 0.8333334
+        # when x is less than mid
+        assert triangular_cdf.cdf_x(-3) == 0.39999998
+        # when x is less than low
+        assert triangular_cdf.cdf_x(-6) == 0
+
     def test_rvs(self):
         triangular_rvs = Triangular(low=0, mode=5, high=10, name="tets_rvs")
         shape = (3, 4)
