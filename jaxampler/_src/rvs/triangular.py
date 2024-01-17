@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, lax, numpy as jnp
@@ -28,9 +28,9 @@ from .crvs import ContinuousRV
 class Triangular(ContinuousRV):
     def __init__(
         self,
-        low: Numeric = 0,
-        mode: Numeric = 0.5,
-        high: Numeric = 1,
+        low: Numeric | Any = 0,
+        mode: Numeric | Any = 0.5,
+        high: Numeric | Any = 1,
         name: Optional[str] = None,
     ) -> None:
         shape, self._low, self._mode, self._high = jx_cast(low, mode, high)

@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -27,7 +27,7 @@ from .crvs import ContinuousRV
 
 
 class LogNormal(ContinuousRV):
-    def __init__(self, mu: Numeric = 0.0, sigma: Numeric = 1.0, name: Optional[str] = None) -> None:
+    def __init__(self, mu: Numeric | Any = 0.0, sigma: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
         shape, self._mu, self._sigma = jx_cast(mu, sigma)
         self.check_params()
         super().__init__(name=name, shape=shape)

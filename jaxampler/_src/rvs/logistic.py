@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -28,7 +28,7 @@ from .crvs import ContinuousRV
 
 
 class Logistic(ContinuousRV):
-    def __init__(self, mu: Numeric = 0.0, scale: Numeric = 1.0, name: Optional[str] = None) -> None:
+    def __init__(self, mu: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
         shape, self._scale = jx_cast(scale)
         self.check_params()
         self._mu = mu

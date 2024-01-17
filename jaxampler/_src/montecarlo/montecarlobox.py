@@ -30,7 +30,6 @@ class MonteCarloBoxIntegration(Integration):
     """Monte Carlo Integration with a uniform probability distribution.
 
     .. math::
-
         \\int_a^b h(x) dx = (b-a)\\int_a^b h(x)\\mathcal{U}(a,b) dx \\approx \\frac{b-a}{N} \\sum_{i=1}^N h(x_i)
 
     where :math:`x_i \\sim p(x)`. This is a special case of Monte Carlo

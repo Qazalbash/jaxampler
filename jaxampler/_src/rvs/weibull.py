@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -26,7 +26,7 @@ from .crvs import ContinuousRV
 
 
 class Weibull(ContinuousRV):
-    def __init__(self, lmbda: Numeric = 1.0, k: Numeric = 1.0, name: Optional[str] = None) -> None:
+    def __init__(self, lmbda: Numeric | Any, k: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._lmbda = jx_cast(lmbda)
         self._k = k
         self.check_params()

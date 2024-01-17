@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import jit, numpy as jnp
@@ -29,9 +29,9 @@ from .crvs import ContinuousRV
 class TruncPowerLaw(ContinuousRV):
     def __init__(
         self,
-        alpha: Numeric,
-        low: Numeric = 0,
-        high: Numeric = 1,
+        alpha: Numeric | Any,
+        low: Numeric | Any,
+        high: Numeric | Any,
         name: Optional[str] = None,
     ) -> None:
         shape, self._alpha, self._low, self._high = jx_cast(alpha, low, high)

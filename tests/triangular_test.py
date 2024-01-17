@@ -18,7 +18,7 @@ import sys
 import jax
 import jax.numpy as jnp
 import pytest
-from jax.scipy.stats import uniform as jax_uniform
+
 
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Triangular

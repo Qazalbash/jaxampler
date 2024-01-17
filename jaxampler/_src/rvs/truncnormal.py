@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -29,10 +29,10 @@ from .crvs import ContinuousRV
 class TruncNormal(ContinuousRV):
     def __init__(
         self,
-        mu: Numeric,
-        sigma: Numeric,
-        low: Numeric = 0.0,
-        high: Numeric = 1.0,
+        mu: Numeric | Any,
+        sigma: Numeric | Any,
+        low: Numeric | Any,
+        high: Numeric | Any,
         name: Optional[str] = None,
     ) -> None:
         shape, self._mu, self._sigma, self._low, self._high = jx_cast(mu, sigma, low, high)
