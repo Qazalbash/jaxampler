@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -28,19 +28,16 @@ from .drvs import DiscreteRV
 
 
 class Binomial(DiscreteRV):
-    """Binomial random variable"""
+    r"""Binomial random variable
+    .. math::
+        X\sim Bin(p,n) \iff P(X=x|p,n)=\binom{n}{x}p^{x}(1-p)^{n-x}
+    """
 
-    def __init__(self, p: Numeric, n: Numeric, name: Optional[str] = None) -> None:
-        """Initialize the Binomial random variable.
-
-        Parameters
-        ----------
-        p : Numeric
-            Probability of success.
-        n : int
-            Number of trials.
-        name : str, optional
-            Name of the random variable, by default None
+    def __init__(self, p: Numeric | Any, n: Numeric | Any, name: Optional[str] = None) -> None:
+        """
+        :param p: Probability of success
+        :param n: Number of trials
+        :param name: Name of the random variable
         """
         shape, self._p, self._n = jx_cast(p, n)
         self.check_params()

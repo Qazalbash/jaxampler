@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -27,7 +27,7 @@ from .crvs import ContinuousRV
 
 
 class Chi2(ContinuousRV):
-    def __init__(self, nu: Numeric, name: Optional[str] = None) -> None:
+    def __init__(self, nu: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._nu = jx_cast(nu)
         self.check_params()
         super().__init__(name=name, shape=shape)

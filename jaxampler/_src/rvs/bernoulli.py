@@ -14,20 +14,20 @@
 
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional
 
 from ..typing import Numeric
 from .binomial import Binomial
 
 
 class Bernoulli(Binomial):
-    """Bernoulli random variable with probability of success ::math::p
+    r"""Bernoulli random variable with probability of success p
 
     .. math::
-        P\\left(X=x|p\\right)=p^{x}(1-p)^{1-x}
+        X\sim \mathbf{B}(p)\iff P\left(X=x|p\right)=p^{x}(1-p)^{1-x}
     """
 
-    def __init__(self, p: Numeric, name: Optional[str] = None) -> None:
+    def __init__(self, p: Numeric | Any, name: Optional[str] = None) -> None:
         """
         :param p: Probability of success.
         :param name: Name of the random variable.

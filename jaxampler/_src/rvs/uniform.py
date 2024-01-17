@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import jit, numpy as jnp
@@ -28,7 +28,7 @@ from .crvs import ContinuousRV
 
 
 class Uniform(ContinuousRV):
-    def __init__(self, low: Numeric = 0.0, high: Numeric = 1.0, name: Optional[str] = None) -> None:
+    def __init__(self, low: Numeric | Any, high: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._low, self._high = jx_cast(low, high)
         self.check_params()
         super().__init__(name, shape)

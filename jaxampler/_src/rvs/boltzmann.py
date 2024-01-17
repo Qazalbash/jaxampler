@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 from jax import jit, numpy as jnp
 from jax.scipy.special import erf
@@ -26,7 +26,7 @@ from .crvs import ContinuousRV
 
 
 class Boltzmann(ContinuousRV):
-    def __init__(self, a: Numeric, name: Optional[str] = None) -> None:
+    def __init__(self, a: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._a = jx_cast(a)
         self.check_params()
         super().__init__(name=name, shape=shape)

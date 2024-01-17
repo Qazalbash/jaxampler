@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -27,7 +27,7 @@ from .crvs import ContinuousRV
 
 
 class Gamma(ContinuousRV):
-    def __init__(self, alpha: Numeric, beta: Numeric, name: Optional[str] = None) -> None:
+    def __init__(self, alpha: Numeric | Any, beta: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._alpha, self._beta = jx_cast(alpha, beta)
         self.check_params()
         super().__init__(name=name, shape=shape)

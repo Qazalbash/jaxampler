@@ -19,6 +19,7 @@ import jax
 import jax.numpy as jnp
 from jax.scipy.stats import geom as jax_geom
 
+
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Geometric
 

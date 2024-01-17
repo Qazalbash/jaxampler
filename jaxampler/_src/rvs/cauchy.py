@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -27,7 +27,7 @@ from .crvs import ContinuousRV
 
 
 class Cauchy(ContinuousRV):
-    def __init__(self, sigma: Numeric, loc: Numeric = 0, name: Optional[str] = None) -> None:
+    def __init__(self, sigma: Numeric | Any, loc: Numeric | Any = 0, name: Optional[str] = None) -> None:
         shape, self._sigma, self._loc = jx_cast(sigma, loc)
         self.check_params()
         super().__init__(name=name, shape=shape)

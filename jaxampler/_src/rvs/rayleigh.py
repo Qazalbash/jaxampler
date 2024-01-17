@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -26,7 +26,7 @@ from .crvs import ContinuousRV
 
 
 class Rayleigh(ContinuousRV):
-    def __init__(self, sigma: float, name: Optional[str] = None) -> None:
+    def __init__(self, sigma: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._sigma = jx_cast(sigma)
         self.check_params()
         super().__init__(name=name, shape=shape)

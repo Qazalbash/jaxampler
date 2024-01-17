@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -29,7 +29,7 @@ from .drvs import DiscreteRV
 class Geometric(DiscreteRV):
     """Geometric Random Variable"""
 
-    def __init__(self, p: Numeric, name: Optional[str] = None) -> None:
+    def __init__(self, p: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._p = jx_cast(p)
         self.check_params()
         self._q = 1.0 - self._p
