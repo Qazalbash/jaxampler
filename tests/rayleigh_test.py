@@ -17,30 +17,34 @@ import sys
 import jax
 import jax.numpy as jnp
 import pytest
-from jax.scipy.stats import uniform as jax_uniform
 
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Rayleigh
 
 
 class TestRayleigh:
-
-    def test_pdf(self):
+    def test_pdf_x(self):
         assert Rayleigh(sigma=0.5).pdf_x(1) == 0.5413411
 
     def test_shapes(self):
-        assert jnp.allclose(Rayleigh(sigma=[0.5, 0.3]).pdf_x(1), jnp.array([0.5413411, 0.04295468]))
-        assert jnp.allclose(Rayleigh(sigma=[0.5, 0.5, 0.5]).pdf_x(1), jnp.array([0.5413411, 0.5413411, 0.5413411]))
+        assert jnp.allclose(
+            Rayleigh(sigma=[0.5, 0.3]).pdf_x(1),
+            jnp.array([0.5413411, 0.04295468]),
+        )
+        assert jnp.allclose(
+            Rayleigh(sigma=[0.5, 0.5, 0.5]).pdf_x(1),
+            jnp.array([0.5413411, 0.5413411, 0.5413411]),
+        )
         assert jnp.allclose(
             Rayleigh(sigma=[[0.3, 0.5], [0.5, 0.4]]).pdf_x(1),
-            jnp.array([[0.04295468, 0.5413411], [0.5413411, 0.2746058]]))
+            jnp.array([[0.04295468, 0.5413411], [0.5413411, 0.2746058]]),
+        )
 
-    def test_imcompatible_shapes(self):
+    def test_incompatible_shapes(self):
         with pytest.raises(ValueError):
             Rayleigh(sigma=[[0.3, 0.5], [0.5]])
 
     def test_out_of_bound(self):
-        # when sigma is negative
         with pytest.raises(AssertionError):
             assert Rayleigh(sigma=-1)
 
@@ -64,6 +68,3 @@ class TestRayleigh:
         # without key
         result = tpl_rvs.rvs(shape)
         assert result.shape, shape + tpl_rvs._shape
-
-
-print(Rayleigh(sigma=500).cdf_x(30))

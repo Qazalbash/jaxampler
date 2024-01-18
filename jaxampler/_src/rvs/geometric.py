@@ -36,7 +36,9 @@ class Geometric(DiscreteRV):
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._p >= 0.0), "All p must be greater than or equals to 0"
+        assert jnp.all(0.0 <= self._p) & jnp.all(
+            self._p <= 1.0
+        ), "All p must be greater than or equals to 0 and less than or equals to 1"
 
     @partial(jit, static_argnums=(0,))
     def logpmf_x(self, x: Numeric) -> Numeric:

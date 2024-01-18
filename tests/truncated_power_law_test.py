@@ -17,14 +17,12 @@ import sys
 import jax
 import jax.numpy as jnp
 import pytest
-from jax.scipy.stats import uniform as jax_uniform
 
 sys.path.append("../jaxampler")
 from jaxampler.rvs import TruncPowerLaw
 
 
 class TestTruncPowerLaw:
-
     def test_pdf(self):
         assert TruncPowerLaw(alpha=0.5, low=0.1, high=10).pdf_x(1) == 0.047481652
         # when alpha is negative
@@ -32,19 +30,32 @@ class TestTruncPowerLaw:
 
     def test_shapes(self):
         assert jnp.allclose(
-            TruncPowerLaw(alpha=[0.5, 0.1], low=[0.1, 0.2], high=[10, 10]).pdf_x(1), jnp.array([0.04748165,
-                                                                                                0.08857405]))
+            TruncPowerLaw(alpha=[0.5, 0.1], low=[0.1, 0.2], high=[10, 10]).pdf_x(1), jnp.array([0.04748165, 0.08857405])
+        )
         assert jnp.allclose(
             TruncPowerLaw(alpha=[0.5, 0.1, 0.2], low=[0.1, 0.2, 0.2], high=[10, 10, 10]).pdf_x(1),
-            jnp.array([0.04748165, 0.08857405, 0.07641375]))
+            jnp.array([0.04748165, 0.08857405, 0.07641375]),
+        )
 
-    def test_imcompatible_shapes(self):
+    def test_incompatible_shapes(self):
         with pytest.raises(ValueError):
-            TruncPowerLaw(alpha=[0.5, 0.1, 0.9], low=[0.1, 0.2], high=[10, 10])
+            TruncPowerLaw(
+                alpha=[0.5, 0.1, 0.9],
+                low=[0.1, 0.2],
+                high=[10, 10],
+            )
         with pytest.raises(ValueError):
-            TruncPowerLaw(alpha=[0.5, 0.1, 0.9], low=[0.1, 0.2, 0.9], high=[10, 10])
+            TruncPowerLaw(
+                alpha=[0.5, 0.1, 0.9],
+                low=[0.1, 0.2, 0.9],
+                high=[10, 10],
+            )
         with pytest.raises(ValueError):
-            TruncPowerLaw(alpha=[0.5, 0.1], low=[0.1, 0.2, 0.9], high=[10, 10])
+            TruncPowerLaw(
+                alpha=[0.5, 0.1],
+                low=[0.1, 0.2, 0.9],
+                high=[10, 10],
+            )
 
     def test_out_of_bound(self):
         # when x is less than low

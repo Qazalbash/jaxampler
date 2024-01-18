@@ -41,6 +41,10 @@ class TestUtils:
         with pytest.raises(ValueError):
             jx_cast(g, h)
 
+    def test_incompatible_shapes(self):
+        with pytest.raises(ValueError):
+            jx_cast([[0.3], 0.5], [0.5])
+
     def test_nPr_exist(self):
         assert nPr(5, 3) == 60
         assert nPr(10, 3) == 720
