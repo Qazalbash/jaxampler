@@ -26,11 +26,11 @@ from jaxampler.rvs import Weibull
 class TestWeibull:
     def test_pdf(self):
         W = Weibull(lmbda=1, k=1)
-        assert jnp.allclose(W.pdf_x(1), 1 / jnp.e)
-        assert jnp.allclose(W.pdf_x(0), 0)
+        assert jnp.allclose(W.pdf_x(1.0), 1 / jnp.e)
+        assert jnp.allclose(W.pdf_x(0.0), 0)
 
     def test_negative_x(self):
-        assert jnp.allclose(Weibull(lmbda=1, k=1).pdf_x(-1), 0)
+        assert jnp.allclose(Weibull(lmbda=1, k=1).pdf_x(-1.0), 0)
 
     def test_negative_lambda(self):
         with pytest.raises(AssertionError):
@@ -45,9 +45,9 @@ class TestWeibull:
             Weibull(lmbda=-1, k=-1)
 
     def test_shapes(self):
-        assert jnp.allclose(Weibull(lmbda=[1, 1], k=[1, 1]).pdf_x(1), jnp.array([0.3678794412, 0.3678794412]))
+        assert jnp.allclose(Weibull(lmbda=[1, 1], k=[1, 1]).pdf_x(1.0), jnp.array([0.3678794412, 0.3678794412]))
         assert jnp.allclose(
-            Weibull(lmbda=[1, 1, 1], k=[1, 1, 1]).pdf_x(1),
+            Weibull(lmbda=[1, 1, 1], k=[1, 1, 1]).pdf_x(1.0),
             jnp.array([0.3678794412, 0.3678794412, 0.3678794412]),
         )
 
