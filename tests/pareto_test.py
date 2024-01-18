@@ -26,47 +26,39 @@ from jaxampler.rvs import Pareto
 class TestPareto:
 
     def test_pdf(self):
-        assert Pareto(alpha=0.5, k=0.1).pdf_x(1) == 0.047481652
-        # when alpha is negative
-        assert Pareto(alpha=-1, k=0.1).pdf_x(1) == 0.21714725
+        assert Pareto(alpha=0.5, scale=0.1).pdf_x(1) == 0.15811388
 
     def test_shapes(self):
-        assert jnp.allclose(Pareto(alpha=[0.5, 0.1], k=[0.1, 0.2]).pdf_x(1), jnp.array([0.04748165, 0.08857405]))
+        assert jnp.allclose(Pareto(alpha=[0.5, 0.1], scale=[0.1, 0.2]).pdf_x(1), jnp.array([0.15811388, 0.08513397]))
         assert jnp.allclose(
-            Pareto(alpha=[0.5, 0.1, 0.2], k=[0.1, 0.2, 0.2]).pdf_x(1), jnp.array([0.04748165, 0.08857405, 0.07641375]))
+            Pareto(alpha=[0.5, 0.1, 0.2], scale=[0.1, 0.2, 0.2]).pdf_x(1),
+            jnp.array([0.15811388, 0.08513397, 0.14495593]))
 
     def test_imcompatible_shapes(self):
         with pytest.raises(ValueError):
-            Pareto(alpha=[0.5, 0.1, 0.9], k=[0.1, 0.2])
-        with pytest.raises(ValueError):
-            Pareto(alpha=[0.5, 0.1, 0.9], k=[0.1, 0.2, 0.9])
-        with pytest.raises(ValueError):
-            Pareto(alpha=[0.5, 0.1], k=[0.1, 0.2, 0.9])
+            Pareto(alpha=[0.5, 0.1, 0.9], scale=[0.1, 0.2])
 
     def test_out_of_bound(self):
-        # when x is less than k
-        assert jnp.allclose(Pareto(alpha=0.5, k=0.1).pdf_x(-1), 0)
-        # when x is greater than high
-        assert jnp.allclose(Pareto(alpha=0.5, k=0.1).pdf_x(11), 0)
-        # when k is negative
+        # when x is less than zero
+        assert jnp.allclose(Pareto(alpha=0.5, scale=0.1).pdf_x(-1), 0)
+        # when x is greater than scale
         with pytest.raises(AssertionError):
-            Pareto(alpha=0.5, k=-1)
-        # when higj is less than k
+            assert jnp.allclose(Pareto(alpha=0.5, scale=0.1).pdf_x(11), 0)
+        # when scale is negative
         with pytest.raises(AssertionError):
-            Pareto(alpha=0.5, k=2)
+            Pareto(alpha=0.5, scale=-1)
+        # when alpha is negative
+        with pytest.raises(AssertionError):
+            Pareto(alpha=-1, scale=2)
 
     def test_cdf_x(self):
-        # when x is less than k
-        assert Pareto(alpha=0.5, k=0.1).cdf_x(0.01) == 0
-        # when x is greater than high
-        assert Pareto(alpha=0.5, k=0.1).cdf_x(11) == 1
-        # when beta is equal to 0
-        assert Pareto(alpha=-1, k=0.1).cdf_x(1) == 0.5
-        # when beta is not equal to 0
-        assert Pareto(alpha=0.5, k=0.1).cdf_x(1) == 0.030653432
+        # when x is less than scale
+        assert Pareto(alpha=0.5, scale=0.1).cdf_x(0.01) == 0
+        # when x is greater than scale
+        assert Pareto(alpha=0.5, scale=0.1).cdf_x(1) == 0.6837722
 
     def test_rvs(self):
-        tpl_rvs = Pareto(alpha=0.1, k=0.1)
+        tpl_rvs = Pareto(alpha=0.1, scale=0.1)
         shape = (3, 4)
 
         # with key
