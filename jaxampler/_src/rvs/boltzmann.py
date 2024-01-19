@@ -42,6 +42,10 @@ class Boltzmann(ContinuousRV):
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
+    def logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self.cdf_x(x))
+
+    @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
         cdf_val = jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
         cdf_val -= 0.5 * jnp.log(jnp.pi / 2) + jnp.log(self._a)
