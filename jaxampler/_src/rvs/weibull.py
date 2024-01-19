@@ -27,8 +27,7 @@ from .crvs import ContinuousRV
 
 class Weibull(ContinuousRV):
     def __init__(self, lmbda: Numeric | Any, k: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._lmbda = jx_cast(lmbda)
-        self._k = k
+        shape, self._lmbda, self._k = jx_cast(lmbda, k)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -37,10 +36,10 @@ class Weibull(ContinuousRV):
         assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def logpdf_x(self, x: Numeric) -> Numeric | tuple[Numeric, ...]:
         return jnp.where(
-            x < 0,
-            -jnp.inf,
+            x <= 0,
+            jnp.full_like(x, -jnp.inf),
             jnp.log(self._k)
             - (self._k * jnp.log(self._lmbda))
             + (self._k - 1.0) * jnp.log(x)
@@ -50,14 +49,14 @@ class Weibull(ContinuousRV):
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
-            x < 0,
+            x <= 0.0,
             0.0,
             1.0 - jnp.exp(-jnp.power(x / self._lmbda, self._k)),
         )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return self._lmbda * jnp.power(-jnp.log(1 - x), 1.0 / self._k)
+        return self._lmbda * jnp.power(-jnp.log(1.0 - x), 1.0 / self._k)
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
