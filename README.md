@@ -135,13 +135,6 @@ Jaxampler supports the following random variables:
 - [x] Uniform
 - [x] Weibull
 
-## Community activity [![Time period](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_badge.svg)](https://repography.com)
-
-[![Timeline graph](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_timeline.svg)](https://github.com/Qazalbash/jaxampler/commits)
-[![Issue status graph](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_issues.svg)](https://github.com/Qazalbash/jaxampler/issues)
-[![Pull request status graph](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_prs.svg)](https://github.com/Qazalbash/jaxampler/pulls)
-[![Trending topics](https://images.repography.com/46122285/Qazalbash/jaxampler/recent-activity/0XNui-hV1RnV_EGT5PYC-qpVjNiNL7sbulBsbk3giFA/I9s4AP-IQQwAFwyhLNvPQXs8_qQ64oxvR5zsJSuAXEk_words.svg)](https://github.com/Qazalbash/jaxampler/commits)
-
 ## Citing Jaxampler
 
 To cite this repository:
