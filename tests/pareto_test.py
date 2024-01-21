@@ -24,41 +24,40 @@ from jaxampler.rvs import Pareto
 
 
 class TestPareto:
-
     def test_pdf(self):
-        assert Pareto(alpha=0.5, scale=0.1).pdf_x(1) == 0.15811388
+        assert Pareto(a=0.5, scale=0.1).pdf_x(1) == 0.15811388
 
     def test_shapes(self):
-        assert jnp.allclose(Pareto(alpha=[0.5, 0.1], scale=[0.1, 0.2]).pdf_x(1), jnp.array([0.15811388, 0.08513397]))
+        assert jnp.allclose(Pareto(a=[0.5, 0.1], scale=[0.1, 0.2]).pdf_x(1), jnp.array([0.15811388, 0.08513397]))
         assert jnp.allclose(
-            Pareto(alpha=[0.5, 0.1, 0.2], scale=[0.1, 0.2, 0.2]).pdf_x(1),
-            jnp.array([0.15811388, 0.08513397, 0.14495593]))
+            Pareto(a=[0.5, 0.1, 0.2], scale=[0.1, 0.2, 0.2]).pdf_x(1), jnp.array([0.15811388, 0.08513397, 0.14495593])
+        )
 
     def test_imcompatible_shapes(self):
         with pytest.raises(ValueError):
-            Pareto(alpha=[0.5, 0.1, 0.9], scale=[0.1, 0.2])
+            Pareto(a=[0.5, 0.1, 0.9], scale=[0.1, 0.2])
 
     def test_out_of_bound(self):
         # when x is less than zero
-        assert jnp.allclose(Pareto(alpha=0.5, scale=0.1).pdf_x(-1), 0)
+        assert jnp.allclose(Pareto(a=0.5, scale=0.1).pdf_x(-1), 0)
         # when x is greater than scale
         with pytest.raises(AssertionError):
-            assert jnp.allclose(Pareto(alpha=0.5, scale=0.1).pdf_x(11), 0)
+            assert jnp.allclose(Pareto(a=0.5, scale=0.1).pdf_x(11), 0)
         # when scale is negative
         with pytest.raises(AssertionError):
-            Pareto(alpha=0.5, scale=-1)
+            Pareto(a=0.5, scale=-1)
         # when alpha is negative
         with pytest.raises(AssertionError):
-            Pareto(alpha=-1, scale=2)
+            Pareto(a=-1, scale=2)
 
     def test_cdf_x(self):
         # when x is less than scale
-        assert Pareto(alpha=0.5, scale=0.1).cdf_x(0.01) == 0
+        assert Pareto(a=0.5, scale=0.1).cdf_x(0.01) == 0
         # when x is greater than scale
-        assert Pareto(alpha=0.5, scale=0.1).cdf_x(1) == 0.6837722
+        assert Pareto(a=0.5, scale=0.1).cdf_x(1) == 0.6837722
 
     def test_rvs(self):
-        tpl_rvs = Pareto(alpha=0.1, scale=0.1)
+        tpl_rvs = Pareto(a=0.1, scale=0.1)
         shape = (3, 4)
 
         # with key
