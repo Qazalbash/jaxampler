@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Any, Optional
+from typing import Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -27,28 +27,35 @@ from .crvs import ContinuousRV
 
 
 class Exponential(ContinuousRV):
-    def __init__(self, lmbda: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._lmbda = jx_cast(lmbda)
+    def __init__(self, loc: Numeric = 0.0, scale: Numeric = 1.0, name: Optional[str] = None) -> None:
+        shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()
-        self._scale = 1.0 / lmbda
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._lmbda > 0.0), "lmbda must be positive"
+        assert jnp.all(self._scale > 0.0), "lmbda must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_expon.logpdf(x, scale=self._scale)
+        return jax_expon.logpdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_expon.pdf(x, scale=self._scale)
+        return jax_expon.pdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
-            jnp.log1p(-jnp.exp(-self._lmbda * x)),
+            jnp.log1p(-jnp.exp((self._loc - x) / self._scale)),
             -jnp.inf,
         )
 
@@ -56,7 +63,7 @@ class Exponential(ContinuousRV):
     def logppf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
-            jnp.log(-jnp.log(1 - x)) - jnp.log(self._lmbda),
+            jnp.log(self._loc - self._scale * jnp.log(1.0 - x)),
             -jnp.inf,
         )
 
@@ -65,11 +72,11 @@ class Exponential(ContinuousRV):
             key = self.get_key()
         new_shape = shape + self._shape
         U = jax.random.uniform(key, shape=new_shape)
-        rvs_val = jnp.log(-jnp.log(U)) - jnp.log(self._lmbda)
-        return jnp.exp(rvs_val)
+        rvs_val = self._loc - self._scale * jnp.log(U)
+        return rvs_val
 
     def __repr__(self) -> str:
-        string = f"Exponential(lmbda={self._lmbda}"
+        string = f"Exponential(loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
