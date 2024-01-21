@@ -27,8 +27,8 @@ from .crvs import ContinuousRV
 
 
 class Chi2(ContinuousRV):
-    def __init__(self, nu: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._nu = jx_cast(nu)
+    def __init__(self, nu: Numeric | Any, loc: Numeric = 0.0, scale: Numeric = 1.0, name: Optional[str] = None) -> None:
+        shape, self._nu, self._loc, self._scale = jx_cast(nu, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -37,19 +37,39 @@ class Chi2(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_chi2.logpdf(x, self._nu)
+        return jax_chi2.logpdf(
+            x=x,
+            df=self._nu,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_chi2.pdf(x, self._nu)
+        return jax_chi2.pdf(
+            x=x,
+            df=self._nu,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
-        return jax_chi2.logcdf(x, self._nu)
+        return jax_chi2.logcdf(
+            x=x,
+            df=self._nu,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return jax_chi2.cdf(x, self._nu)
+        return jax_chi2.cdf(
+            x=x,
+            df=self._nu,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logppf_x(self, x: Numeric) -> Numeric:
@@ -59,10 +79,10 @@ class Chi2(ContinuousRV):
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.chisquare(key, self._nu, shape=new_shape)
+        return self._loc + self._scale * jax.random.chisquare(key, self._nu, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"Chi2(nu={self._nu}"
+        string = f"Chi2(nu={self._nu}, loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
