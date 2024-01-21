@@ -37,43 +37,80 @@ class Beta(ContinuousRV):
         B(\alpha, \beta)=\int_{0}^{1}t^{\alpha-1}(1-t)^{\beta-1}dt
     """
 
-    def __init__(self, alpha: Numeric | Any, beta: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._alpha, self._beta = jx_cast(alpha, beta)
+    def __init__(
+        self,
+        alpha: Numeric | Any,
+        beta: Numeric | Any,
+        loc: Numeric = 0.0,
+        scale: Numeric = 1.0,
+        name: Optional[str] = None,
+    ) -> None:
+        shape, self._alpha, self._beta, self._loc, self._scale = jx_cast(alpha, beta, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
         assert jnp.all(self._alpha > 0.0), "alpha must be positive"
         assert jnp.all(self._beta > 0.0), "beta must be positive"
+        assert jnp.all(self._scale > 0.0), "scale must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_beta.logpdf(x, self._alpha, self._beta)
+        return jax_beta.logpdf(
+            x=x,
+            a=self._alpha,
+            b=self._beta,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_beta.pdf(x, self._alpha, self._beta)
+        return jax_beta.pdf(
+            x=x,
+            a=self._alpha,
+            b=self._beta,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
-        return jax_beta.logcdf(x, self._alpha, self._beta)
+        return jax_beta.logcdf(
+            x=x,
+            a=self._alpha,
+            b=self._beta,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return jax_beta.cdf(x, self._alpha, self._beta)
+        return jax_beta.cdf(
+            x=x,
+            a=self._alpha,
+            b=self._beta,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return tfp.math.betaincinv(self._alpha, self._beta, x)
+        return tfp.math.betaincinv(
+            self._alpha,
+            self._beta,
+            (x - self._loc) / self._scale,
+        )
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.beta(key, self._alpha, self._beta, shape=new_shape)
+        X = jax.random.beta(key, self._alpha, self._beta, shape=new_shape)
+        return self._loc + self._scale * X
 
     def __repr__(self) -> str:
-        string = f"Beta(alpha={self._alpha}, beta={self._beta}"
+        string = f"Beta(alpha={self._alpha}, beta={self._beta}, loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"

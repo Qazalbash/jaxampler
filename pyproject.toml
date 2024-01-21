@@ -72,4 +72,4 @@ order-by-type = false
 
 [tool.pyright]
 reportIncompatibleMethodOverride = true
-include = ["diffrax", "tests"]
+include = ["jaxampler", "tests"]
