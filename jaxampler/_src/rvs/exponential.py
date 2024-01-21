@@ -15,7 +15,7 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 from jax import Array, jit, numpy as jnp
@@ -27,7 +27,12 @@ from .crvs import ContinuousRV
 
 
 class Exponential(ContinuousRV):
-    def __init__(self, loc: Numeric = 0.0, scale: Numeric = 1.0, name: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
+        name: Optional[str] = None,
+    ) -> None:
         shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
