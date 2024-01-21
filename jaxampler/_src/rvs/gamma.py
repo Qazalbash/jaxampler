@@ -27,30 +27,56 @@ from .crvs import ContinuousRV
 
 
 class Gamma(ContinuousRV):
-    def __init__(self, alpha: Numeric | Any, beta: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._alpha, self._beta = jx_cast(alpha, beta)
+    def __init__(
+        self,
+        a: Numeric | Any,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
+        name: Optional[str] = None,
+    ) -> None:
+        shape, self._a, self._loc, self._scale = jx_cast(a, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._alpha > 0), "All alpha must be greater than 0"
-        assert jnp.all(self._beta > 0), "All beta must be greater than 0"
+        assert jnp.all(self._a > 0), "All a must be greater than 0"
+        assert jnp.all(self._scale > 0), "All scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_gamma.logpdf(x, self._alpha, scale=1 / self._beta)
+        return jax_gamma.logpdf(
+            x=x,
+            a=self._a,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_gamma.pdf(x, self._alpha, scale=1 / self._beta)
+        return jax_gamma.pdf(
+            x=x,
+            a=self._a,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
-        return jax_gamma.logcdf(x, self._alpha, scale=1 / self._beta)
+        return jax_gamma.logcdf(
+            x=x,
+            a=self._a,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return jax_gamma.cdf(x, self._alpha, scale=1 / self._beta)
+        return jax_gamma.cdf(
+            x=x,
+            a=self._a,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logppf_x(self, x: Numeric) -> Numeric:
@@ -60,10 +86,10 @@ class Gamma(ContinuousRV):
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.gamma(key, self._alpha, shape=new_shape) / self._beta
+        return self._loc + self._scale * jax.random.gamma(key, self._a, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"Gamma(alpha={self._alpha}, beta={self._beta}"
+        string = f"Gamma(a={self._a}, loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
