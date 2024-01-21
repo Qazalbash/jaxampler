@@ -29,7 +29,7 @@ from .drvs import DiscreteRV
 class Geometric(DiscreteRV):
     """Geometric Random Variable"""
 
-    def __init__(self, p: Numeric | Any, loc: Numeric = 0.0, name: Optional[str] = None) -> None:
+    def __init__(self, p: Numeric | Any, loc: Numeric | Any = 0.0, name: Optional[str] = None) -> None:
         shape, self._p, self._loc = jx_cast(p, loc)
         self.check_params()
         self._q = 1.0 - self._p
