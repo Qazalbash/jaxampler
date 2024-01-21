@@ -27,42 +27,54 @@ from .crvs import ContinuousRV
 
 
 class Pareto(ContinuousRV):
-    def __init__(self, alpha: Numeric | Any, scale: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._alpha, self._scale = jx_cast(alpha, scale)
+    def __init__(
+        self, a: Numeric | Any, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None
+    ) -> None:
+        shape, self._a, self._loc, self._scale = jx_cast(a, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._alpha > 0.0), "alpha must be greater than 0"
+        assert jnp.all(self._a > 0.0), "alpha must be greater than 0"
         assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_pareto.logpdf(x, self._alpha, scale=self._scale)
+        return jax_pareto.logpdf(
+            x=x,
+            b=self._a,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_pareto.pdf(x, self._alpha, scale=self._scale)
+        return jax_pareto.pdf(
+            x=x,
+            b=self._a,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
-            self._scale <= x,
-            jnp.log1p(-jnp.power(self._scale / x, self._alpha)),
+            self._loc + self._scale <= x,
+            jnp.log1p(-jnp.power(self._scale / (x - self._loc), self._a)),
             -jnp.inf,
         )
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def ppf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < 0.0,
             (0.0 <= x) & (x < 1.0),
             1.0 <= x,
         ]
         choices = [
-            -jnp.inf,
-            jnp.log(self._scale) - (1.0 / self._alpha) * jnp.log(1 - x),
-            jnp.log(1.0),
+            0.0,
+            self._loc + jnp.exp(jnp.log(self._scale) - (1.0 / self._a) * jnp.log(1 - x)),
+            1.0,
         ]
         return jnp.select(conditions, choices)
 
@@ -70,10 +82,10 @@ class Pareto(ContinuousRV):
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.pareto(key, self._alpha, shape=new_shape) * self._scale
+        return self._loc + self._scale * jax.random.pareto(key, self._a, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"Pareto(alpha={self._alpha}, scale={self._scale}"
+        string = f"Pareto(a={self._a}, loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
