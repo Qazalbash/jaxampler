@@ -41,8 +41,8 @@ class Beta(ContinuousRV):
         self,
         alpha: Numeric | Any,
         beta: Numeric | Any,
-        loc: Numeric = 0.0,
-        scale: Numeric = 1.0,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
         name: Optional[str] = None,
     ) -> None:
         shape, self._alpha, self._beta, self._loc, self._scale = jx_cast(alpha, beta, loc, scale)
