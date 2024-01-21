@@ -24,4 +24,4 @@ from jaxampler.rvs import LogNormal
 class TestLogNormal:
     def test_invalid_params(self):
         with pytest.raises(AssertionError):
-            LogNormal(sigma=-1.0)
+            LogNormal(scale=-1.0)

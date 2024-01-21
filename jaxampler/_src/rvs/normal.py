@@ -27,43 +27,63 @@ from .crvs import ContinuousRV
 
 
 class Normal(ContinuousRV):
-    def __init__(self, mu: Numeric | Any = 0.0, sigma: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
-        shape, self._mu, self._sigma = jx_cast(mu, sigma)
+    def __init__(self, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
+        shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()
         self._logZ = 0.0
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._sigma > 0.0), "All sigma must be greater than 0.0"
+        assert jnp.all(self._scale > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_norm.logpdf(x, self._mu, self._sigma)
+        return jax_norm.logpdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
-        return jax_norm.logcdf(x, self._mu, self._sigma)
+        return jax_norm.logcdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_norm.pdf(x, self._mu, self._sigma)
+        return jax_norm.pdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return jax_norm.cdf(x, self._mu, self._sigma)
+        return jax_norm.cdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return jax_norm.ppf(x, self._mu, self._sigma)
+        return jax_norm.ppf(
+            q=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.normal(key, shape=new_shape) * self._sigma + self._mu
+        return self._loc + self._scale * jax.random.normal(key, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"Normal(mu={self._mu}, sigma={self._sigma}"
+        string = f"Normal(loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
