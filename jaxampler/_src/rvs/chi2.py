@@ -27,7 +27,13 @@ from .crvs import ContinuousRV
 
 
 class Chi2(ContinuousRV):
-    def __init__(self, nu: Numeric | Any, loc: Numeric = 0.0, scale: Numeric = 1.0, name: Optional[str] = None) -> None:
+    def __init__(
+        self,
+        nu: Numeric | Any,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
+        name: Optional[str] = None,
+    ) -> None:
         shape, self._nu, self._loc, self._scale = jx_cast(nu, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
