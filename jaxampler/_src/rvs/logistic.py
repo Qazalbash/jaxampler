@@ -28,10 +28,9 @@ from .crvs import ContinuousRV
 
 
 class Logistic(ContinuousRV):
-    def __init__(self, mu: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
-        shape, self._scale = jx_cast(scale)
+    def __init__(self, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
+        shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()
-        self._mu = mu
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
@@ -39,28 +38,40 @@ class Logistic(ContinuousRV):
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_logistic.logpdf(x, self._mu, self._scale)
+        return jax_logistic.logpdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_logistic.pdf(x, self._mu, self._scale)
+        return jax_logistic.pdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return jax_logistic.cdf(x, self._mu, self._scale)
+        return jax_logistic.cdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return self._mu + self._scale * logit(x)
+        return self._loc + self._scale * logit(x)
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.logistic(key, shape=new_shape) * self._scale + self._mu
+        return self._loc + self._scale * jax.random.logistic(key, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"Logistic(mu={self._mu}, scale={self._scale}"
+        string = f"Logistic(loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
