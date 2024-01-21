@@ -29,8 +29,8 @@ from .drvs import DiscreteRV
 class Geometric(DiscreteRV):
     """Geometric Random Variable"""
 
-    def __init__(self, p: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._p = jx_cast(p)
+    def __init__(self, p: Numeric | Any, loc: Numeric = 0.0, name: Optional[str] = None) -> None:
+        shape, self._p, self._loc = jx_cast(p, loc)
         self.check_params()
         self._q = 1.0 - self._p
         super().__init__(name=name, shape=shape)
@@ -42,16 +42,24 @@ class Geometric(DiscreteRV):
 
     @partial(jit, static_argnums=(0,))
     def logpmf_x(self, x: Numeric) -> Numeric:
-        return jax_geom.logpmf(x, self._p)
+        return jax_geom.logpmf(
+            k=x,
+            p=self._p,
+            loc=self._loc,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pmf_x(self, x: Numeric) -> Numeric:
-        return jax_geom.pmf(x, self._p)
+        return jax_geom.pmf(
+            k=x,
+            p=self._p,
+            loc=self._loc,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        conditions = [x < 0, x >= 0]
-        choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(x))]
+        conditions = [x < self._loc, x >= self._loc]
+        choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(x - self._loc))]
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
@@ -62,7 +70,7 @@ class Geometric(DiscreteRV):
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.geometric(key, self._p, shape=new_shape)
+        return self._loc + jax.random.geometric(key, self._p, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Geometric(p={self._p}"
