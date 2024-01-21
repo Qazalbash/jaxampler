@@ -30,8 +30,8 @@ class Gamma(ContinuousRV):
     def __init__(
         self,
         a: Numeric | Any,
-        loc: Numeric = 0.0,
-        scale: Numeric = 1.0,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
         name: Optional[str] = None,
     ) -> None:
         shape, self._a, self._loc, self._scale = jx_cast(a, loc, scale)
