@@ -27,42 +27,58 @@ from .crvs import ContinuousRV
 
 
 class Cauchy(ContinuousRV):
-    def __init__(self, sigma: Numeric | Any, loc: Numeric | Any = 0, name: Optional[str] = None) -> None:
-        shape, self._sigma, self._loc = jx_cast(sigma, loc)
+    def __init__(self, loc: Numeric | Any = 0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
+        shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._sigma > 0.0), "sigma must be positive"
+        assert jnp.all(self._scale > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_cauchy.logpdf(x, self._loc, self._sigma)
+        return jax_cauchy.logpdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_cauchy.pdf(x, self._loc, self._sigma)
+        return jax_cauchy.pdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def logcdf_x(self, x: Numeric) -> Numeric:
-        return jax_cauchy.logcdf(x, self._loc, self._sigma)
+        return jax_cauchy.logcdf(
+            x=x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return jax_cauchy.cdf(x, self._loc, self._sigma)
+        return jax_cauchy.cdf(
+            x,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return self._loc + self._sigma * jnp.tan(jnp.pi * (x - 0.5))
+        return self._loc + self._scale * jnp.tan(jnp.pi * (x - 0.5))
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.cauchy(key, shape=new_shape) * self._sigma + self._loc
+        return +self._loc + self._scale * jax.random.cauchy(key, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"Cauchy(sigma={self._sigma}, loc={self._loc}"
+        string = f"Cauchy(loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
