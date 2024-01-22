@@ -42,7 +42,7 @@ class Chi2(ContinuousRV):
         assert jnp.all(self._nu.dtype == jnp.int32), "nu must be an integer"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.logpdf(
             x=x,
             df=self._nu,
@@ -51,7 +51,7 @@ class Chi2(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.pdf(
             x=x,
             df=self._nu,
@@ -60,7 +60,7 @@ class Chi2(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.logcdf(
             x=x,
             df=self._nu,
@@ -69,7 +69,7 @@ class Chi2(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_chi2.cdf(
             x=x,
             df=self._nu,
@@ -78,7 +78,7 @@ class Chi2(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def _logppf_x(self, x: Numeric) -> Numeric:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:

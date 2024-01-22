@@ -17,7 +17,9 @@ import sys
 
 import jax.numpy as jnp
 import pytest
+from jax import vmap
 from jax.scipy.special import erf
+
 
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Boltzmann
@@ -34,23 +36,25 @@ class TestBoltzmann:
         a = jnp.linspace(0.1, 10.0, 100)
         boltzmann = Boltzmann(a=a)
         x = jnp.linspace(0.1, 10.0, 100)
-        logpdf_val = boltzmann.logpdf_x(x)
-        logpmf = (
+        logpdf_val = boltzmann.logpdf(x)
+        logpmf = vmap(
             lambda x_, a_: 2 * jnp.log(x_)
             - 3 * jnp.log(a_)
-            - 0.5 * jnp.log(jnp.pi / 2.0)
+            - 0.5 * jnp.log(jnp.pi * 0.5)
             - 0.5 * jnp.power(x_, 2) / jnp.power(a_, 2)
         )
-        expected = jnp.array(list(map(logpmf, x, a)))
+        expected = logpmf(x, a)
         assert jnp.allclose(logpdf_val, expected)
 
     def test_cdf(self):
         a = jnp.linspace(0.1, 10.0, 100)
         boltzmann = Boltzmann(a=a)
         x = jnp.linspace(0.1, 10.0, 100)
-        cdf_val = boltzmann.cdf_x(x)
-        cdf = lambda x_, a_: erf(x_ / (jnp.sqrt(2) * a_)) - jnp.exp(
-            jnp.log(x_) - 0.5 * jnp.power(x_ / a_, 2) - 0.5 * jnp.log(jnp.pi / 2) - jnp.log(a_)
+        cdf_val = boltzmann.cdf(x)
+        cdf = vmap(
+            lambda x_, a_: erf(x_ / (jnp.sqrt(2) * a_))
+            - jnp.exp(jnp.log(x_) - 0.5 * jnp.power(x_ / a_, 2) - 0.5 * jnp.log(jnp.pi * 0.5) - jnp.log(a_)),
+            in_axes=(0, 0),
         )
-        expected = jnp.array(list(map(cdf, x, a)))
+        expected = cdf(x, a)
         assert jnp.allclose(cdf_val, expected)

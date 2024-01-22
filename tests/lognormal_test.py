@@ -17,6 +17,7 @@ import sys
 
 import pytest
 
+
 sys.path.append("../jaxampler")
 from jaxampler.rvs import LogNormal
 

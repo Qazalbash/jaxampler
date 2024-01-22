@@ -36,7 +36,7 @@ class Poisson(DiscreteRV):
         assert jnp.all(self._mu > 0.0), "Lambda must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, x: Numeric) -> Numeric:
+    def _logpmf_x(self, x: Numeric) -> Numeric:
         return jax_poisson.logpmf(
             k=x,
             mu=self._mu,
@@ -44,7 +44,7 @@ class Poisson(DiscreteRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, x: Numeric) -> Numeric:
+    def _pmf_x(self, x: Numeric) -> Numeric:
         return jax_poisson.pmf(
             k=x,
             mu=self._mu,
@@ -52,11 +52,11 @@ class Poisson(DiscreteRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
-        return jnp.log(self.cdf_x(x))
+    def _logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self._cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_poisson.cdf(
             k=x,
             mu=self._mu,

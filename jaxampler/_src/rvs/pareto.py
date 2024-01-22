@@ -39,7 +39,7 @@ class Pareto(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_pareto.logpdf(
             x=x,
             b=self._a,
@@ -48,7 +48,7 @@ class Pareto(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_pareto.pdf(
             x=x,
             b=self._a,
@@ -57,7 +57,7 @@ class Pareto(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             self._loc + self._scale <= x,
             jnp.log1p(-jnp.power(self._scale / (x - self._loc), self._a)),
@@ -65,7 +65,7 @@ class Pareto(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < 0.0,
             (0.0 <= x) & (x < 1.0),

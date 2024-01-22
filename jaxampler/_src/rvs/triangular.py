@@ -43,7 +43,7 @@ class Triangular(ContinuousRV):
         assert jnp.all(self._mode <= self._high), "mid must be less than or equal to high"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             (self._low <= x) & (x < self._mode),
@@ -61,7 +61,7 @@ class Triangular(ContinuousRV):
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             (self._low < x) & (x <= self._mode),
@@ -82,8 +82,8 @@ class Triangular(ContinuousRV):
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
-        _Fc = self.cdf_v(self._mode)
+    def _ppf_x(self, x: Numeric) -> Numeric:
+        _Fc = self._cdf_v(self._mode)
         ppf_val = jnp.where(
             x < _Fc,
             self._low + lax.sqrt(x * (self._mode - self._low) * (self._high - self._low)),

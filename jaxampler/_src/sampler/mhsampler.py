@@ -82,9 +82,11 @@ class MetropolisHastingSampler(Sampler):
         assert x0.shape == (n_chains,), f"got x0={x0}, n_chains={n_chains}"
 
         if hasting_ratio:
-            alpha = lambda x1, x2: ((p.pdf_x(x2) / p.pdf_x(x1)) * (q(x1).pdf_x(x2) / q(x2).pdf_x(x1))).clip(0.0, 1.0)
+            alpha = lambda x1, x2: ((p._pdf_x(x2) / p._pdf_x(x1)) * (q(x1)._pdf_x(x2) / q(x2)._pdf_x(x1))).clip(
+                0.0, 1.0
+            )
         else:
-            alpha = lambda x1, x2: (p.pdf_x(x2) / p.pdf_x(x1)).clip(0.0, 1.0)
+            alpha = lambda x1, x2: (p._pdf_x(x2) / p._pdf_x(x1)).clip(0.0, 1.0)
 
         if key is None:
             key = self.get_key()

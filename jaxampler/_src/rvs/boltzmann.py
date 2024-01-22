@@ -35,20 +35,20 @@ class Boltzmann(ContinuousRV):
         assert jnp.all(self._a > 0.0), "a must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         logpdf_val = 2 * jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
-        logpdf_val -= 0.5 * jnp.log(jnp.pi / 2) + 3 * jnp.log(self._a)
+        logpdf_val -= 0.5 * jnp.log(jnp.pi * 0.5) + 3 * jnp.log(self._a)
         logpdf_val = jnp.where(x > 0.0, logpdf_val, -jnp.inf)
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
-        return jnp.log(self.cdf_x(x))
+    def _logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self._cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         cdf_val = jnp.log(x) - 0.5 * jnp.power(x / self._a, 2)
-        cdf_val -= 0.5 * jnp.log(jnp.pi / 2) + jnp.log(self._a)
+        cdf_val -= 0.5 * jnp.log(jnp.pi * 0.5) + jnp.log(self._a)
         cdf_val = jnp.exp(cdf_val)
         cdf_val = erf(x / (jnp.sqrt(2) * self._a)) - cdf_val
         return cdf_val

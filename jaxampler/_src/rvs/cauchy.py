@@ -36,7 +36,7 @@ class Cauchy(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.logpdf(
             x=x,
             loc=self._loc,
@@ -44,7 +44,7 @@ class Cauchy(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.pdf(
             x=x,
             loc=self._loc,
@@ -52,7 +52,7 @@ class Cauchy(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.logcdf(
             x=x,
             loc=self._loc,
@@ -60,7 +60,7 @@ class Cauchy(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_cauchy.cdf(
             x,
             loc=self._loc,
@@ -68,7 +68,7 @@ class Cauchy(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         return self._loc + self._scale * jnp.tan(jnp.pi * (x - 0.5))
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:

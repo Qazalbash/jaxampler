@@ -37,7 +37,7 @@ class Logistic(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "scale must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_logistic.logpdf(
             x=x,
             loc=self._loc,
@@ -45,7 +45,7 @@ class Logistic(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_logistic.pdf(
             x=x,
             loc=self._loc,
@@ -53,7 +53,7 @@ class Logistic(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_logistic.cdf(
             x=x,
             loc=self._loc,
@@ -61,7 +61,7 @@ class Logistic(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         return self._loc + self._scale * logit(x)
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:

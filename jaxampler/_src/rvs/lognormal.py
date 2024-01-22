@@ -36,7 +36,7 @@ class LogNormal(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         constants = -(jnp.log(self._scale) + 0.5 * jnp.log(2 * jnp.pi))
         logpdf_val = jnp.where(
             x <= 0,
@@ -46,20 +46,20 @@ class LogNormal(ContinuousRV):
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return log_ndtr((jnp.log(x) - self._loc) / self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return ndtr((jnp.log(x) - self._loc) / self._scale)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         return jnp.exp(self._loc + self._scale * ndtri(x))
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         U = jax.random.uniform(key=key, shape=shape)
-        return self.ppf_x(U)
+        return self._ppf_x(U)
 
     def __repr__(self) -> str:
         string = f"LogNormal(loc={self._loc}, scale={self._scale}"

@@ -43,7 +43,7 @@ class Gamma(ContinuousRV):
         assert jnp.all(self._scale > 0), "All scale must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.logpdf(
             x=x,
             a=self._a,
@@ -52,7 +52,7 @@ class Gamma(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.pdf(
             x=x,
             a=self._a,
@@ -61,7 +61,7 @@ class Gamma(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.logcdf(
             x=x,
             a=self._a,
@@ -70,7 +70,7 @@ class Gamma(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_gamma.cdf(
             x=x,
             a=self._a,
@@ -79,7 +79,7 @@ class Gamma(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def _logppf_x(self, x: Numeric) -> Numeric:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:

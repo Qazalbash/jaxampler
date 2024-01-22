@@ -17,6 +17,7 @@ import sys
 
 import pytest
 
+
 sys.path.append("../jaxampler")
 from jaxampler.rvs import StudentT
 
@@ -30,7 +31,7 @@ class TestStudentT:
         with pytest.raises(AssertionError):
             StudentT(df=1.0, scale=-1.0)
 
-    def test_cdf_x(self):
+    def test_cdf(self):
         rv = StudentT(df=1.0, loc=-1.0, scale=1.0)
-        assert rv.cdf_x(-1.0) == 0.5
-        assert rv.cdf_x(0.0) == pytest.approx(0.75, abs=1e-4)
+        assert rv.cdf(-1.0) == 0.5
+        assert rv.cdf(0.0) == pytest.approx(0.75, abs=1e-4)

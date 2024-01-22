@@ -41,7 +41,7 @@ class Exponential(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "lmbda must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_expon.logpdf(
             x=x,
             loc=self._loc,
@@ -49,7 +49,7 @@ class Exponential(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_expon.pdf(
             x=x,
             loc=self._loc,
@@ -57,7 +57,7 @@ class Exponential(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log1p(-jnp.exp((self._loc - x) / self._scale)),
@@ -65,7 +65,7 @@ class Exponential(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def _logppf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log(self._loc - self._scale * jnp.log(1.0 - x)),

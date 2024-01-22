@@ -44,7 +44,7 @@ class StudentT(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "scale must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_t.logpdf(
             x=x,
             df=self._df,
@@ -53,7 +53,7 @@ class StudentT(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_t.pdf(
             x=x,
             df=self._df,
@@ -62,11 +62,11 @@ class StudentT(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
-        return jnp.log(self.cdf_x(x))
+    def _logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self._cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return 1 - 0.5 * betainc(
             a=self._df * 0.5,
             b=0.5,
@@ -74,7 +74,7 @@ class StudentT(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         """A method is addressed in this paper https://www.homepages.ucl.ac.uk/~ucahwts/lgsnotes/JCF_Student.pdf"""
         raise NotImplementedError
 
