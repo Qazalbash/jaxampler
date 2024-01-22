@@ -55,7 +55,7 @@ class Beta(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "scale must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.logpdf(
             x=x,
             a=self._alpha,
@@ -65,7 +65,7 @@ class Beta(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.pdf(
             x=x,
             a=self._alpha,
@@ -75,7 +75,7 @@ class Beta(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.logcdf(
             x=x,
             a=self._alpha,
@@ -85,7 +85,7 @@ class Beta(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_beta.cdf(
             x=x,
             a=self._alpha,
@@ -95,7 +95,7 @@ class Beta(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         return tfp.math.betaincinv(
             self._alpha,
             self._beta,

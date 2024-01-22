@@ -18,25 +18,26 @@ import jax
 import jax.numpy as jnp
 import pytest
 
+
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Rayleigh
 
 
 class TestRayleigh:
-    def test_pdf_x(self):
-        assert Rayleigh(sigma=0.5).pdf_x(1) == 0.5413411
+    def test_pdf(self):
+        assert Rayleigh(sigma=0.5).pdf(1) == 0.5413411
 
     def test_shapes(self):
         assert jnp.allclose(
-            Rayleigh(sigma=[0.5, 0.3]).pdf_x(1),
+            Rayleigh(sigma=[0.5, 0.3]).pdf(1),
             jnp.array([0.5413411, 0.04295468]),
         )
         assert jnp.allclose(
-            Rayleigh(sigma=[0.5, 0.5, 0.5]).pdf_x(1),
+            Rayleigh(sigma=[0.5, 0.5, 0.5]).pdf(1),
             jnp.array([0.5413411, 0.5413411, 0.5413411]),
         )
         assert jnp.allclose(
-            Rayleigh(sigma=[[0.3, 0.5], [0.5, 0.4]]).pdf_x(1),
+            Rayleigh(sigma=[[0.3, 0.5], [0.5, 0.4]]).pdf(1),
             jnp.array([[0.04295468, 0.5413411], [0.5413411, 0.2746058]]),
         )
 
@@ -48,13 +49,13 @@ class TestRayleigh:
         with pytest.raises(AssertionError):
             assert Rayleigh(sigma=-1)
 
-    def test_cdf_x(self):
+    def test_cdf(self):
         # when x is less than 0
-        assert Rayleigh(sigma=0.5).cdf_x(-0.01) == 0
+        assert Rayleigh(sigma=0.5).cdf(-0.01) == 0
         # when x is equal to 0
-        assert Rayleigh(sigma=5.5).cdf_x(0) == 0
+        assert Rayleigh(sigma=5.5).cdf(0) == 0
         # when x is greater than 0
-        assert Rayleigh(sigma=500).cdf_x(30) == 0.0017983912
+        assert Rayleigh(sigma=500).cdf(30) == 0.0017983912
 
     def test_rvs(self):
         tpl_rvs = Rayleigh(sigma=0.1)

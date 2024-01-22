@@ -51,19 +51,19 @@ class Binomial(DiscreteRV):
         assert jnp.all(self._n > 0), "n must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, x: Numeric) -> Numeric:
+    def _logpmf_x(self, x: Numeric) -> Numeric:
         return jax_binom.logpmf(x, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, x: Numeric) -> Numeric:
+    def _pmf_x(self, x: Numeric) -> Numeric:
         return jax_binom.pmf(x, self._n, self._p)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
-        return jnp.log(self.cdf_x(x))
+    def _logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self._cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         floor_x = jnp.floor(x)
         cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
         return jnp.select(cond, [0.0, 1.0, betainc(self._n - floor_x, floor_x + 1, self._q)])

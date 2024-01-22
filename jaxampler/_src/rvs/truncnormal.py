@@ -46,7 +46,7 @@ class TruncNormal(ContinuousRV):
         assert jnp.all(self._scale > 0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.logpdf(
             x=x,
             a=self._alpha,
@@ -56,7 +56,7 @@ class TruncNormal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.pdf(
             x=x,
             a=self._alpha,
@@ -66,7 +66,7 @@ class TruncNormal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.logcdf(
             x=x,
             a=self._alpha,
@@ -76,7 +76,7 @@ class TruncNormal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_truncnorm.cdf(
             x=x,
             a=self._alpha,

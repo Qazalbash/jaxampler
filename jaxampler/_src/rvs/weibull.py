@@ -42,7 +42,7 @@ class Weibull(ContinuousRV):
         assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric | tuple[Numeric, ...]:
+    def _logpdf_x(self, x: Numeric) -> Numeric | tuple[Numeric, ...]:
         return jnp.where(
             x <= 0,
             jnp.full_like(x, -jnp.inf),
@@ -53,7 +53,7 @@ class Weibull(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x <= 0.0,
             0.0,
@@ -61,12 +61,12 @@ class Weibull(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         return self._loc + self._scale * jnp.power(-jnp.log(1.0 - x), 1.0 / self._k)
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         U = jax.random.uniform(key, shape=shape)
-        return self.ppf_x(U)
+        return self._ppf_x(U)
 
     def __repr__(self) -> str:
         string = f"Weibull(k={self._k}, loc={self._loc}, scale={self._scale}"

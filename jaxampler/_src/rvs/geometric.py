@@ -41,7 +41,7 @@ class Geometric(DiscreteRV):
         ), "All p must be greater than or equals to 0 and less than or equals to 1"
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, x: Numeric) -> Numeric:
+    def _logpmf_x(self, x: Numeric) -> Numeric:
         return jax_geom.logpmf(
             k=x,
             p=self._p,
@@ -49,7 +49,7 @@ class Geometric(DiscreteRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, x: Numeric) -> Numeric:
+    def _pmf_x(self, x: Numeric) -> Numeric:
         return jax_geom.pmf(
             k=x,
             p=self._p,
@@ -57,14 +57,14 @@ class Geometric(DiscreteRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         conditions = [x < self._loc, x >= self._loc]
         choices = [jnp.zeros_like(self._q), 1.0 - jnp.power(self._q, jnp.floor(x - self._loc))]
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
-        return jnp.log(self.cdf_x(x))
+    def _logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self._cdf_x(x))
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         return self._loc + jax.random.geometric(key=key, p=self._p, shape=shape)

@@ -37,7 +37,7 @@ class Normal(ContinuousRV):
         assert jnp.all(self._scale > 0.0), "All sigma must be greater than 0.0"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.logpdf(
             x=x,
             loc=self._loc,
@@ -45,7 +45,7 @@ class Normal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.logcdf(
             x=x,
             loc=self._loc,
@@ -53,7 +53,7 @@ class Normal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.pdf(
             x=x,
             loc=self._loc,
@@ -61,7 +61,7 @@ class Normal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, x: Numeric) -> Numeric:
+    def _cdf_x(self, x: Numeric) -> Numeric:
         return jax_norm.cdf(
             x=x,
             loc=self._loc,
@@ -69,7 +69,7 @@ class Normal(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def _ppf_x(self, x: Numeric) -> Numeric:
         return jax_norm.ppf(
             q=x,
             loc=self._loc,

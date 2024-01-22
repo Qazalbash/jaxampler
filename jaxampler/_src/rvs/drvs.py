@@ -17,8 +17,9 @@ from __future__ import annotations
 from functools import partial
 from typing import Optional
 
-from jax import Array, jit, numpy as jnp, vmap
+from jax import jit, numpy as jnp, vmap
 
+from ..typing import Numeric
 from .rvs import GenericRV
 
 
@@ -29,19 +30,29 @@ class DiscreteRV(GenericRV):
     # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_x(self, *k: Array) -> Array:
+    def _logpmf_x(self, *k: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pmf_x(self, *k: Array) -> Array:
-        return jnp.exp(self.logpmf_x(*k))
+    def _pmf_x(self, *k: Numeric) -> Numeric:
+        return jnp.exp(self._logpmf_x(*k))
 
     # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpmf_v(self, *k: Array) -> Array:
-        return vmap(self.logpmf_x, in_axes=0)(*k)
+    def _logpmf_v(self, *k: Numeric) -> Numeric:
+        return vmap(self._logpmf_x, in_axes=0)(*k)
 
     @partial(jit, static_argnums=(0,))
-    def pmf_v(self, *k: Array) -> Array:
-        return jnp.exp(self.logpmf_v(*k))
+    def _pmf_v(self, *k: Numeric) -> Numeric:
+        return jnp.exp(self._logpmf_v(*k))
+
+    # FACTORY METHODS
+
+    @partial(jit, static_argnums=(0,))
+    def logpmf(self, *k: Numeric) -> Numeric:
+        return self._pv_factory(self._logpmf_x, self._logpmf_v, *k)
+
+    @partial(jit, static_argnums=(0,))
+    def pmf(self, *k: Numeric) -> Numeric:
+        return self._pv_factory(self._pmf_x, self._pmf_v, *k)

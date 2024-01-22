@@ -59,13 +59,13 @@ class TruncPowerLaw(ContinuousRV):
         return jnp.exp(self._logZ)
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         logpdf_val: Numeric = jnp.log(x) * self._alpha - self._logZ
         logpdf_val = jnp.where((x >= self._low) * (x <= self._high), logpdf_val, -jnp.inf)
         return logpdf_val
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             x > self._high,
@@ -83,7 +83,7 @@ class TruncPowerLaw(ContinuousRV):
         return jnp.select(conditions, choices)
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def _logppf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < 0.0,
             x > 1.0,
@@ -101,7 +101,7 @@ class TruncPowerLaw(ContinuousRV):
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         U = jax.random.uniform(key=key, shape=shape, dtype=jnp.float32)
-        rvs_val = self.ppf_v(U)
+        rvs_val = self._ppf_v(U)
         return rvs_val
 
     def __repr__(self) -> str:

@@ -28,19 +28,19 @@ from jaxampler.rvs import Uniform
 class TestUniform:
     def test_shape(self):
         assert jnp.allclose(
-            Uniform(low=0.0, high=10.0, name="uniform_0_to_10").pdf_x(5),
+            Uniform(low=0.0, high=10.0, name="uniform_0_to_10").pdf(5),
             jax_uniform.pdf(5, 0, 10),
         )
 
     def test_low_is_negative(self):
         assert jnp.allclose(
-            Uniform(low=-10.0, high=10.0, name="uniform_n10_to_10").pdf_x(5),
+            Uniform(low=-10.0, high=10.0, name="uniform_n10_to_10").pdf(5),
             jax_uniform.pdf(5, -10, 20),
         )
 
     def test_low_and_high_are_negative(self):
         assert jnp.allclose(
-            Uniform(low=-10.0, high=-1.0, name="uniform_n10_to_n1").pdf_x(5),
+            Uniform(low=-10.0, high=-1.0, name="uniform_n10_to_n1").pdf(5),
             jax_uniform.pdf(5, -10, 9),
         )
 
@@ -52,26 +52,26 @@ class TestUniform:
         with pytest.raises(AssertionError):
             Uniform(low=10.0, high=0.0, name="uniform_10_to_0")
 
-    def test_cdf_x(self):
+    def test_cdf(self):
         uniform_cdf = Uniform(low=0, high=10, name="cdf_0_to_10")
-        assert uniform_cdf.cdf_x(5) <= 1
-        assert uniform_cdf.cdf_x(5) >= 0
-        assert uniform_cdf.cdf_x(15) == 1
-        assert uniform_cdf.cdf_x(-1) == 0
+        assert uniform_cdf.cdf(5) <= 1
+        assert uniform_cdf.cdf(5) >= 0
+        assert uniform_cdf.cdf(15) == 1
+        assert uniform_cdf.cdf(-1) == 0
 
         # when low is negative
         uniform_cdf = Uniform(low=-10, high=10, name="cdf_n10_to_10")
-        assert uniform_cdf.cdf_x(0) <= 1
-        assert uniform_cdf.cdf_x(0) >= 0
-        assert uniform_cdf.cdf_x(15) == 1
-        assert uniform_cdf.cdf_x(-11) == 0
+        assert uniform_cdf.cdf(0) <= 1
+        assert uniform_cdf.cdf(0) >= 0
+        assert uniform_cdf.cdf(15) == 1
+        assert uniform_cdf.cdf(-11) == 0
 
         # when low and high are negative
         uniform_cdf = Uniform(low=-10, high=-1, name="cdf_n10_to_n1")
-        assert uniform_cdf.cdf_x(-5) <= 1
-        assert uniform_cdf.cdf_x(-5) >= 0
-        assert uniform_cdf.cdf_x(1) == 1
-        assert uniform_cdf.cdf_x(-20) == 0
+        assert uniform_cdf.cdf(-5) <= 1
+        assert uniform_cdf.cdf(-5) >= 0
+        assert uniform_cdf.cdf(1) == 1
+        assert uniform_cdf.cdf(-20) == 0
 
     def test_rvs(self):
         uniform_rvs = Uniform(low=0.0, high=10.0, name="tets_rvs")

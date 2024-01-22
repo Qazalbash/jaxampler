@@ -37,7 +37,7 @@ class Uniform(ContinuousRV):
         assert jnp.all(self._low < self._high), "All low must be less than high"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jax_uniform.logpdf(
             x,
             loc=self._low,
@@ -45,7 +45,7 @@ class Uniform(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, x: Numeric) -> Numeric:
+    def _pdf_x(self, x: Numeric) -> Numeric:
         return jax_uniform.pdf(
             x,
             loc=self._low,
@@ -53,7 +53,7 @@ class Uniform(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         conditions = [
             x < self._low,
             (self._low <= x) & (x <= self._high),
@@ -67,7 +67,7 @@ class Uniform(ContinuousRV):
         return jnp.select(conditions, choice)
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def _logppf_x(self, x: Numeric) -> Numeric:
         return jnp.log(x * (self._high - self._low) + self._low)
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:

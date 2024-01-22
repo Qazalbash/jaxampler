@@ -28,17 +28,17 @@ from jaxampler.rvs import Binomial
 class TestBinomial:
     def test_all_positive(self):
         assert jnp.allclose(
-            Binomial(p=0.5, n=10, name="test_logpmf_p0.5").logpmf_x(5),
+            Binomial(p=0.5, n=10, name="test_logpmf_p0.5").logpmf(5),
             jax_binom.logpmf(5, 10, 0.5),
         )
 
     def test_small_p(self):
         assert jnp.allclose(
-            Binomial(p=0.0001, n=100, name="test_pmf_p0.0001").pmf_x(5),
+            Binomial(p=0.0001, n=100, name="test_pmf_p0.0001").pmf(5),
             jax_binom.pmf(5, 100, 0.0001),
         )
         assert jnp.allclose(
-            Binomial(p=0.0001, n=10, name="test_logpmf_p0.0001").logpmf_x(5),
+            Binomial(p=0.0001, n=10, name="test_logpmf_p0.0001").logpmf(5),
             jax_binom.logpmf(5, 10, 0.0001),
         )
 
@@ -48,43 +48,43 @@ class TestBinomial:
 
     def test_large_n(self):
         assert jnp.allclose(
-            Binomial(p=0.1, n=100).logpmf_x(50),
+            Binomial(p=0.1, n=100).logpmf(50),
             jax_binom.logpmf(50, 100, 0.1),
         )
         assert jnp.allclose(
-            Binomial(p=0.5, n=1000, name="test_pmf_p0.5").pmf_x(5),
+            Binomial(p=0.5, n=1000, name="test_pmf_p0.5").pmf(5),
             jax_binom.pmf(5, 1000, 0.1),
         )
         assert jnp.allclose(
-            Binomial(p=0.5, n=[10, 20], name="test_pmf_n2").pmf_x(5),
+            Binomial(p=0.5, n=[10, 20], name="test_pmf_n2").pmf(5),
             jax_binom.pmf(5, jnp.asarray([10, 20]), 0.5),
         )
         assert jnp.allclose(
-            Binomial(p=0.1, n=100000, name="test_pmf_p0.1n100000").pmf_x(50),
+            Binomial(p=0.1, n=100000, name="test_pmf_p0.1n100000").pmf(50),
             jax_binom.pmf(50, 100000, 0.1),
         )
 
     def test_shapes(self):
-        assert Binomial(p=0.5, n=[10, 20], name="test_logpmf_n2").logpmf_x(5).shape == (2,)
-        assert Binomial(p=[0.5, 0.1], n=[10, 20], name="test_logpmf_p2n2").logpmf_x(5).shape == (2,)
-        assert Binomial(p=[0.5, 0.1, 0.3], n=[10, 20, 30], name="test_logpmf_p3n3").logpmf_x(5).shape == (3,)
+        assert Binomial(p=0.5, n=[10, 20], name="test_logpmf_n2").logpmf(5).shape == (2,)
+        assert Binomial(p=[0.5, 0.1], n=[10, 20], name="test_logpmf_p2n2").logpmf(5).shape == (2,)
+        assert Binomial(p=[0.5, 0.1, 0.3], n=[10, 20, 30], name="test_logpmf_p3n3").logpmf(5).shape == (3,)
         assert jnp.allclose(
-            Binomial(p=[0.5, 0.1], n=[10, 20], name="test_pmf_p2n2").pmf_x(5),
+            Binomial(p=[0.5, 0.1], n=[10, 20], name="test_pmf_p2n2").pmf(5),
             jax_binom.pmf(5, jnp.asarray([10, 20]), jnp.asarray([0.5, 0.1])),
         )
-        assert Binomial(p=[[0.5, 0.1], [0.4, 0.1]], n=[[10], [20]], name="test_pmf_p2x3n2").pmf_x(5).shape == (2, 2)
-        assert Binomial(p=[[0.5, 0.1], [0.4, 0.1]], n=[10, 20], name="test_pmf_p2x3n2").pmf_x(5).shape == (2, 2)
+        assert Binomial(p=[[0.5, 0.1], [0.4, 0.1]], n=[[10], [20]], name="test_pmf_p2x3n2").pmf(5).shape == (2, 2)
+        assert Binomial(p=[[0.5, 0.1], [0.4, 0.1]], n=[10, 20], name="test_pmf_p2x3n2").pmf(5).shape == (2, 2)
 
     def test_incompatible_shapes(self):
         with pytest.raises(ValueError):
             Binomial(p=[[0.5, 0.1, 0.3], [0.4, 0.1, 0.2]], n=[10, 20], name="test_pmf_p2x3n2")
 
-    def test_cdf_x(self):
+    def test_cdf(self):
         bin_cdf = Binomial(p=0.2, n=12, name="test_cdf")
-        assert bin_cdf.cdf_x(13) == 1.0
-        assert bin_cdf.cdf_x(-1) == 0.0
-        assert bin_cdf.cdf_x(9) >= 0.0
-        assert bin_cdf.cdf_x(9) <= 1.0
+        assert bin_cdf.cdf(13) == 1.0
+        assert bin_cdf.cdf(-1) == 0.0
+        assert bin_cdf.cdf(9) >= 0.0
+        assert bin_cdf.cdf(9) <= 1.0
 
     def test_rvs(self):
         bin_rvs = Binomial(p=0.6, n=[5, 23], name="tets_rvs")

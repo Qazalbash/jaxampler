@@ -32,19 +32,29 @@ class ContinuousRV(GenericRV):
     # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, *x: Numeric) -> Numeric:
+    def _logpdf_x(self, *x: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def pdf_x(self, *x: Numeric) -> Numeric:
-        return jnp.exp(self.logpdf_x(*x))
+    def _pdf_x(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logpdf_x(*x))
 
     # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_v(self, *x: Numeric) -> Numeric:
-        return vmap(self.logpdf_x, in_axes=0)(*x)
+    def _logpdf_v(self, *x: Numeric) -> Numeric:
+        return vmap(self._logpdf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def pdf_v(self, *x: Numeric) -> Numeric:
-        return jnp.exp(self.logpdf_v(*x))
+    def _pdf_v(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logpdf_v(*x))
+
+    # FACTORY METHODS
+
+    @partial(jit, static_argnums=(0,))
+    def logpdf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._logpdf_x, self._logpdf_v, *x)
+
+    @partial(jit, static_argnums=(0,))
+    def pdf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._pdf_x, self._pdf_v, *x)

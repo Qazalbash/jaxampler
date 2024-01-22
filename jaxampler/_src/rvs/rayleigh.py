@@ -35,7 +35,7 @@ class Rayleigh(ContinuousRV):
         assert jnp.all(self._sigma > 0.0), "sigma must be positive"
 
     @partial(jit, static_argnums=(0,))
-    def logpdf_x(self, x: Numeric) -> Numeric:
+    def _logpdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log(x - self._loc) - 0.5 * jnp.power((x - self._loc) / self._sigma, 2) - 2 * jnp.log(self._sigma),
@@ -43,7 +43,7 @@ class Rayleigh(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, x: Numeric) -> Numeric:
+    def _logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
             jnp.log1p(-jnp.exp(-0.5 * jnp.power((x - self._loc) / self._sigma, 2))),
@@ -51,7 +51,7 @@ class Rayleigh(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric | tuple[Numeric, ...]:
+    def _ppf_x(self, x: Numeric) -> Numeric | tuple[Numeric, ...]:
         return jnp.where(
             x < 0,
             jnp.zeros_like(x),

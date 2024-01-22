@@ -19,6 +19,7 @@ import jax
 import jax.numpy as jnp
 import pytest
 
+
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Weibull
 
@@ -26,11 +27,11 @@ from jaxampler.rvs import Weibull
 class TestWeibull:
     def test_pdf(self):
         W = Weibull(scale=1, k=1)
-        assert jnp.allclose(W.pdf_x(1.0), 1 / jnp.e)
-        assert jnp.allclose(W.pdf_x(0.0), 0)
+        assert jnp.allclose(W.pdf(1.0), 1 / jnp.e)
+        assert jnp.allclose(W.pdf(0.0), 0)
 
-    def test_negative_x(self):
-        assert jnp.allclose(Weibull(scale=1, k=1).pdf_x(-1.0), 0)
+    def test_negative(self):
+        assert jnp.allclose(Weibull(scale=1, k=1).pdf(-1.0), 0)
 
     def test_negative_lambda(self):
         with pytest.raises(AssertionError):
@@ -45,21 +46,21 @@ class TestWeibull:
             Weibull(scale=-1, k=-1)
 
     def test_shapes(self):
-        assert jnp.allclose(Weibull(scale=[1, 1], k=[1, 1]).pdf_x(1.0), jnp.array([0.3678794412, 0.3678794412]))
+        assert jnp.allclose(Weibull(scale=[1, 1], k=[1, 1]).pdf(1.0), jnp.array([0.3678794412, 0.3678794412]))
         assert jnp.allclose(
-            Weibull(scale=[1, 1, 1], k=[1, 1, 1]).pdf_x(1.0),
+            Weibull(scale=[1, 1, 1], k=[1, 1, 1]).pdf(1.0),
             jnp.array([0.3678794412, 0.3678794412, 0.3678794412]),
         )
 
-    def test_cdf_x(self):
+    def test_cdf(self):
         W = Weibull(scale=[1, 1, 1], k=[1, 1, 1])
-        assert jnp.allclose(W.cdf_x(1), 1 - 1 / jnp.e)
-        assert jnp.allclose(W.cdf_x(0), 0)
+        assert jnp.allclose(W.cdf(1), 1 - 1 / jnp.e)
+        assert jnp.allclose(W.cdf(0), 0)
 
     def test_ppf(self):
         W = Weibull(scale=1, k=1)
-        assert jnp.allclose(W.ppf_x(0.0), 0.0)
-        assert jnp.allclose(W.ppf_x(1 - 1 / jnp.e), 1)
+        assert jnp.allclose(W.ppf(0.0), 0.0)
+        assert jnp.allclose(W.ppf(1 - 1 / jnp.e), 1)
 
     def test_rvs(self):
         W = Weibull(scale=1, k=1)

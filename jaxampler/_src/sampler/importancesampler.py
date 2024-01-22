@@ -67,8 +67,8 @@ class ImportanceSampler(Sampler):
             key = self.get_key()
 
         q_rv = q.rvs(shape=(N,), key=key)
-        p_theta = p.pdf_v(q_rv)
-        q_phi = q.pdf_v(q_rv)
+        p_theta = p._pdf_v(q_rv)
+        q_phi = q._pdf_v(q_rv)
         hx = vmap(h)(q_rv)
         w = p_theta / q_phi
         normalization_constant = w.mean()

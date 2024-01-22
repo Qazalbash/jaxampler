@@ -15,9 +15,11 @@
 from __future__ import annotations
 
 from functools import partial
-from typing import Optional
+from typing import Callable, Optional
 
-from jax import jit, numpy as jnp, vmap
+import numpy as np
+from jax import jit, lax, numpy as jnp, vmap
+from jax._src import core
 from jaxtyping import Array
 
 from ..jobj import JObj
@@ -37,38 +39,75 @@ class GenericRV(JObj):
     # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_x(self, *x: Numeric) -> Numeric:
+    def _logcdf_x(self, *x: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def cdf_x(self, *x: Numeric) -> Numeric:
-        return jnp.exp(self.logcdf_x(*x))
+    def _cdf_x(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logcdf_x(*x))
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, *x: Numeric) -> Numeric:
+    def _logppf_x(self, *x: Numeric) -> Numeric:
         raise NotImplementedError
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, *x: Numeric) -> Numeric:
-        return jnp.exp(self.logppf_x(*x))
+    def _ppf_x(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logppf_x(*x))
 
     # VECTOR VALUED
 
     @partial(jit, static_argnums=(0,))
-    def logcdf_v(self, *x: Numeric) -> Numeric:
-        return vmap(self.logcdf_x, in_axes=0)(*x)
+    def _logcdf_v(self, *x: Numeric) -> Numeric:
+        return vmap(self._logcdf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def cdf_v(self, *x: Numeric) -> Numeric:
-        return jnp.exp(self.logcdf_v(*x))
+    def _cdf_v(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logcdf_v(*x))
 
     @partial(jit, static_argnums=(0,))
-    def logppf_v(self, *x: Numeric) -> Numeric:
-        return vmap(self.logppf_x, in_axes=0)(*x)
+    def _logppf_v(self, *x: Numeric) -> Numeric:
+        return vmap(self._logppf_x, in_axes=0)(*x)
 
     @partial(jit, static_argnums=(0,))
-    def ppf_v(self, *x: Numeric) -> Numeric:
-        return jnp.exp(self.logppf_v(*x))
+    def _ppf_v(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logppf_v(*x))
+
+    # XXF FACTORY METHODS
+
+    def _pv_factory(
+        self,
+        func_p: Callable[..., Numeric],
+        func_v: Callable[..., Numeric],
+        *x: Numeric,
+    ) -> Numeric:
+        # partially taken from the implementation of `jnp.broadcast_arrays`
+        shapes = [np.shape(arg) for arg in x]
+        if not shapes or all(core.definitely_equal_shape(shapes[0], s) for s in shapes):
+            shape = shapes[0]
+        else:
+            shape: tuple[int, ...] = lax.broadcast_shapes(*shapes)
+
+        if len(shape) < 2:
+            return func_p(*x)
+        return func_v(*x)
+
+    # POINT VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def logcdf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._logcdf_x, self._logcdf_v, *x)
+
+    @partial(jit, static_argnums=(0,))
+    def cdf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._cdf_x, self._cdf_v, *x)
+
+    @partial(jit, static_argnums=(0,))
+    def logppf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._logppf_x, self._logppf_v, *x)
+
+    @partial(jit, static_argnums=(0,))
+    def ppf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._ppf_x, self._ppf_v, *x)
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:

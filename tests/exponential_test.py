@@ -19,6 +19,7 @@ import jax
 import jax.numpy as jnp
 import pytest
 
+
 sys.path.append("../jaxampler")
 from jaxampler.rvs import Exponential
 
@@ -35,35 +36,35 @@ class TestExponential:
         Exponential(scale=1.0, name="test")
         Exponential(scale=jnp.ones((3, 2)))
 
-    def test_cdf_x(self):
+    def test_cdf(self):
         scale = jnp.array([1.0, 0.5, 1.0 / 3.0])
         exp = Exponential(scale=scale)
         assert jnp.allclose(
-            exp.cdf_x(0.0),
+            exp.cdf(0.0),
             jnp.zeros((3,)),
         )
         assert jnp.allclose(
-            exp.cdf_x(1.0),
+            exp.cdf(1.0),
             1.0 - jnp.exp(-1.0 / scale),
         )
         assert jnp.allclose(
-            exp.cdf_x(2.0),
+            exp.cdf(2.0),
             1.0 - jnp.exp(-2.0 / scale),
         )
 
-    def test_ppf_x(self):
+    def test_ppf(self):
         scale = jnp.array([1.0, 2.0, 3.0])
         exp = Exponential(scale=scale)
         assert jnp.allclose(
-            exp.ppf_x(0.0),
+            exp.ppf(0.0),
             jnp.zeros((3,)),
         )
         assert jnp.allclose(
-            exp.ppf_x(1.0 - jnp.exp(-1.0 / scale)),
+            exp.ppf(1.0 - jnp.exp(-1.0 / scale)),
             1.0,
         )
         assert jnp.allclose(
-            exp.ppf_x(1.0 - jnp.exp(-2.0 / scale)),
+            exp.ppf(1.0 - jnp.exp(-2.0 / scale)),
             2.0,
         )
 
