@@ -71,4 +71,10 @@ class GenericRV(JObj):
         return jnp.exp(self.logppf_v(*x))
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
+        if key is None:
+            key = self.get_key()
+        new_shape = shape + self._shape
+        return self._rvs(shape=new_shape, key=key)
+
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         raise NotImplementedError

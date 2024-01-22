@@ -78,11 +78,8 @@ class Pareto(ContinuousRV):
         ]
         return jnp.select(conditions, choices)
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return self._loc + self._scale * jax.random.pareto(key, self._a, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + self._scale * jax.random.pareto(key=key, b=self._a, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Pareto(a={self._a}, loc={self._loc}, scale={self._scale}"

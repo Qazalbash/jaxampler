@@ -72,11 +72,8 @@ class Exponential(ContinuousRV):
             -jnp.inf,
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        U = jax.random.uniform(key, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        U = jax.random.uniform(key=key, shape=shape)
         rvs_val = self._loc - self._scale * jnp.log(U)
         return rvs_val
 

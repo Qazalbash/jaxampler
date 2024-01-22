@@ -85,15 +85,12 @@ class TruncNormal(ContinuousRV):
             scale=self._scale,
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         return self._loc + self._scale * jax.random.truncated_normal(
-            key,
-            self._alpha,
-            self._beta,
-            shape=new_shape,
+            key=key,
+            lower=self._alpha,
+            upper=self._beta,
+            shape=shape,
         )
 
     def __repr__(self) -> str:

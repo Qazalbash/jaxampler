@@ -66,11 +66,8 @@ class Geometric(DiscreteRV):
     def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.log(self.cdf_x(x))
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return self._loc + jax.random.geometric(key, self._p, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + jax.random.geometric(key=key, p=self._p, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Geometric(p={self._p}"

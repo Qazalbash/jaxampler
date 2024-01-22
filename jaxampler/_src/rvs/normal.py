@@ -76,11 +76,8 @@ class Normal(ContinuousRV):
             scale=self._scale,
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return self._loc + self._scale * jax.random.normal(key, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + self._scale * jax.random.normal(key=key, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Normal(loc={self._loc}, scale={self._scale}"

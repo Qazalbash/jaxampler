@@ -102,12 +102,8 @@ class Beta(ContinuousRV):
             (x - self._loc) / self._scale,
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        X = jax.random.beta(key, self._alpha, self._beta, shape=new_shape)
-        return self._loc + self._scale * X
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + self._scale * jax.random.beta(key=key, a=self._alpha, b=self._beta, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Beta(alpha={self._alpha}, beta={self._beta}, loc={self._loc}, scale={self._scale}"

@@ -70,11 +70,8 @@ class Uniform(ContinuousRV):
     def logppf_x(self, x: Numeric) -> Numeric:
         return jnp.log(x * (self._high - self._low) + self._low)
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return jax.random.uniform(key, minval=self._low, maxval=self._high, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Uniform(low={self._low}, high={self._high}"

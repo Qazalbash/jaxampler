@@ -64,11 +64,8 @@ class Weibull(ContinuousRV):
     def ppf_x(self, x: Numeric) -> Numeric:
         return self._loc + self._scale * jnp.power(-jnp.log(1.0 - x), 1.0 / self._k)
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        U = jax.random.uniform(key, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        U = jax.random.uniform(key, shape=shape)
         return self.ppf_x(U)
 
     def __repr__(self) -> str:
