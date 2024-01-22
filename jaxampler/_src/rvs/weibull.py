@@ -26,13 +26,19 @@ from .crvs import ContinuousRV
 
 
 class Weibull(ContinuousRV):
-    def __init__(self, lmbda: Numeric | Any, k: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._lmbda, self._k = jx_cast(lmbda, k)
+    def __init__(
+        self,
+        k: Numeric | Any,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
+        name: Optional[str] = None,
+    ) -> None:
+        shape, self._k, self._loc, self._scale = jx_cast(k, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._lmbda > 0.0), "scale must be greater than 0"
+        assert jnp.all(self._scale > 0.0), "scale must be greater than 0"
         assert jnp.all(self._k > 0.0), "concentration must be greater than 0"
 
     @partial(jit, static_argnums=(0,))
@@ -41,9 +47,9 @@ class Weibull(ContinuousRV):
             x <= 0,
             jnp.full_like(x, -jnp.inf),
             jnp.log(self._k)
-            - (self._k * jnp.log(self._lmbda))
-            + (self._k - 1.0) * jnp.log(x)
-            - jnp.power(x / self._lmbda, self._k),
+            - (self._k * jnp.log(self._scale))
+            + (self._k - 1.0) * jnp.log(x - self._loc)
+            - jnp.power(x / self._scale, self._k),
         )
 
     @partial(jit, static_argnums=(0,))
@@ -51,12 +57,12 @@ class Weibull(ContinuousRV):
         return jnp.where(
             x <= 0.0,
             0.0,
-            1.0 - jnp.exp(-jnp.power(x / self._lmbda, self._k)),
+            1.0 - jnp.exp(-jnp.power((x - self._loc) / self._scale, self._k)),
         )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
-        return self._lmbda * jnp.power(-jnp.log(1.0 - x), 1.0 / self._k)
+        return self._loc + self._scale * jnp.power(-jnp.log(1.0 - x), 1.0 / self._k)
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
@@ -66,7 +72,7 @@ class Weibull(ContinuousRV):
         return self.ppf_x(U)
 
     def __repr__(self) -> str:
-        string = f"Weibull(lambda={self._lmbda}, k={self._k}"
+        string = f"Weibull(k={self._k}, loc={self._loc}, scale={self._scale}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
