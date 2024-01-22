@@ -20,12 +20,12 @@ from typing_extensions import Unpack
 import numpy as np
 from jax import lax, numpy as jnp
 from jax._src import core
-from jaxtyping import Array, Integer
+from jaxtyping import Integer
 
 
 def jx_cast(
     *args: Any,
-) -> tuple[tuple[int, ...], Unpack[tuple[Array, ...]]]:
+) -> tuple[tuple[int, ...], Unpack[tuple[Any, ...]]]:
     """Cast provided arguments to `jnp.array` and checks if they can be
     broadcast.
 
