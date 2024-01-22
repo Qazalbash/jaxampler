@@ -81,11 +81,8 @@ class Chi2(ContinuousRV):
     def logppf_x(self, x: Numeric) -> Numeric:
         raise NotImplementedError("Not able to find sufficient information to implement")
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return self._loc + self._scale * jax.random.chisquare(key, self._nu, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + self._scale * jax.random.chisquare(key=key, df=self._nu, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Chi2(nu={self._nu}, loc={self._loc}, scale={self._scale}"

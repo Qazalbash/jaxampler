@@ -78,11 +78,8 @@ class StudentT(ContinuousRV):
         """A method is addressed in this paper https://www.homepages.ucl.ac.uk/~ucahwts/lgsnotes/JCF_Student.pdf"""
         raise NotImplementedError
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return jax.random.t(key=key, df=self._df, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + self._scale * jax.random.t(key=key, df=self._df, shape=shape)
 
     def __repr__(self) -> str:
         string = f"StudentT(nu={self._df}"

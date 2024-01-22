@@ -68,11 +68,8 @@ class Binomial(DiscreteRV):
         cond = [x < 0, x >= self._n, jnp.logical_and(x >= 0, x < self._n)]
         return jnp.select(cond, [0.0, 1.0, betainc(self._n - floor_x, floor_x + 1, self._q)])
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return jax.random.binomial(key=key, n=self._n, p=self._p, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Binomial(p={self._p}, n={self._n}"

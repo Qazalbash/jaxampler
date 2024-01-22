@@ -91,16 +91,13 @@ class Triangular(ContinuousRV):
         )
         return ppf_val
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         return jax.random.triangular(
-            key,
+            key=key,
             left=self._low,
             right=self._high,
             mode=self._mode,
-            shape=new_shape,
+            shape=shape,
         )
 
     def __repr__(self) -> str:

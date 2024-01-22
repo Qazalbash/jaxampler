@@ -71,11 +71,8 @@ class Cauchy(ContinuousRV):
     def ppf_x(self, x: Numeric) -> Numeric:
         return self._loc + self._scale * jnp.tan(jnp.pi * (x - 0.5))
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return +self._loc + self._scale * jax.random.cauchy(key, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + self._scale * jax.random.cauchy(key=key, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Cauchy(loc={self._loc}, scale={self._scale}"

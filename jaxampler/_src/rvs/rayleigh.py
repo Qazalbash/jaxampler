@@ -51,18 +51,15 @@ class Rayleigh(ContinuousRV):
         )
 
     @partial(jit, static_argnums=(0,))
-    def ppf_x(self, x: Numeric) -> Numeric:
+    def ppf_x(self, x: Numeric) -> Numeric | tuple[Numeric, ...]:
         return jnp.where(
             x < 0,
             jnp.zeros_like(x),
             self._loc + self._sigma * jnp.sqrt(-2 * jnp.log(1 - x)),
         )
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
-            key = self.get_key()
-        new_shape = shape + self._shape
-        return self._loc + jax.random.rayleigh(key, scale=self._sigma, shape=new_shape)
+    def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
+        return self._loc + jax.random.rayleigh(key, scale=self._sigma, shape=shape)
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"
