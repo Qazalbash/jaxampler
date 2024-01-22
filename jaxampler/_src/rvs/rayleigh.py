@@ -26,8 +26,8 @@ from .crvs import ContinuousRV
 
 
 class Rayleigh(ContinuousRV):
-    def __init__(self, sigma: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._sigma = jx_cast(sigma)
+    def __init__(self, loc: Numeric | Any = 0.0, sigma: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
+        shape, self._loc, self._sigma = jx_cast(loc, sigma)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
@@ -38,7 +38,7 @@ class Rayleigh(ContinuousRV):
     def logpdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
-            jnp.log(x) - 0.5 * jnp.power(x / self._sigma, 2) - 2 * jnp.log(self._sigma),
+            jnp.log(x - self._loc) - 0.5 * jnp.power((x - self._loc) / self._sigma, 2) - 2 * jnp.log(self._sigma),
             -jnp.inf,
         )
 
@@ -46,23 +46,23 @@ class Rayleigh(ContinuousRV):
     def logcdf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
             x >= 0,
-            jnp.log1p(-jnp.exp(-0.5 * jnp.power(x / self._sigma, 2))),
+            jnp.log1p(-jnp.exp(-0.5 * jnp.power((x - self._loc) / self._sigma, 2))),
             -jnp.inf,
         )
 
     @partial(jit, static_argnums=(0,))
-    def logppf_x(self, x: Numeric) -> Numeric:
+    def ppf_x(self, x: Numeric) -> Numeric:
         return jnp.where(
-            x >= 0,
-            jnp.log(self._sigma) + 0.5 * jnp.log(-2 * jnp.log(1 - x)),
-            -jnp.inf,
+            x < 0,
+            jnp.zeros_like(x),
+            self._loc + self._sigma * jnp.sqrt(-2 * jnp.log(1 - x)),
         )
 
     def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.rayleigh(key, scale=self._sigma, shape=new_shape)
+        return self._loc + jax.random.rayleigh(key, scale=self._sigma, shape=new_shape)
 
     def __repr__(self) -> str:
         string = f"Rayleigh(sigma={self._sigma}"
