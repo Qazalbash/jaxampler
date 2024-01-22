@@ -28,25 +28,50 @@ from .crvs import ContinuousRV
 
 
 class StudentT(ContinuousRV):
-    def __init__(self, nu: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._nu = jx_cast(nu)
+    def __init__(
+        self,
+        df: Numeric | Any,
+        loc: Numeric | Any = 0.0,
+        scale: Numeric | Any = 1.0,
+        name: Optional[str] = None,
+    ) -> None:
+        shape, self._df, self._loc, self._scale = jx_cast(df, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
     def check_params(self) -> None:
-        assert jnp.all(self._nu > 0.0), "nu must be positive"
+        assert jnp.all(self._df > 0.0), "nu must be positive"
+        assert jnp.all(self._scale > 0.0), "scale must be positive"
 
     @partial(jit, static_argnums=(0,))
     def logpdf_x(self, x: Numeric) -> Numeric:
-        return jax_t.logpdf(x, self._nu)
+        return jax_t.logpdf(
+            x=x,
+            df=self._df,
+            loc=self._loc,
+            scale=self._scale,
+        )
 
     @partial(jit, static_argnums=(0,))
     def pdf_x(self, x: Numeric) -> Numeric:
-        return jax_t.pdf(x, self._nu)
+        return jax_t.pdf(
+            x=x,
+            df=self._df,
+            loc=self._loc,
+            scale=self._scale,
+        )
+
+    @partial(jit, static_argnums=(0,))
+    def logcdf_x(self, x: Numeric) -> Numeric:
+        return jnp.log(self.cdf_x(x))
 
     @partial(jit, static_argnums=(0,))
     def cdf_x(self, x: Numeric) -> Numeric:
-        return 1 - 0.5 * betainc(self._nu * 0.5, 0.5, 1 / (1 + (jnp.power(x, 2) / self._nu)))
+        return 1 - 0.5 * betainc(
+            a=self._df * 0.5,
+            b=0.5,
+            x=1 / (1 + (jnp.power((x - self._loc) / self._scale, 2) / self._df)),
+        )
 
     @partial(jit, static_argnums=(0,))
     def ppf_x(self, x: Numeric) -> Numeric:
@@ -57,10 +82,10 @@ class StudentT(ContinuousRV):
         if key is None:
             key = self.get_key()
         new_shape = shape + self._shape
-        return jax.random.t(key=key, df=self._nu, shape=new_shape)
+        return jax.random.t(key=key, df=self._df, shape=new_shape)
 
     def __repr__(self) -> str:
-        string = f"StudentT(nu={self._nu}"
+        string = f"StudentT(nu={self._df}"
         if self._name is not None:
             string += f", name={self._name}"
         string += ")"
