@@ -73,9 +73,8 @@ class GenericRV(JObj):
         return jnp.exp(self._logppf_v(*x))
 
     # XXF FACTORY METHODS
-
+    @staticmethod
     def _pv_factory(
-        self,
         func_p: Callable[..., Numeric],
         func_v: Callable[..., Numeric],
         *x: Numeric,
@@ -90,8 +89,6 @@ class GenericRV(JObj):
         if len(shape) < 2:
             return func_p(*x)
         return func_v(*x)
-
-    # POINT VALUED
 
     @partial(jit, static_argnums=(0,))
     def logcdf(self, *x: Numeric) -> Numeric:

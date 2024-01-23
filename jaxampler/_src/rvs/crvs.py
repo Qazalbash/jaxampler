@@ -25,8 +25,6 @@ from .rvs import GenericRV
 
 class ContinuousRV(GenericRV):
     def __init__(self, name: Optional[str] = None, shape: tuple[int, ...] = ()) -> None:
-        if name is None:
-            name = ""
         super().__init__(name=name, shape=shape)
 
     # POINT VALUED

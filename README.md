@@ -73,9 +73,11 @@ tqdm
 The test suite is based on `pytest`. To run the tests, one needs to install pytest and run `pytest` at the root
 directory of this repo.
 
-## Monte Carlo Methods
+## Algorithms and Distributions
 
-Jaxampler supports the following Monte Carlo methods:
+Jaxampler currently supports the following algorithms and distributions:
+
+<details><summary>Monte Carlo Methods</summary>
 
 - [ ] Hamiltonian Monte Carlo
 - [x] Importance Sampling
@@ -88,9 +90,10 @@ Jaxampler supports the following Monte Carlo methods:
 - [ ] Wang-Landau Sampling
 - [ ] Worm Algorithm
 
-## Samplers
+</details>
 
-Jaxampler supports the following samplers:
+<details><summary>Samplers</summary>
+<p>
 
 - [x] Accept-Rejection Sampler
 - [x] Adaptive Accept-Rejection Sampler
@@ -100,26 +103,22 @@ Jaxampler supports the following samplers:
 - [x] Metropolis-Hastings Sampler
 - [ ] Slice Sampler
 
-## Random Variables
+</p>
+</details>
 
-Jaxampler supports the following random variables:
 
-### Discrete Random Variables
+<details><summary>Random Variables</summary>
+<p>
 
 - [x] Bernoulli
-- [x] Binomial
-- [x] Geometric
-- [x] Poisson
-- [ ] Rademacher
-
-### Continuous Random Variables
-
 - [x] Beta
+- [x] Binomial
 - [x] Boltzmann
 - [x] Cauchy
 - [x] Chi
 - [x] Exponential
 - [x] Gamma
+- [x] Geometric
 - [ ] Gumbel
 - [ ] Laplace
 - [x] Log Normal
@@ -127,6 +126,8 @@ Jaxampler supports the following random variables:
 - [ ] Multivariate Normal
 - [x] Normal
 - [x] Pareto
+- [x] Poisson
+- [ ] Rademacher
 - [x] Rayleigh
 - [x] Student t
 - [x] Triangular
@@ -134,6 +135,9 @@ Jaxampler supports the following random variables:
 - [x] Truncated Power Law
 - [x] Uniform
 - [x] Weibull
+
+</p>
+</details>
 
 ## Citing Jaxampler
 
