@@ -24,10 +24,10 @@ from tensorflow_probability.substrates import jax as tfp
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Beta(ContinuousRV):
+class Beta(RandomVariable):
     r"""
     Beta Random Variable
 

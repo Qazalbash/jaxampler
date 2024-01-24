@@ -26,7 +26,7 @@ from ..jobj import JObj
 from ..typing import Numeric
 
 
-class GenericRV(JObj):
+class RandomVariable(JObj):
     """Generic random variable class."""
 
     def __init__(self, name: Optional[str] = None, shape: tuple[int, ...] = ()) -> None:
@@ -114,3 +114,63 @@ class GenericRV(JObj):
 
     def _rvs(self, shape: tuple[int, ...], key: Array) -> Array:
         raise NotImplementedError
+
+    # POINT VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def _logpdf_x(self, *x: Numeric) -> Numeric:
+        raise NotImplementedError
+
+    @partial(jit, static_argnums=(0,))
+    def _pdf_x(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logpdf_x(*x))
+
+    # VECTOR VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def _logpdf_v(self, *x: Numeric) -> Numeric:
+        return vmap(self._logpdf_x, in_axes=0)(*x)
+
+    @partial(jit, static_argnums=(0,))
+    def _pdf_v(self, *x: Numeric) -> Numeric:
+        return jnp.exp(self._logpdf_v(*x))
+
+    # FACTORY METHODS
+
+    @partial(jit, static_argnums=(0,))
+    def logpdf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._logpdf_x, self._logpdf_v, *x)
+
+    @partial(jit, static_argnums=(0,))
+    def pdf(self, *x: Numeric) -> Numeric:
+        return self._pv_factory(self._pdf_x, self._pdf_v, *x)
+
+    # POINT VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def _logpmf_x(self, *k: Numeric) -> Numeric:
+        raise NotImplementedError
+
+    @partial(jit, static_argnums=(0,))
+    def _pmf_x(self, *k: Numeric) -> Numeric:
+        return jnp.exp(self._logpmf_x(*k))
+
+    # VECTOR VALUED
+
+    @partial(jit, static_argnums=(0,))
+    def _logpmf_v(self, *k: Numeric) -> Numeric:
+        return vmap(self._logpmf_x, in_axes=0)(*k)
+
+    @partial(jit, static_argnums=(0,))
+    def _pmf_v(self, *k: Numeric) -> Numeric:
+        return jnp.exp(self._logpmf_v(*k))
+
+    # FACTORY METHODS
+
+    @partial(jit, static_argnums=(0,))
+    def logpmf(self, *k: Numeric) -> Numeric:
+        return self._pv_factory(self._logpmf_x, self._logpmf_v, *k)
+
+    @partial(jit, static_argnums=(0,))
+    def pmf(self, *k: Numeric) -> Numeric:
+        return self._pv_factory(self._pmf_x, self._pmf_v, *k)

@@ -24,10 +24,10 @@ from jax.scipy.stats import t as jax_t
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class StudentT(ContinuousRV):
+class StudentT(RandomVariable):
     def __init__(
         self,
         df: Numeric | Any,

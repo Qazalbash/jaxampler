@@ -21,8 +21,6 @@ from .binomial import Binomial as Binomial
 from .boltzmann import Boltzmann as Boltzmann
 from .cauchy import Cauchy as Cauchy
 from .chi2 import Chi2 as Chi2
-from .crvs import ContinuousRV as ContinuousRV
-from .drvs import DiscreteRV as DiscreteRV
 from .exponential import Exponential as Exponential
 from .gamma import Gamma as Gamma
 from .geometric import Geometric as Geometric
@@ -32,7 +30,7 @@ from .normal import Normal as Normal
 from .pareto import Pareto as Pareto
 from .poisson import Poisson as Poisson
 from .rayleigh import Rayleigh as Rayleigh
-from .rvs import GenericRV as GenericRV
+from .rvs import RandomVariable as RandomVariable
 from .studentt import StudentT as StudentT
 from .triangular import Triangular as Triangular
 from .truncnormal import TruncNormal as TruncNormal

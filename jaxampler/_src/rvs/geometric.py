@@ -23,10 +23,10 @@ from jax.scipy.stats import geom as jax_geom
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .drvs import DiscreteRV
+from .rvs import RandomVariable
 
 
-class Geometric(DiscreteRV):
+class Geometric(RandomVariable):
     """Geometric Random Variable"""
 
     def __init__(self, p: Numeric | Any, loc: Numeric | Any = 0.0, name: Optional[str] = None) -> None:

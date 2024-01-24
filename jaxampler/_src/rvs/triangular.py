@@ -22,10 +22,10 @@ from jax import Array, jit, lax, numpy as jnp
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Triangular(ContinuousRV):
+class Triangular(RandomVariable):
     def __init__(
         self,
         low: Numeric | Any = 0,

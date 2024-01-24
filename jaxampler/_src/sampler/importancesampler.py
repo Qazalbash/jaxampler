@@ -18,7 +18,7 @@ from typing import Callable, Optional
 
 from jax import Array, vmap
 
-from ..rvs.crvs import ContinuousRV
+from ..rvs.rvs import RandomVariable
 from .sampler import Sampler
 
 
@@ -38,9 +38,9 @@ class ImportanceSampler(Sampler):
         ----------
         h : Callable
             function to be integrated
-        p : ContinuousRV
+        p : RandomVariable
             target distribution
-        q : ContinuousRV
+        q : RandomVariable
             proxy distribution
         N : int, optional
             Number of samples, by default 1
@@ -53,8 +53,8 @@ class ImportanceSampler(Sampler):
             Samples from the target distribution
         """
         h: Optional[Callable] = kwargs.get("h", None)
-        p: Optional[ContinuousRV] = kwargs.get("p", None)
-        q: Optional[ContinuousRV] = kwargs.get("q", None)
+        p: Optional[RandomVariable] = kwargs.get("p", None)
+        q: Optional[RandomVariable] = kwargs.get("q", None)
         N: Optional[int] = kwargs.get("N", None)
 
         assert h is not None, "h is None"

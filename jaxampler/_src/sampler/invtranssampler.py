@@ -19,7 +19,7 @@ from typing import Optional
 import jax
 from jax import Array
 
-from ..rvs.crvs import ContinuousRV
+from ..rvs.rvs import RandomVariable
 from .sampler import Sampler
 
 
@@ -37,7 +37,7 @@ class InverseTransformSampler(Sampler):
 
         Parameters
         ----------
-        rv : ContinuousRV
+        rv : RandomVariable
             The random variable to sample from.
         N : int, optional
             Number of samples, by default 1
@@ -49,7 +49,7 @@ class InverseTransformSampler(Sampler):
         Array
             The samples.
         """
-        rv: Optional[ContinuousRV] = kwargs.get("rv", None)
+        rv: Optional[RandomVariable] = kwargs.get("rv", None)
         N: Optional[int] = kwargs.get("N", None)
 
         assert rv is not None, "rv is None"

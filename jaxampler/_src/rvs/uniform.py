@@ -24,10 +24,10 @@ from jaxtyping import Array
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Uniform(ContinuousRV):
+class Uniform(RandomVariable):
     def __init__(self, low: Numeric | Any, high: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._low, self._high = jx_cast(low, high)
         self.check_params()

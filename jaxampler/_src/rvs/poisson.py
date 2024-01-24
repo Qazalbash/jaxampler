@@ -23,10 +23,10 @@ from jax.scipy.stats import poisson as jax_poisson
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .drvs import DiscreteRV
+from .rvs import RandomVariable
 
 
-class Poisson(DiscreteRV):
+class Poisson(RandomVariable):
     def __init__(self, mu: Numeric | Any, loc: Numeric | Any = 0.0, name: Optional[str] = None) -> None:
         shape, self._mu, self._loc = jx_cast(mu, loc)
         self.check_params()

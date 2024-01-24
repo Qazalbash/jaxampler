@@ -20,7 +20,7 @@ from jax import Array, numpy as jnp
 from jax.random import uniform
 from tqdm import tqdm, trange
 
-from ..rvs.crvs import ContinuousRV
+from ..rvs.rvs import RandomVariable
 from .sampler import Sampler
 
 
@@ -39,9 +39,9 @@ class MetropolisHastingSampler(Sampler):
 
         Parameters
         ----------
-        p : ContinuousRV
+        p : RandomVariable
             Target distribution
-        q : Callable[[Any], ContinuousRV], optional
+        q : Callable[[Any], RandomVariable], optional
             Proxy distribution, by default None
         burn_in : int, optional
             Burn-in phase, by default 100
@@ -61,7 +61,7 @@ class MetropolisHastingSampler(Sampler):
         Array
             Samples from the target distribution
         """
-        p: Optional[ContinuousRV] = kwargs.get("p", None)
+        p: Optional[RandomVariable] = kwargs.get("p", None)
         q: Optional[Callable] = kwargs.get("q", None)
         burn_in: Optional[int] = kwargs.get("burn_in", None)
         n_chains: Optional[int] = kwargs.get("n_chains", None)

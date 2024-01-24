@@ -23,10 +23,10 @@ from jaxtyping import Array
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class TruncPowerLaw(ContinuousRV):
+class TruncPowerLaw(RandomVariable):
     def __init__(
         self,
         alpha: Numeric | Any,
