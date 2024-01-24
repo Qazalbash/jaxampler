@@ -23,10 +23,10 @@ from jax.scipy.stats import pareto as jax_pareto
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Pareto(ContinuousRV):
+class Pareto(RandomVariable):
     def __init__(
         self, a: Numeric | Any, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None
     ) -> None:

@@ -23,10 +23,10 @@ from jax.scipy.special import log_ndtr, ndtr, ndtri
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class LogNormal(ContinuousRV):
+class LogNormal(RandomVariable):
     def __init__(self, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
         shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()

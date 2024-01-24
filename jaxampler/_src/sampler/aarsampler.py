@@ -18,7 +18,7 @@ from typing import Optional
 
 from jax import Array, numpy as jnp
 
-from ..rvs.crvs import ContinuousRV
+from ..rvs.rvs import RandomVariable
 from .arsampler import AcceptRejectSampler
 
 
@@ -33,9 +33,9 @@ class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
 
         Parameters
         ----------
-        target_rv : ContinuousRV
+        target_rv : RandomVariable
             The random variable to sample from.
-        proposal_rv : ContinuousRV
+        proposal_rv : RandomVariable
             The proposal random variable.
         scale : float, optional
             Scaler to cover target distribution by proposal distribution, by default 1.0
@@ -49,8 +49,8 @@ class AdaptiveAcceptRejectSampler(AcceptRejectSampler):
         Array
             The samples.
         """
-        target_rv: Optional[ContinuousRV] = kwargs.get("target_rv", None)
-        proposal_rv: Optional[ContinuousRV] = kwargs.get("proposal_rv", None)
+        target_rv: Optional[RandomVariable] = kwargs.get("target_rv", None)
+        proposal_rv: Optional[RandomVariable] = kwargs.get("proposal_rv", None)
         N: Optional[int] = kwargs.get("N", None)
 
         assert target_rv is not None, "target_rv is None"

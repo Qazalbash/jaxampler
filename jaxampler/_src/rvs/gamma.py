@@ -23,10 +23,10 @@ from jax.scipy.stats import gamma as jax_gamma
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Gamma(ContinuousRV):
+class Gamma(RandomVariable):
     def __init__(
         self,
         a: Numeric | Any,

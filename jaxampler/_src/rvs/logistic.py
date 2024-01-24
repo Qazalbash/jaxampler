@@ -24,10 +24,10 @@ from jax.scipy.stats import logistic as jax_logistic
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Logistic(ContinuousRV):
+class Logistic(RandomVariable):
     def __init__(self, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
         shape, self._loc, self._scale = jx_cast(loc, scale)
         self.check_params()

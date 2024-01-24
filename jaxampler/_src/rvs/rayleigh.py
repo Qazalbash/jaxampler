@@ -22,10 +22,10 @@ from jax import Array, jit, numpy as jnp
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Rayleigh(ContinuousRV):
+class Rayleigh(RandomVariable):
     def __init__(self, loc: Numeric | Any = 0.0, sigma: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
         shape, self._loc, self._sigma = jx_cast(loc, sigma)
         self.check_params()

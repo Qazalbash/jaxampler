@@ -19,7 +19,7 @@ from typing import Optional
 import jax
 from jax import Array
 
-from ..rvs.crvs import ContinuousRV
+from ..rvs.rvs import RandomVariable
 from .sampler import Sampler
 
 
@@ -37,9 +37,9 @@ class AcceptRejectSampler(Sampler):
 
         Parameters
         ----------
-        target_rv : ContinuousRV
+        target_rv : RandomVariable
             The random variable to sample from.
-        proposal_rv : ContinuousRV
+        proposal_rv : RandomVariable
             The proposal random variable.
         scale : int, optional
             Scaler to cover target distribution by proposal distribution, by default 1
@@ -53,8 +53,8 @@ class AcceptRejectSampler(Sampler):
         Array
             The samples.
         """
-        target_rv: Optional[ContinuousRV] = kwargs.get("target_rv", None)
-        proposal_rv: Optional[ContinuousRV] = kwargs.get("proposal_rv", None)
+        target_rv: Optional[RandomVariable] = kwargs.get("target_rv", None)
+        proposal_rv: Optional[RandomVariable] = kwargs.get("proposal_rv", None)
         N: Optional[int] = kwargs.get("N", None)
 
         assert target_rv is not None, "target_rv is None"

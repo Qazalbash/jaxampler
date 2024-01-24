@@ -20,7 +20,7 @@ from typing import Optional
 from jax import Array
 
 from ..jobj import JObj
-from ..rvs.crvs import ContinuousRV, GenericRV
+from ..rvs.rvs import RandomVariable
 
 
 class Sampler(JObj):
@@ -30,18 +30,18 @@ class Sampler(JObj):
         """Initializes a Sampler object."""
         super().__init__(name)
 
-    def check_rv(self, rv: GenericRV) -> None:
+    def check_rv(self, rv: RandomVariable) -> None:
         """Checks if the given random variable is a valid random variable for the sampler.
 
         If the random variable is not valid, an AssertionError is raised.
 
         Parameters
         ----------
-        rv : GenericRV
+        rv : RandomVariable
             The random variable to check.
         """
-        assert isinstance(rv, GenericRV), f"rv must be a GenericRV object, got {rv}"
-        assert isinstance(rv, ContinuousRV), f"rv must be a ContinuousRV object, got {rv}"
+        assert isinstance(rv, RandomVariable), f"rv must be a RandomVariable object, got {rv}"
+        assert isinstance(rv, RandomVariable), f"rv must be a RandomVariable object, got {rv}"
 
     @abstractmethod
     def sample(self, *args, **kwargs) -> Array:
@@ -51,7 +51,7 @@ class Sampler(JObj):
 
         Parameters
         ----------
-        rv : GenericRV
+        rv : RandomVariable
             The random variable to sample from.
         N : int, optional
             Number of samples, by default 1

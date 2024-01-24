@@ -23,10 +23,10 @@ from jax.scipy.stats import chi2 as jax_chi2
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Chi2(ContinuousRV):
+class Chi2(RandomVariable):
     def __init__(
         self,
         nu: Numeric | Any,

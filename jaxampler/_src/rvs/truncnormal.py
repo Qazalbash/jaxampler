@@ -23,10 +23,10 @@ from jax.scipy.stats import truncnorm as jax_truncnorm
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class TruncNormal(ContinuousRV):
+class TruncNormal(RandomVariable):
     def __init__(
         self,
         loc: Numeric | Any = 0.0,

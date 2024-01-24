@@ -18,7 +18,7 @@ from typing import Callable, Optional
 
 from jax import Array, numpy as jnp, vmap
 
-from ..rvs.crvs import ContinuousRV
+from ..rvs.rvs import RandomVariable
 from ..typing import Numeric
 from ..utils import jx_cast
 from .integration import Integration
@@ -45,7 +45,7 @@ class MonteCarloGenericIntegration(Integration):
         ----------
         h : Callable
             First part of the integrand.
-        p : ContinuousRV
+        p : RandomVariable
             Probability distribution. It is part of the integrand.
         low : Numeric
             lower bound of the integral.
@@ -62,7 +62,7 @@ class MonteCarloGenericIntegration(Integration):
             Integral of the function.
         """
         h: Optional[Callable] = kwargs.get("h", None)
-        p: Optional[ContinuousRV] = kwargs.get("p", None)
+        p: Optional[RandomVariable] = kwargs.get("p", None)
         low: Optional[Numeric] = kwargs.get("low", None)
         high: Optional[Numeric] = kwargs.get("high", None)
         N: Optional[int] = kwargs.get("N", None)

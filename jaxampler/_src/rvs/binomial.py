@@ -24,10 +24,10 @@ from jax.scipy.stats import binom as jax_binom
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .drvs import DiscreteRV
+from .rvs import RandomVariable
 
 
-class Binomial(DiscreteRV):
+class Binomial(RandomVariable):
     r"""Binomial random variable
     .. math::
         X\sim Bin(p,n) \iff P(X=x|p,n)=\binom{n}{x}p^{x}(1-p)^{n-x}

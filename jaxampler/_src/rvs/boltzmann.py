@@ -22,10 +22,10 @@ from jax.scipy.special import erf
 
 from ..typing import Numeric
 from ..utils import jx_cast
-from .crvs import ContinuousRV
+from .rvs import RandomVariable
 
 
-class Boltzmann(ContinuousRV):
+class Boltzmann(RandomVariable):
     def __init__(self, a: Numeric | Any, name: Optional[str] = None) -> None:
         shape, self._a = jx_cast(a)
         self.check_params()
