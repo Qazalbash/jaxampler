@@ -23,13 +23,13 @@ from jax.scipy.stats import uniform as jax_uniform
 from jaxtyping import Array
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
 class Uniform(RandomVariable):
     def __init__(self, low: Numeric | Any, high: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._low, self._high = jx_cast(low, high)
+        shape, self._low, self._high = jxam_array_cast(low, high)
         self.check_params()
         super().__init__(name, shape)
 

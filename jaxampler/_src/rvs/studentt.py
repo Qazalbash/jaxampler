@@ -23,7 +23,7 @@ from jax.scipy.special import betainc
 from jax.scipy.stats import t as jax_t
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -35,7 +35,7 @@ class StudentT(RandomVariable):
         scale: Numeric | Any = 1.0,
         name: Optional[str] = None,
     ) -> None:
-        shape, self._df, self._loc, self._scale = jx_cast(df, loc, scale)
+        shape, self._df, self._loc, self._scale = jxam_array_cast(df, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

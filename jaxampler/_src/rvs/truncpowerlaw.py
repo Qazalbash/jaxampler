@@ -22,7 +22,7 @@ from jax import jit, numpy as jnp
 from jaxtyping import Array
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -34,7 +34,7 @@ class TruncPowerLaw(RandomVariable):
         high: Numeric | Any,
         name: Optional[str] = None,
     ) -> None:
-        shape, self._alpha, self._low, self._high = jx_cast(alpha, low, high)
+        shape, self._alpha, self._low, self._high = jxam_array_cast(alpha, low, high)
         self.check_params()
         self._beta = 1.0 + self._alpha
         self._logZ = self.logZ()

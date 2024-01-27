@@ -21,7 +21,7 @@ import jax
 from jax import Array, jit, lax, numpy as jnp
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -33,7 +33,7 @@ class Triangular(RandomVariable):
         high: Numeric | Any = 1,
         name: Optional[str] = None,
     ) -> None:
-        shape, self._low, self._mode, self._high = jx_cast(low, mode, high)
+        shape, self._low, self._mode, self._high = jxam_array_cast(low, mode, high)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

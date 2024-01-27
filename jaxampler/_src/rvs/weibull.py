@@ -21,7 +21,7 @@ import jax
 from jax import Array, jit, numpy as jnp
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -33,7 +33,7 @@ class Weibull(RandomVariable):
         scale: Numeric | Any = 1.0,
         name: Optional[str] = None,
     ) -> None:
-        shape, self._k, self._loc, self._scale = jx_cast(k, loc, scale)
+        shape, self._k, self._loc, self._scale = jxam_array_cast(k, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

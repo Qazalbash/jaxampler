@@ -23,7 +23,7 @@ from jax.scipy.stats import beta as jax_beta
 from tensorflow_probability.substrates import jax as tfp
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -45,7 +45,7 @@ class Beta(RandomVariable):
         scale: Numeric | Any = 1.0,
         name: Optional[str] = None,
     ) -> None:
-        shape, self._alpha, self._beta, self._loc, self._scale = jx_cast(alpha, beta, loc, scale)
+        shape, self._alpha, self._beta, self._loc, self._scale = jxam_array_cast(alpha, beta, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

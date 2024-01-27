@@ -21,13 +21,13 @@ from jax import jit, numpy as jnp
 from jax.scipy.special import erf
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
 class Boltzmann(RandomVariable):
     def __init__(self, a: Numeric | Any, name: Optional[str] = None) -> None:
-        shape, self._a = jx_cast(a)
+        shape, self._a = jxam_array_cast(a)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

@@ -22,7 +22,7 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import pareto as jax_pareto
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -30,7 +30,7 @@ class Pareto(RandomVariable):
     def __init__(
         self, a: Numeric | Any, loc: Numeric | Any = 0.0, scale: Numeric | Any = 1.0, name: Optional[str] = None
     ) -> None:
-        shape, self._a, self._loc, self._scale = jx_cast(a, loc, scale)
+        shape, self._a, self._loc, self._scale = jxam_array_cast(a, loc, scale)
         self.check_params()
         super().__init__(name=name, shape=shape)
 
