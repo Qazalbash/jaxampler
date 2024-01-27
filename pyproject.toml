@@ -10,7 +10,7 @@ find = { }
 
 [project]
 name = "jaxampler"
-version = "0.0.6"
+version = "0.0.7"
 authors = [{ name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" }]
 maintainers = [
     { name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" },

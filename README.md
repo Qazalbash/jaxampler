@@ -148,7 +148,7 @@ To cite this repository:
     author  = {Meesum Qazalbash},
     title   = {{Jaxampler}: A JAX-based statistical sampling toolkit},
     url     = {https://github.com/Qazalbash/jaxampler},
-    version = {0.0.6},
+    version = {0.0.7},
     year    = {2023}
 }
 ```
