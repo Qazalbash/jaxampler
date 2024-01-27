@@ -7,7 +7,7 @@ py-modules = ["jaxampler"]
 
 [project]
 name = "jaxampler"
-version = "0.0.5"
+version = "0.0.6"
 authors = [{ name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" }]
 maintainers = [
     { name = "Meesum Qazalbash", email = "meesumqazalbash@gmail.com" },
