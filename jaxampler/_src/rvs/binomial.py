@@ -23,7 +23,7 @@ from jax.scipy.special import betainc
 from jax.scipy.stats import binom as jax_binom
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -39,7 +39,7 @@ class Binomial(RandomVariable):
         :param n: Number of trials
         :param name: Name of the random variable
         """
-        shape, self._p, self._n = jx_cast(p, n)
+        shape, self._p, self._n = jxam_array_cast(p, n)
         self.check_params()
         self._q = 1.0 - self._p
         super().__init__(name=name, shape=shape)

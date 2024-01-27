@@ -21,13 +21,13 @@ import jax
 from jax import Array, jit, numpy as jnp
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
 class Rayleigh(RandomVariable):
     def __init__(self, loc: Numeric | Any = 0.0, sigma: Numeric | Any = 1.0, name: Optional[str] = None) -> None:
-        shape, self._loc, self._sigma = jx_cast(loc, sigma)
+        shape, self._loc, self._sigma = jxam_array_cast(loc, sigma)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

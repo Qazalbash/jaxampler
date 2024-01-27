@@ -22,7 +22,7 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import geom as jax_geom
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -30,7 +30,7 @@ class Geometric(RandomVariable):
     """Geometric Random Variable"""
 
     def __init__(self, p: Numeric | Any, loc: Numeric | Any = 0.0, name: Optional[str] = None) -> None:
-        shape, self._p, self._loc = jx_cast(p, loc)
+        shape, self._p, self._loc = jxam_array_cast(p, loc)
         self.check_params()
         self._q = 1.0 - self._p
         super().__init__(name=name, shape=shape)

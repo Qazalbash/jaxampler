@@ -22,7 +22,7 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import truncnorm as jax_truncnorm
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
@@ -35,7 +35,7 @@ class TruncNormal(RandomVariable):
         high: Numeric | Any = 1.0,
         name: Optional[str] = None,
     ) -> None:
-        shape, self._loc, self._scale, self._low, self._high = jx_cast(loc, scale, low, high)
+        shape, self._loc, self._scale, self._low, self._high = jxam_array_cast(loc, scale, low, high)
         self.check_params()
         self._alpha = (self._low - self._loc) / self._scale
         self._beta = (self._high - self._loc) / self._scale

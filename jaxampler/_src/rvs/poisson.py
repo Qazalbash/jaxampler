@@ -22,13 +22,13 @@ from jax import Array, jit, numpy as jnp
 from jax.scipy.stats import poisson as jax_poisson
 
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .rvs import RandomVariable
 
 
 class Poisson(RandomVariable):
     def __init__(self, mu: Numeric | Any, loc: Numeric | Any = 0.0, name: Optional[str] = None) -> None:
-        shape, self._mu, self._loc = jx_cast(mu, loc)
+        shape, self._mu, self._loc = jxam_array_cast(mu, loc)
         self.check_params()
         super().__init__(name=name, shape=shape)
 

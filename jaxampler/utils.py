@@ -14,4 +14,9 @@
 
 from __future__ import annotations
 
-from jaxampler._src.utils import jx_cast as jx_cast, nCr as nCr, nPr as nPr
+from jaxampler._src.utils import (
+    jxam_array_cast as jxam_array_cast,
+    jxam_shape_cast as jxam_shape_cast,
+    nCr as nCr,
+    nPr as nPr,
+)

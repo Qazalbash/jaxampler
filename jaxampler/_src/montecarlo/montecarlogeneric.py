@@ -20,7 +20,7 @@ from jax import Array, numpy as jnp, vmap
 
 from ..rvs.rvs import RandomVariable
 from ..typing import Numeric
-from ..utils import jx_cast
+from ..utils import jxam_array_cast
 from .integration import Integration
 
 
@@ -76,7 +76,7 @@ class MonteCarloGenericIntegration(Integration):
         key: Optional[Array] = kwargs.get("key", None)
         if key is None:
             key = self.get_key()
-        param_shape, low, high = jx_cast(low, high)
+        param_shape, low, high = jxam_array_cast(low, high)
         p_rv = p.rvs(shape=(N,) + param_shape, key=key)
         p_rv = p_rv[(p_rv >= low) & (p_rv <= high)]
         hx = vmap(h)(p_rv)

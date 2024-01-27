@@ -19,14 +19,14 @@ from jax import numpy as jnp
 
 
 sys.path.append("../jaxampler")
-from jaxampler.utils import jx_cast, nCr, nPr
+from jaxampler.utils import jxam_array_cast, nCr, nPr
 
 
 class TestUtils:
     def test_jx_cast_success(self):
         a = 1
         b = [1, 2, 3]
-        shape, casted_a, casted_b = jx_cast(a, b)
+        shape, casted_a, casted_b = jxam_array_cast(a, b)
         assert shape == (3,)
         assert isinstance(casted_a, jnp.ndarray)
         assert isinstance(casted_b, jnp.ndarray)
@@ -39,11 +39,11 @@ class TestUtils:
         g = jnp.array([[1, 2, 3], [4, 5, 6]])
         h = jnp.array([[1, 2]])
         with pytest.raises(ValueError):
-            jx_cast(g, h)
+            jxam_array_cast(g, h)
 
     def test_incompatible_shapes(self):
         with pytest.raises(ValueError):
-            jx_cast([[0.3], 0.5], [0.5])
+            jxam_array_cast([[0.3], 0.5], [0.5])
 
     def test_nPr_exist(self):
         assert nPr(5, 3) == 60
