@@ -5,6 +5,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 py-modules = ["jaxampler"]
 
+[tool.setuptools.packages]
+find = { }
+
 [project]
 name = "jaxampler"
 version = "0.0.6"
