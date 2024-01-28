@@ -145,9 +145,9 @@ To cite this repository:
 
 ```bibtex
 @software{jaxampler2023github,
-    author  = {Meesum Qazalbash},
-    title   = {{Jaxampler}: A JAX-based statistical sampling toolkit},
-    url     = {https://github.com/Qazalbash/jaxampler},
+    author  = {Meesum Qazalbash, Muhammad Zeeshan, Richard O'Shaughnessy},
+    title   = {{Jaxampler}: tool for sampling statistical distributions},
+    url     = {https://github.com/gwkokab/jaxampler},
     version = {0.0.7},
     year    = {2023}
 }
