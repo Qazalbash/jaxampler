@@ -62,11 +62,9 @@ class ImportanceSampler(Sampler):
         assert q is not None, "q is None"
         assert N is not None, "N is None"
 
-        key: Optional[Array] = kwargs.get("key", None)
-        if key is None:
-            key = self.get_key()
+        seed: Optional[int] = kwargs.get("seed", None)
 
-        q_rv = q.rvs(shape=(N,), key=key)
+        q_rv = q.rvs(shape=(N,), seed=seed)
         p_theta = p._pdf_v(q_rv)
         q_phi = q._pdf_v(q_rv)
         hx = vmap(h)(q_rv)

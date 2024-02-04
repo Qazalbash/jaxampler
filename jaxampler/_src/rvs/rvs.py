@@ -17,6 +17,7 @@ from __future__ import annotations
 from functools import partial
 from typing_extensions import Any, Callable, Optional
 
+import jax
 from jax import jit, numpy as jnp, vmap
 from jaxtyping import Array
 
@@ -172,9 +173,11 @@ class RandomVariable(JObj):
         fn = self._pv_factory(lambda x: x._logppf_x, lambda x: x._logppf_v, shape)
         return fn(*x)
 
-    def rvs(self, shape: tuple[int, ...], key: Optional[Array] = None) -> Array:
-        if key is None:
+    def rvs(self, shape: tuple[int, ...], seed: Optional[int] = None) -> Array:
+        if seed is None:
             key = self.get_key()
+        else:
+            key = jax.random.PRNGKey(seed)
         new_shape = shape + self._shape
         return self._rvs(shape=new_shape, key=key)
 

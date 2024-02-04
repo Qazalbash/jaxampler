@@ -65,16 +65,13 @@ class AcceptRejectSampler(Sampler):
         self.check_rv(proposal_rv)
 
         scale: float = kwargs.get("scale", 1.0)
-        key: Optional[Array] = kwargs.get("key", None)
+        seed: Optional[int] = kwargs.get("seed", None)
 
-        if key is None:
-            key = self.get_key()
-
-        V = proposal_rv.rvs((1, N), key)
+        V = proposal_rv.rvs(shape=(1, N), seed=seed)
 
         pdf = target_rv._pdf_v(*V)
 
-        key = self.get_key(key)
+        key = self.get_key()
         U_scaled = jax.random.uniform(
             key,
             shape=(N,),

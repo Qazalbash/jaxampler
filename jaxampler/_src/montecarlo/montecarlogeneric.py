@@ -73,11 +73,10 @@ class MonteCarloGenericIntegration(Integration):
         assert high is not None, "high is None"
         assert N is not None, "N is None"
 
-        key: Optional[Array] = kwargs.get("key", None)
-        if key is None:
-            key = self.get_key()
+        seed: Optional[int] = kwargs.get("seed", None)
+
         param_shape, low, high = jxam_array_cast(low, high)
-        p_rv = p.rvs(shape=(N,) + param_shape, key=key)
+        p_rv = p.rvs(shape=(N,) + param_shape, seed=seed)
         p_rv = p_rv[(p_rv >= low) & (p_rv <= high)]
         hx = vmap(h)(p_rv)
         return jnp.mean(hx)
