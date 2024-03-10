@@ -44,7 +44,7 @@ You may install the latest released version of Jaxampler through pip by doing
 pip3 install --upgrade jaxampler
 ```
 
-You may install the bleeding edge version by cloning this repo, or doing
+You may install the bleeding edge version by cloning this repo or doing
 
 ```bash
 pip3 install --upgrade git+https://github.com/Qazalbash/jaxampler
@@ -145,9 +145,9 @@ To cite this repository:
 
 ```bibtex
 @software{jaxampler2023github,
-    author  = {Meesum Qazalbash, Muhammad Zeeshan, Richard O'Shaughnessy},
+    author  = {Meesum Qazalbash},
     title   = {{Jaxampler}: tool for sampling statistical distributions},
-    url     = {https://github.com/gwkokab/jaxampler},
+    url     = {https://github.com/Qazalbash/jaxampler},
     version = {0.0.7},
     year    = {2023}
 }
