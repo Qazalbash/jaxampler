@@ -21,6 +21,21 @@ limitations under the License. -->
 ![PyPI version](https://img.shields.io/pypi/v/jaxampler)
 [![Versions](https://img.shields.io/pypi/pyversions/jaxampler.svg)](https://pypi.org/project/jaxampler/)
 
+> [!IMPORTANT]
+> 📣 **As of April 2024 I recommends that new projects should adopt
+> [NumPyro](https://github.com/pyro-ppl/numpyro) instead of Jaxampler.** 📣
+>
+> At the time of writing [NumPyro](https://github.com/pyro-ppl/numpyro) has a [larger](https://github.com/pyro-ppl/numpyro/graphs/contributors) and
+> [more active](https://github.com/pyro-ppl/numpyro/activity) development team and
+> more adoption with users outside of Alphabet. It has
+> [more extensive documentation](https://num.pyro.ai/en/stable/index.html),
+> [examples](https://github.com/pyro-ppl/numpyro/tree/master/examples)
+> and an [active community](https://forum.pyro.ai/) creating end
+> to end examples.
+>
+> Jaxampler will be a public archive but I have no plans to take it down from
+> PyPI public repositories.
+
 Jaxampler 🧪 is a statistical sampling toolkit built on top of JAX. It provides a set of high-performance sampling
 algorithms for a wide range of statistical distributions. Jaxampler is designed to be easy to use and integrate with
 existing JAX workflows. It is also designed to be extensible, allowing users to easily add new sampling algorithms and
