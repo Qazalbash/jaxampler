@@ -27,7 +27,7 @@ limitations under the License. -->
 >
 > At the time of writing [NumPyro](https://github.com/pyro-ppl/numpyro) has a [larger](https://github.com/pyro-ppl/numpyro/graphs/contributors) and
 > [more active](https://github.com/pyro-ppl/numpyro/activity) development team and
-> more adoption with users outside of Alphabet. It has
+> more adoption with users. It has
 > [more extensive documentation](https://num.pyro.ai/en/stable/index.html),
 > [examples](https://github.com/pyro-ppl/numpyro/tree/master/examples)
 > and an [active community](https://forum.pyro.ai/) creating end
